@@ -7,6 +7,7 @@ type ProgrammingLanguageAssociation = {
   languageName : string;
   displayLanguageName: string;
   mainFile: string;
+  fileExtension: string;
   baseValue: string;
 }
 
@@ -28,15 +29,15 @@ export class FullCodeEditorComponent implements OnInit {
   theme = 'vs-dark';
   programmingLanguageAssociations : ProgrammingLanguageAssociation[] =
   [
-    {languageName : 'python', displayLanguageName : 'Python', mainFile : 'main.py', baseValue: ''},
-    {languageName : 'java', displayLanguageName : 'Java', mainFile : 'Main.java', baseValue: 'public class Main {\n\n\tpublic static void main(String[] args) {\n\n\t\tSystem.out.println("Hello world!");\n\t}\n\n}'},
-    {languageName : 'c', displayLanguageName : 'C', mainFile : 'main.c', baseValue: '#include <stdlib.h>\n' +
+    {languageName : 'python', displayLanguageName : 'Python', mainFile : 'main.py', fileExtension : '.py', baseValue: ''},
+    {languageName : 'java', displayLanguageName : 'Java', mainFile : 'Main.java', fileExtension : '.java', baseValue: 'public class Main {\n\n\tpublic static void main(String[] args) {\n\n\t\tSystem.out.println("Hello world!");\n\t}\n\n}'},
+    {languageName : 'c', displayLanguageName : 'C', mainFile : 'main.c', fileExtension : '.c', baseValue: '#include <stdlib.h>\n' +
         '\n' +
         'int main(int argc, char** argv) {\n' +
         '  printf("Hello World\\n");\n' +
         '  return 0;\n' +
         '}'},
-    {languageName : 'typescript', displayLanguageName : 'Typescript', mainFile : 'main.ts', baseValue: ''}
+    {languageName : 'typescript', displayLanguageName : 'Typescript', mainFile : 'main.ts', fileExtension : '.ts', baseValue: ''}
   ];
   codeModel: CodeModel = {
     language: this.selected,
@@ -58,15 +59,15 @@ export class FullCodeEditorComponent implements OnInit {
   }
 
   onCodeChanged(value: any) {
-
+      this.code = value;
   }
 
   async sendData() {
     this.loading = true;
-    let file = new Blob([this.codeEditor.codeModel.value], {type: '.java'});
-    const formData: FormData = new FormData();
-    formData.append('fileKey', file, `Main.java`);
     const programmingLanguage = await this.programmingLanguageAssociations.find((item) => { return item.languageName === this.selected });
+    let file = new Blob([this.code], {type: programmingLanguage?.fileExtension});
+    const formData: FormData = new FormData();
+    formData.append('fileKey', file, programmingLanguage?.mainFile);
     console.log(programmingLanguage);
     const data = await lastValueFrom(this.http.post<string>(`https://oome-code-executer.herokuapp.com/${programmingLanguage?.languageName}/`, formData));
     console.log(data);
