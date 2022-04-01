@@ -12,11 +12,11 @@ import {HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CodeEditorModule } from '@ngstack/code-editor';
-import { CodeEditorComponent } from './code-editor/code-editor.component';
+import { FullCodeEditorComponent } from './code-editor/full-code-editor.component';
 @NgModule({
   declarations: [
     AppComponent,
-    CodeEditorComponent
+    FullCodeEditorComponent
   ],
   imports: [
     BrowserModule,

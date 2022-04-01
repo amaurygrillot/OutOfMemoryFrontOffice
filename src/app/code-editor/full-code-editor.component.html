@@ -6,7 +6,11 @@
       <mat-form-field appearance="fill">
         <mat-label>Select an option</mat-label>
         <mat-select [(value)]="selected">
-          <mat-option *ngFor="let language of programmingLanguageAssociations" value = "{{language.languageName}}">{{language.displayLanguageName}}</mat-option>
+          <mat-option *ngFor="let language of programmingLanguageAssociations"
+                      (click) = "changeLanguage(language.languageName)"
+                      value = "{{language.languageName}}">
+            {{language.displayLanguageName}}
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </mat-card-actions>
@@ -15,7 +19,16 @@
   [codeModel]="codeModel"
   [options]="options"
   (valueChanged)="onCodeChanged($event)"
->
+  *ngIf="!changingLanguage"
+ #codeEditor>
+</ngs-code-editor>
+<ngs-code-editor
+  [theme]="theme"
+  [codeModel]="codeModel"
+  [options]="options"
+  (valueChanged)="onCodeChanged($event)"
+  *ngIf="changingLanguage"
+  #secondCodeEditor>
 </ngs-code-editor>
 
     <mat-card *ngIf="hasLoaded" [style.background] = "resultColor">
