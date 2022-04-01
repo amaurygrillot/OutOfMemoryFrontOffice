@@ -1,0 +1,11 @@
+<ngs-code-editor
+  [theme]="theme"
+  [codeModel]="codeModel"
+  [options]="options"
+  (valueChanged)="onCodeChanged($event)"
+>
+</ngs-code-editor>
+
+<mat-spinner *ngIf="loading"></mat-spinner>
+<button mat-flat-button color="primary" (click)="sendData()" *ngIf="!loading">Exécuter</button>
+
