@@ -3,24 +3,36 @@ import {CodeModel} from "@ngstack/code-editor";
 import {HttpClient} from "@angular/common/http";
 import {lastValueFrom} from "rxjs";
 
+type ProgrammingLanguageAssociation = {
+  languageName : string;
+  displayLanguageName: string;
+  mainFile: string
+}
 
 @Component({
   selector: 'app-code-editor',
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.css']
 })
-export class CodeEditorComponent implements OnInit {
 
+export class CodeEditorComponent implements OnInit {
+  selected = 'python';
   loading = false;
   hasLoaded = false;
   result = "";
   resultColor = '';
   code = "";
   theme = 'vs-dark';
-
+  programmingLanguageAssociations : ProgrammingLanguageAssociation[] =
+  [
+    {languageName : 'python', displayLanguageName : 'Python', mainFile : 'main.py'},
+    {languageName : 'java', displayLanguageName : 'Java', mainFile : 'Main.java'},
+    {languageName : 'c', displayLanguageName : 'C', mainFile : 'main.c'},
+    {languageName : 'typescript', displayLanguageName : 'Typescript', mainFile : 'main.ts'}
+  ];
   codeModel: CodeModel = {
-    language: 'python',
-    uri: 'main.py',
+    language: this.selected,
+    uri: this.programmingLanguageAssociations.find((item) => { return item.languageName === this.selected })?.mainFile || 'main.py',
     value: '',
   };
 

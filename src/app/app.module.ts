@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSelectModule} from '@angular/material/select';
 
 import { MatButtonModule} from '@angular/material/button';
 import {HttpClientModule } from '@angular/common/http';
@@ -28,7 +29,8 @@ import { CodeEditorComponent } from './code-editor/code-editor.component';
     FormsModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    CodeEditorModule.forRoot()
+    CodeEditorModule.forRoot(),
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
