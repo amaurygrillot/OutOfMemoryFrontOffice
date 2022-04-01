@@ -1,3 +1,7 @@
+<mat-card>
+  <mat-card-title>Editeur</mat-card-title>
+  <mat-card-content>
+
 <ngs-code-editor
   [theme]="theme"
   [codeModel]="codeModel"
@@ -6,6 +10,20 @@
 >
 </ngs-code-editor>
 
-<mat-spinner *ngIf="loading"></mat-spinner>
-<button mat-flat-button color="primary" (click)="sendData()" *ngIf="!loading">Exécuter</button>
+    <mat-card *ngIf="hasLoaded" [style.background] = "resultColor">
+      <mat-card-title>Résultat d'exécution</mat-card-title>
+      <mat-card-content>
+        <p style="white-space: pre;">{{result}}</p>
+      </mat-card-content>
 
+    </mat-card>
+
+    <mat-card-actions>
+      <mat-spinner *ngIf="loading"></mat-spinner>
+      <button mat-flat-button color="primary" (click)="sendData()" *ngIf="!loading">Exécuter</button>
+    </mat-card-actions>
+
+
+
+  </mat-card-content>
+</mat-card>

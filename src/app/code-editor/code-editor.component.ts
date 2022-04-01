@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {CodeModel} from "@ngstack/code-editor";
 import {HttpClient} from "@angular/common/http";
+import {lastValueFrom} from "rxjs";
 
 
 @Component({
@@ -11,6 +12,9 @@ import {HttpClient} from "@angular/common/http";
 export class CodeEditorComponent implements OnInit {
 
   loading = false;
+  hasLoaded = false;
+  result = "";
+  resultColor = '';
   code = "";
   theme = 'vs-dark';
 
@@ -36,16 +40,24 @@ export class CodeEditorComponent implements OnInit {
     this.code = value;
   }
 
-  sendData() {
+  async sendData() {
     this.loading = true;
     let file = new Blob([this.code], {type: '.py'});
     const formData: FormData = new FormData();
     formData.append('fileKey', file, `test3.py`);
-    this.http.post(`https://oome-code-executer.herokuapp.com/pythonExecuter/`, formData)
-      .subscribe((data: any) => {
-        console.log(data);
-        this.loading = false;
-      });
+    const data = await lastValueFrom(this.http.post<string>(`https://oome-code-executer.herokuapp.com/pythonExecuter/`, formData));
+    console.log(data);
+    if(data.search('Process ended with error code : 0') === -1)
+    {
+       this.resultColor = 'red';
+    }
+    else
+    {
+      this.resultColor = 'green';
+    }
+    this.result = data.substring(0,data.lastIndexOf('\n'));
+    this.hasLoaded = true;
+    this.loading = false;
   }
 
 }
