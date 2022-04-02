@@ -32,6 +32,7 @@ export class FullCodeEditorComponent implements OnInit {
     {languageName : 'python', displayLanguageName : 'Python', mainFile : 'main.py', fileExtension : '.py', baseValue: ''},
     {languageName : 'java', displayLanguageName : 'Java', mainFile : 'Main.java', fileExtension : '.java', baseValue: 'public class Main {\n\n\tpublic static void main(String[] args) {\n\n\t\tSystem.out.println("Hello world!");\n\t}\n\n}'},
     {languageName : 'c', displayLanguageName : 'C', mainFile : 'main.c', fileExtension : '.c', baseValue: '#include <stdlib.h>\n' +
+        '#include <stdio.h>\n' +
         '\n' +
         'int main(int argc, char** argv) {\n' +
         '  printf("Hello World\\n");\n' +
