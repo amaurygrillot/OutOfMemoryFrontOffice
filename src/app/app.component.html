@@ -1,11 +1,22 @@
-<mat-card>
-  <mat-card-title>Envoyer fichier</mat-card-title>
-  <mat-card-content>
-    <div class="header">
-    </div>
-      <app-code-editor></app-code-editor>
+<app-auth (isLogged)="updateLoginStatus($event)"></app-auth>
 
+<div *ngIf="isLogged; then authenticated else guest"></div>
 
-  </mat-card-content>
-</mat-card>
+<ng-container>
+  <ng-template #authenticated>
+    <app-topbar-online></app-topbar-online>
+  </ng-template>
 
+  <ng-template #guest>
+    <app-topbar-offline></app-topbar-offline>
+  </ng-template>
+</ng-container>
+
+<router-outlet></router-outlet>
+
+<footer style="background-color: black">
+  <div class="text-center p-4" style="color: white">
+    © 2022 Copyright:
+    <a class="text-reset fw-bold ">out of memory</a>
+  </div>
+</footer>

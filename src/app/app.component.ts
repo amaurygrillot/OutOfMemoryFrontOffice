@@ -1,7 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, NgForm, Validators} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
-import {CodeModel} from "@ngstack/code-editor";
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +7,12 @@ import {CodeModel} from "@ngstack/code-editor";
 })
 export class AppComponent {
   title = 'OutOfMemoryFrontOffice';
+  isLogged!: boolean
 
   constructor() {
   }
 
-
-
-
-
-
+  updateLoginStatus($event: boolean) {
+    this.isLogged = $event;
+  }
 }

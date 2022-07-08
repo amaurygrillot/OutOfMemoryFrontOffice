@@ -1,0 +1,32 @@
+<mat-card>
+  <mat-card-header class="center">
+    <mat-card-title>
+      <h3>Login</h3>
+      <hr>
+    </mat-card-title>
+  </mat-card-header>
+  <div class="container d-flex align-items-center justify-content-center">
+    <form [formGroup]="loginForm">
+      <mat-card-content>
+        <div class="form-group">
+          <label for="email">Email</label><br>
+          <input type="email" class="form-control" id="email" formControlName="email" aria-describedby="emailHelp">
+        </div>
+      </mat-card-content>
+      <mat-card-content>
+        <div class="form-group">
+          <label for="password">Password</label><br>
+          <input type="password" class="form-control" id="password" formControlName="password">
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="center">
+          <button type="submit" mat-raised-button color="primary" [disabled]="!loginForm.valid"
+                  (click)="logIn()">
+            Log In
+          </button>
+        </div>
+      </mat-card-actions>
+    </form>
+  </div>
+</mat-card>
