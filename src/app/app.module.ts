@@ -16,13 +16,17 @@ import {AuthModule} from "@app/auth/auth.module";
 import {LocalStorageService} from "@app/auth/services/local-storage.service";
 import {TokenService} from "@app/auth/services/token.service";
 import {TokenInterceptor} from "@app/token-interceptor";
+import { PostComponent } from './post/post.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CodeEditorComponent,
     TopbarOnlineComponent,
-    TopbarOfflineComponent
+    TopbarOfflineComponent,
+    PostComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

@@ -26,8 +26,10 @@ export class AuthComponent implements OnInit {
 
     if (tokenValue) {
       this.tokenService.setToken(tokenValue);
+      console.log(tokenValue)
 
       //this.getUser(this.tokenService.getEmailId())
+      console.log(this.tokenService.getUserId())
 
       this.updateLoggedStatus(true);
     } else {

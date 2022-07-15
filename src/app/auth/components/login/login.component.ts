@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
 })
 
 export class LoginComponent implements OnInit {
-  private _url = "http://localhost:3000/api";
+  private _url = "https://outofmemoryerror-back.azurewebsites.net/api";
   token!: string;
   loginForm = new FormGroup({
     email: new FormControl(null, [
@@ -39,13 +39,11 @@ export class LoginComponent implements OnInit {
     }
 
     this.http
-      .post(this._url + "/auth-login", body).toPromise()
+      .post(this._url + "/authLogin", body).toPromise()
       .then(response => {
 
         const tmp = JSON.stringify(response).split("\"");
-        this.token = tmp[3];
-
-        console.log(this.token);
+        this.token = tmp[7];
 
         this.localStorage.set("JWTToken", this.token);
         this.router.navigateByUrl('').then(() => {

@@ -6,7 +6,7 @@ import jwtDecode from "jwt-decode";
 })
 export class TokenService {
   jwtToken!: string;
-  infoToken! : { [key: string]: string };
+  tokenInfos! : { [key: string]: string };
 
   constructor() { }
 
@@ -18,7 +18,20 @@ export class TokenService {
 
   decodeToken() {
     if (this.jwtToken) {
-      this.infoToken = jwtDecode(this.jwtToken);
+      this.tokenInfos = jwtDecode(this.jwtToken);
     }
   }
+
+  getUserId() {
+    this.decodeToken();
+    return this.tokenInfos ? this.tokenInfos : null;
+  }
+
+
+
+
+
+
+
+
 }
