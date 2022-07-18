@@ -4,29 +4,37 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CodeEditorModule} from '@ngstack/code-editor';
-import {CodeEditorComponent} from './features/code-editor/code-editor.component';
 import {environment} from '@environments/environment';
 import {provideAuth, getAuth} from '@angular/fire/auth';
-import {TopbarOnlineComponent} from './topbar/topbar-online/topbar-online.component';
-import {TopbarOfflineComponent} from './topbar/topbar-offline/topbar-offline.component';
 import {RouterModule} from "@angular/router";
 import {SharedModule} from "@app/shared/shared.module";
 import {AppRoutingModule} from "@app/app-routing.module";
 import {AuthModule} from "@app/auth/auth.module";
-import {LocalStorageService} from "@app/auth/services/local-storage.service";
-import {TokenService} from "@app/auth/services/token.service";
-import {TokenInterceptor} from "@app/token-interceptor";
 import { PostComponent } from './post/post.component';
 import { ProfileComponent } from './profile/profile.component';
+import {MAT_DATE_FORMATS} from "@angular/material/core";
+import {FullCodeEditorComponent} from "@app/post/components/code-editor/full-code-editor.component";
+import {LoginComponent} from "@app/auth/login/login.component";
+import {DatePipe} from "@angular/common";
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'MM/DD/YYYY',
+  },
+  display: {
+    dateInput: 'MM/DD/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  },
+};
 
 @NgModule({
   declarations: [
     AppComponent,
-    CodeEditorComponent,
-    TopbarOnlineComponent,
-    TopbarOfflineComponent,
+    FullCodeEditorComponent,
     PostComponent,
-    ProfileComponent
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,17 +44,15 @@ import { ProfileComponent } from './profile/profile.component';
     AppRoutingModule,
     CodeEditorModule.forRoot(),
     //provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
+    //provideAuth(() => getAuth()),
     AuthModule,
-    RouterModule
+    RouterModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-    TokenService,
-    LocalStorageService
+    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS},
+    DatePipe
   ],
   exports: [
-    CodeEditorComponent
   ],
   bootstrap: [AppComponent]
 })

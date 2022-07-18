@@ -5,8 +5,13 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatIconModule} from "@angular/material/icon";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatSelectModule} from "@angular/material/select";
 
 
 @NgModule({
@@ -23,7 +28,12 @@ import {MatToolbarModule} from "@angular/material/toolbar";
     MatInputModule,
     MatProgressSpinnerModule,
     MatToolbarModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatTabsModule,
+    MatMenuModule,
+    MatIconModule,
+    MatDialogModule,
+    MatSelectModule
   ]
 })
 export class SharedModule {

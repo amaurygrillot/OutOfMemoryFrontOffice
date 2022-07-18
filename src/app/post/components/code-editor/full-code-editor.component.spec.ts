@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LogoutComponent } from './logout.component';
+import { FullCodeEditorComponent } from './full-code-editor.component';
 
-describe('LogoutComponent', () => {
-  let component: LogoutComponent;
-  let fixture: ComponentFixture<LogoutComponent>;
+describe('CodeEditorComponent', () => {
+  let component: FullCodeEditorComponent;
+  let fixture: ComponentFixture<FullCodeEditorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LogoutComponent ]
+      declarations: [ FullCodeEditorComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LogoutComponent);
+    fixture = TestBed.createComponent(FullCodeEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
