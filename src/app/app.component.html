@@ -1,11 +1,43 @@
-<mat-card>
-  <mat-card-title>Envoyer fichier</mat-card-title>
-  <mat-card-content>
-    <div class="header">
-    </div>
-      <app-code-editor></app-code-editor>
+<div class="container mt-5">
+  <mat-tab-group color="primary" #tabGroup>
+
+    <mat-tab label="out of memory"> </mat-tab>
 
 
-  </mat-card-content>
-</mat-card>
+    <mat-tab [disabled]="true">
+      <ng-template mat-tab-label>
+        <button mat-flat-button color = "primary" (click)="showLogin()" *ngIf="!isLogged" >
+          Sign In
+        </button>
+        <button mat-flat-button color = "warn" (click)="LogOff()" *ngIf="isLogged">
+          Log off
+        </button>
+      </ng-template>
 
+    </mat-tab>
+    <mat-tab *ngIf="!isLogged" [disabled]="true">
+      <ng-template mat-tab-label>
+        <button mat-button [matMenuTriggerFor]="menu" [ngClass]="{'mat-raised-button' : true}">
+          Sign up
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="showSubscribeUser()">User</button>
+          <button mat-menu-item >zz</button>
+        </mat-menu>
+      </ng-template>
+
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<app-post></app-post>
+
+<!--
+<footer style="background-color: black">
+  <div class="text-center p-4" style="color: white">
+    © 2022 Copyright:
+    <a class="text-reset fw-bold ">out of memory</a>
+  </div>
+</footer>
+-->

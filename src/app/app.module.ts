@@ -1,36 +1,60 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { MatFormFieldModule} from '@angular/material/form-field';
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {CodeEditorModule} from '@ngstack/code-editor';
+import {environment} from '@environments/environment';
+import {provideAuth, getAuth} from '@angular/fire/auth';
+import {RouterModule} from "@angular/router";
+import {SharedModule} from "@app/shared/shared.module";
+import {AppRoutingModule} from "@app/app-routing.module";
+import {AuthModule} from "@app/auth/auth.module";
+import { PostComponent } from './post/post.component';
+import { ProfileComponent } from './profile/profile.component';
+import {MAT_DATE_FORMATS} from "@angular/material/core";
+import {FullCodeEditorComponent} from "@app/post/components/code-editor/full-code-editor.component";
+import {LoginComponent} from "@app/auth/login/login.component";
+import {DatePipe} from "@angular/common";
 
-import { MatButtonModule} from '@angular/material/button';
-import {HttpClientModule } from '@angular/common/http';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CodeEditorModule } from '@ngstack/code-editor';
-import { CodeEditorComponent } from './code-editor/code-editor.component';
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'MM/DD/YYYY',
+  },
+  display: {
+    dateInput: 'MM/DD/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  },
+};
+
 @NgModule({
   declarations: [
     AppComponent,
-    CodeEditorComponent
+    FullCodeEditorComponent,
+    PostComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
-    MatFormFieldModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MatButtonModule,
-    MatCardModule,
-    MatInputModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatProgressSpinnerModule,
-    CodeEditorModule.forRoot()
+    SharedModule,
+    AppRoutingModule,
+    CodeEditorModule.forRoot(),
+    //provideFirebaseApp(() => initializeApp(environment.firebase)),
+    //provideAuth(() => getAuth()),
+    AuthModule,
+    RouterModule,
   ],
-  providers: [],
+  providers: [
+    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS},
+    DatePipe
+  ],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
