@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Post} from "@app/shared/models";
 import {DatePipe} from "@angular/common";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-post',
@@ -20,8 +21,7 @@ export class PostComponent implements OnInit {
     .set('Content-Type', 'application/json');
 
 
-
-  constructor(private http: HttpClient,  private datePipe: DatePipe) { }
+  constructor(private http: HttpClient,  private datePipe: DatePipe, private router: Router) { }
 
   ngOnInit(): void {
     this.getAllPosts().subscribe(posts => {

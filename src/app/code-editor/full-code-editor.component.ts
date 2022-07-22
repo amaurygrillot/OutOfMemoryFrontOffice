@@ -28,18 +28,18 @@ export class FullCodeEditorComponent implements OnInit {
   code = "";
   theme = 'vs-dark';
   programmingLanguageAssociations : ProgrammingLanguageAssociation[] =
-  [
-    {languageName : 'python', displayLanguageName : 'Python', mainFile : 'main.py', fileExtension : '.py', baseValue: ''},
-    {languageName : 'java', displayLanguageName : 'Java', mainFile : 'Main.java', fileExtension : '.java', baseValue: 'public class Main {\n\n\tpublic static void main(String[] args) {\n\n\t\tSystem.out.println("Hello world!");\n\t}\n\n}'},
-    {languageName : 'c', displayLanguageName : 'C', mainFile : 'main.c', fileExtension : '.c', baseValue: '#include <stdlib.h>\n' +
-        '#include <stdio.h>\n' +
-        '\n' +
-        'int main(int argc, char** argv) {\n' +
-        '  printf("Hello World\\n");\n' +
-        '  return 0;\n' +
-        '}'},
-    {languageName : 'typescript', displayLanguageName : 'Typescript', mainFile : 'main.ts', fileExtension : '.ts', baseValue: ''}
-  ];
+    [
+      {languageName : 'python', displayLanguageName : 'Python', mainFile : 'main.py', fileExtension : '.py', baseValue: ''},
+      {languageName : 'java', displayLanguageName : 'Java', mainFile : 'Main.java', fileExtension : '.java', baseValue: 'public class Main {\n\n\tpublic static void main(String[] args) {\n\n\t\tSystem.out.println("Hello world!");\n\t}\n\n}'},
+      {languageName : 'c', displayLanguageName : 'C', mainFile : 'main.c', fileExtension : '.c', baseValue: '#include <stdlib.h>\n' +
+          '#include <stdio.h>\n' +
+          '\n' +
+          'int main(int argc, char** argv) {\n' +
+          '  printf("Hello World\\n");\n' +
+          '  return 0;\n' +
+          '}'},
+      {languageName : 'typescript', displayLanguageName : 'Typescript', mainFile : 'main.ts', fileExtension : '.ts', baseValue: ''}
+    ];
   codeModel: CodeModel = {
     language: this.selected,
     uri: this.programmingLanguageAssociations.find((item) => { return item.languageName === this.selected })?.mainFile || 'main.py',
@@ -60,7 +60,7 @@ export class FullCodeEditorComponent implements OnInit {
   }
 
   onCodeChanged(value: any) {
-      this.code = value;
+    this.code = value;
   }
 
   async sendData() {
@@ -70,11 +70,11 @@ export class FullCodeEditorComponent implements OnInit {
     const formData: FormData = new FormData();
     formData.append('fileKey', file, programmingLanguage?.mainFile);
     console.log(programmingLanguage);
-    const data = await lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executor.azurewebsites.net/${programmingLanguage?.languageName}/`, formData));
+    const data = await lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executor-container.azurewebsites.net/${programmingLanguage?.languageName}/`, formData));
     console.log(data);
     if(data.search('Process ended with error code : 0') === -1)
     {
-       this.resultColor = 'red';
+      this.resultColor = 'red';
     }
     else
     {
@@ -85,7 +85,7 @@ export class FullCodeEditorComponent implements OnInit {
     this.loading = false;
   }
 
-   changeLanguage(languageName: string): void {
+  changeLanguage(languageName: string): void {
     this.changingLanguage = !this.changingLanguage;
     const programmingLanguage = this.programmingLanguageAssociations.find((item) => { return item.languageName === languageName });
     this.codeModel.value =  programmingLanguage?.baseValue || '';
