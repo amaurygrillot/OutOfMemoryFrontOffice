@@ -5,6 +5,7 @@ import {User} from "@app/shared/models";
 import {MatTabGroup} from "@angular/material/tabs";
 import {MatDialog} from "@angular/material/dialog";
 import {DomSanitizer} from "@angular/platform-browser";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -16,10 +17,12 @@ export class AppComponent {
   isLogged = sessionStorage.getItem('token') !== null;
   private _url = "https://outofmemoryerror-back.azurewebsites.net/api"
 
+  showEditor = false
+
   image: any;
   @ViewChild('tabGroup') tabGroup: MatTabGroup | undefined;
 
-  constructor(private http: HttpClient, public dialog: MatDialog) {
+  constructor(private http: HttpClient, public dialog: MatDialog, private router: Router) {
     console.log(sessionStorage);
     this.image = sessionStorage.getItem('image');
   }
@@ -68,6 +71,7 @@ export class AppComponent {
     const token = sessionStorage.getItem('token');
     if (token !== null) {
       sessionStorage.clear();
+      this.resetAllTabs();
     } else {
       return;
     }
@@ -77,4 +81,11 @@ export class AppComponent {
 
   }
 
+  resetAllTabs() {
+    this.showEditor = false;
+  }
+
+  showCreatePost() {
+    this.showEditor = true;
+  }
 }
