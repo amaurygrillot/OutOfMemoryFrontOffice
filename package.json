@@ -1,6 +1,5 @@
 {
   "name": "out-of-memory-front-office",
-  "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start ng serve": "ng serve",
@@ -9,7 +8,6 @@
     "test": "ng test",
     "start": "node server.js"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "~13.3.0",
     "@angular/cdk": "^13.3.1",
