@@ -5,7 +5,6 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CodeEditorModule} from '@ngstack/code-editor';
 import {environment} from '@environments/environment';
-import {provideAuth, getAuth} from '@angular/fire/auth';
 import {RouterModule} from "@angular/router";
 import {SharedModule} from "@app/shared/shared.module";
 import {AppRoutingModule} from "@app/app-routing.module";
