@@ -13,7 +13,9 @@ import {AuthRoutingModule} from "@app/auth/auth-routing.module";
     SignupComponent
   ],
   exports: [
-    AuthComponent
+    AuthComponent,
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     SharedModule,
