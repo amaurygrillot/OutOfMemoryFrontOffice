@@ -97,7 +97,6 @@ export class FullCodeEditorComponent implements OnInit {
     const formData: FormData = new FormData();
     formData.append('fileKey', file, programmingLanguage?.mainFile);
     console.log(programmingLanguage);
-
     const data = await lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executor-container.azurewebsites.net/${programmingLanguage?.languageName}/`, formData));
     console.log(data);
     if (data.search('Process ended with error code : 0') === -1) {
