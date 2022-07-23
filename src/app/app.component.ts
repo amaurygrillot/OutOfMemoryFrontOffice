@@ -18,6 +18,8 @@ export class AppComponent {
   private _url = "https://outofmemoryerror-back.azurewebsites.net/api"
 
   showEditor = false
+  showMenuUser = false
+  showPostCreated = true
 
   image: any;
   @ViewChild('tabGroup') tabGroup: MatTabGroup | undefined;
@@ -39,6 +41,7 @@ export class AppComponent {
           .set('Authorization', `${sessionStorage.getItem('token')}`)
           .set('Content-Type', 'application/json');
         this.isLogged = true;
+        this.showMenuUser = true;
 
         const user = await this.http.get<any>(`${this._url}/user/getAnotherUserById/${sessionStorage.getItem('userId')}`,
           {headers: header})
@@ -82,10 +85,18 @@ export class AppComponent {
   }
 
   resetAllTabs() {
+    this.showPostCreated = true;
+    this.showEditor = false;
+    this.showMenuUser = false;
+  }
+
+  showPost() {
+    this.showPostCreated = true;
     this.showEditor = false;
   }
 
   showCreatePost() {
+    this.showPostCreated = false;
     this.showEditor = true;
   }
 }

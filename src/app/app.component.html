@@ -32,7 +32,7 @@
 <button mat-flat-button color = "primary" (click)="showLogin()" *ngIf="!isLogged" >Create a post</button>
 <button mat-flat-button color = "primary" (click)="showCreatePost()" *ngIf="isLogged" >Create a post</button>
 
-<app-post *ngIf="!showEditor"></app-post>
+<app-post *ngIf="showPostCreated"></app-post>
 <full-code-editor *ngIf="showEditor"></full-code-editor>
 
 

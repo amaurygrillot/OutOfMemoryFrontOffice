@@ -24,9 +24,12 @@ export class UserComponent implements OnInit {
       this.user = user;
       this.loading = false;
     });
+    /*
     this.postService.getPostsByUserId(this.userId!).subscribe(posts => {
       this.userPosts = posts;
-    })
+      this.postsOk = true;
+    });
+     */
   }
 
 }
