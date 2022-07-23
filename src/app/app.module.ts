@@ -9,7 +9,6 @@ import {SharedModule} from "@app/shared/shared.module";
 import {AppRoutingModule} from "@app/app-routing.module";
 import {AuthModule} from "@app/auth/auth.module";
 import {MAT_DATE_FORMATS} from "@angular/material/core";
-import {DatePipe} from "@angular/common";
 import {UserModule} from "@app/user/user.module";
 import {PostModule} from "@app/post/post.module";
 import {FullCodeEditorModule} from "@app/code-editor/full-code-editor.module";
@@ -34,10 +33,8 @@ export const MY_DATE_FORMATS = {
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    SharedModule,
     AppRoutingModule,
-    //provideFirebaseApp(() => initializeApp(environment.firebase)),
-    //provideAuth(() => getAuth()),
+    SharedModule,
     AuthModule,
     RouterModule,
     UserModule,
@@ -45,8 +42,7 @@ export const MY_DATE_FORMATS = {
     FullCodeEditorModule
   ],
   providers: [
-    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS},
-    DatePipe
+    {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS}
   ],
   exports: [
   ],

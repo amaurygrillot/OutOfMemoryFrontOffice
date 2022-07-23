@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import {MatCardModule} from "@angular/material/card";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
@@ -12,9 +12,12 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatSelectModule} from "@angular/material/select";
+import { SharedComponent } from './shared.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    SharedComponent
+  ],
   imports: [
     CommonModule
   ],
@@ -33,7 +36,9 @@ import {MatSelectModule} from "@angular/material/select";
     MatIconModule,
     MatDialogModule,
     MatSelectModule
+  ],
+  providers: [
+    DatePipe
   ]
 })
-export class SharedModule {
-}
+export class SharedModule { }

@@ -2,6 +2,8 @@ export class Post {
   post_uid: string;
   is_comment: bigint;
   type_privacy: string;
+  title: string;
+  description: string;
   created_at: string;
   person_uid: string;
   username: string;
@@ -11,10 +13,12 @@ export class Post {
   count_likes: bigint;
   is_like: bigint
 
-  constructor(post_uid: string, is_comment: bigint, type_privacy: string, created_at: string, person_uid: string, username: string, avatar: string, images: string, count_comment: bigint, count_likes: bigint, is_like: bigint) {
+  constructor(post_uid: string, is_comment: bigint, type_privacy: string, title: string, description:string, created_at: string, person_uid: string, username: string, avatar: string, images: string, count_comment: bigint, count_likes: bigint, is_like: bigint) {
     this.post_uid = post_uid;
     this.is_comment = is_comment;
     this.type_privacy = type_privacy;
+    this.title = title;
+    this.description = description;
     this.created_at = created_at;
     this.person_uid = person_uid;
     this.username = username;
