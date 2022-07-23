@@ -23,13 +23,6 @@ steps:
     ng build --prod
   displayName: 'npm install and build'
 
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    customCommand: 'link @angular/cli'
-    customEndpoint: 
-  displayName : 'link angular'
-
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'Azure for Students (3e62f9fd-92d4-4ce8-8b24-f8408660c2e7)'
