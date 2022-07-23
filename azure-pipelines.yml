@@ -37,5 +37,5 @@ steps:
     appName: 'out-of-memory-error'
     package: '$(System.DefaultWorkingDirectory)'
     runtimeStack: 'NODE|14-lts'
-    startUpCommand: 'ng serve'
-  displayName: 'start ng serve'
+    startUpCommand: 'node server.js'
+  displayName: 'start and deploy app'
