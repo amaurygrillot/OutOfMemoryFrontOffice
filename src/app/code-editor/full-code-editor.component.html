@@ -2,7 +2,7 @@
   <mat-card-title>Editeur</mat-card-title>
 
   <mat-card-content>
-    <mat-card-actions>
+    <mat-card-actions *ngIf="isEditorReady">
       <mat-form-field appearance="fill">
         <mat-label>Select an option</mat-label>
         <mat-select [(value)]="selected">
@@ -19,7 +19,7 @@
       [codeModel]="codeModel"
       [options]="options"
       (valueChanged)="onCodeChanged($event)"
-      *ngIf="!changingLanguage"
+      *ngIf="!changingLanguage &&isEditorReady"
       #codeEditor>
     </ngs-code-editor>
     <ngs-code-editor
@@ -30,6 +30,7 @@
       *ngIf="changingLanguage"
       #secondCodeEditor>
     </ngs-code-editor>
+    <mat-spinner *ngIf="!isEditorReady"></mat-spinner>
 
     <mat-card *ngIf="hasLoaded" [style.background]="resultColor">
       <mat-card-title>Résultat d'exécution</mat-card-title>

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild } from '@angular/core';
 import {CodeModel} from "@ngstack/code-editor";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {lastValueFrom} from "rxjs";
@@ -18,10 +18,10 @@ type ProgrammingLanguageAssociation = {
   styleUrls: ['./full-code-editor.component.css']
 })
 
-export class FullCodeEditorComponent implements OnInit {
+export class FullCodeEditorComponent implements OnInit{
   @ViewChild('codeEditor') codeEditor !: CodeEditorComponent;
   @ViewChild('secondCodeEditor') secondCodeEditor !: CodeEditorComponent;
-  selected = 'java';
+  selected = '';
   loading = false;
   hasLoaded = false;
   result = "";
@@ -31,7 +31,13 @@ export class FullCodeEditorComponent implements OnInit {
   programmingLanguageAssociations: ProgrammingLanguageAssociation[] =
 
     [
-      {languageName: 'python', displayLanguageName: 'Python', mainFile: 'main.py', fileExtension: '.py', baseValue: ''},
+      {
+        languageName: 'python',
+        displayLanguageName: 'Python',
+        mainFile: 'main.py',
+        fileExtension: '.py',
+        baseValue: ''
+      },
       {
         languageName: 'java',
         displayLanguageName: 'Java',
@@ -51,23 +57,19 @@ export class FullCodeEditorComponent implements OnInit {
           '  printf("Hello World\\n");\n' +
           '  return 0;\n' +
           '}'
-      },
+      }/*,
       {
         languageName: 'typescript',
         displayLanguageName: 'Typescript',
         mainFile: 'main.ts',
         fileExtension: '.ts',
         baseValue: ''
-      }
+      }*/
     ];
   codeModel: CodeModel = {
     language: this.selected,
-    uri: this.programmingLanguageAssociations.find((item) => {
-      return item.languageName === this.selected
-    })?.mainFile || 'main.py',
-    value: this.programmingLanguageAssociations.find((item) => {
-      return item.languageName === 'java'
-    })?.baseValue || ''
+    uri: '',
+    value: ''
   };
 
   options = {
@@ -77,12 +79,29 @@ export class FullCodeEditorComponent implements OnInit {
     },
   };
   changingLanguage = false;
+  isEditorReady = false;
 
   constructor(private http: HttpClient) {
   }
 
-  ngOnInit(): void {
+
+  async ngOnInit() {
+
+      for (const programmingLanguage of this.programmingLanguageAssociations)
+      {
+          const value = await this.setLanguageBaseValue(programmingLanguage);
+          programmingLanguage.baseValue = value || '';
+      }
+    this.codeModel.value = this.programmingLanguageAssociations[1].baseValue;
+    this.code = this.codeModel.value;
+    this.codeModel.uri = this.programmingLanguageAssociations[1].mainFile;
+    this.selected = this.programmingLanguageAssociations[1].languageName;
+    this.codeModel.language = this.selected;
+    this.isEditorReady = true;
+
   }
+
+
 
   onCodeChanged(value: any) {
     this.code = value;
@@ -114,14 +133,29 @@ export class FullCodeEditorComponent implements OnInit {
     this.loading = false;
   }
 
-  changeLanguage(languageName: string): void {
+  changeLanguage(languageName: string) {
+    this.loading = true;
     this.changingLanguage = !this.changingLanguage;
     const programmingLanguage = this.programmingLanguageAssociations.find((item) => {
       return item.languageName === languageName
     });
-    this.codeModel.value = programmingLanguage?.baseValue || '';
     this.codeModel.language = programmingLanguage?.languageName || 'python';
     this.codeModel.uri = programmingLanguage?.mainFile || 'main.py';
+    this.codeModel.value = programmingLanguage?.baseValue || '';
+    this.code = programmingLanguage?.baseValue || '';
+    this.onCodeChanged(this.code);
+    this.loading = false;
+
   }
+
+  async setLanguageBaseValue(programmingLanguage: ProgrammingLanguageAssociation): Promise<string | undefined>
+  {
+    //filePath : post_uid/user_uid
+    const filePath = `e16bc063-5a08-4a87-9c88-866fe1c2bb55/41aaef93-5341-43e3-b3ca-955374f2d0f8`
+    return this.http.get<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage.languageName}/${filePath}`).toPromise();
+
+  }
+
+
 
 }
