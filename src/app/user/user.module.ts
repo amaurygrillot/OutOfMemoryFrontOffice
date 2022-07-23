@@ -5,17 +5,21 @@ import {ProfileComponent} from "./profile/profile.component";
 import {SharedModule} from "../shared/shared.module";
 import {PostService} from "@app/services/post.service";
 import {UserService} from "@app/services/user.service";
+import { MenuUserComponent } from './menu-user/menu-user.component';
+import {MatDividerModule} from "@angular/material/divider";
 
 
 
 @NgModule({
   declarations: [
     UserComponent,
-    ProfileComponent
+    ProfileComponent,
+    MenuUserComponent
   ],
   exports: [
     UserComponent,
-    ProfileComponent
+    ProfileComponent,
+    MenuUserComponent
   ],
   imports: [
     CommonModule,

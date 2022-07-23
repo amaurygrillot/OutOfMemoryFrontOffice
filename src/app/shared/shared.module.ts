@@ -13,6 +13,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatSelectModule} from "@angular/material/select";
 import { SharedComponent } from './shared.component';
+import {MatDividerModule} from "@angular/material/divider";
 
 @NgModule({
   declarations: [
@@ -35,10 +36,12 @@ import { SharedComponent } from './shared.component';
     MatMenuModule,
     MatIconModule,
     MatDialogModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDividerModule
   ],
   providers: [
-    DatePipe
+    DatePipe,
+    SharedComponent
   ]
 })
 export class SharedModule { }

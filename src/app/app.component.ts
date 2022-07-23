@@ -66,7 +66,7 @@ export class AppComponent {
     return null;
   }
 
-  LogOff(): void {
+  logOff(): void {
     this.isLogged = false;
     const token = sessionStorage.getItem('token');
     if (token !== null) {
@@ -77,7 +77,7 @@ export class AppComponent {
     }
   }
 
-  showSubscribeUser() {
+  signUp() {
 
   }
 
