@@ -9,24 +9,16 @@
         <button mat-flat-button color = "primary" (click)="showLogin()" *ngIf="!isLogged" >
           Sign In
         </button>
-        <button mat-flat-button color = "warn" (click)="LogOff()" *ngIf="isLogged">
-          Log off
-        </button>
+        <app-user *ngIf="isLogged"></app-user>
       </ng-template>
 
     </mat-tab>
     <mat-tab *ngIf="!isLogged" [disabled]="true">
       <ng-template mat-tab-label>
-        <button mat-button [matMenuTriggerFor]="menu" [ngClass]="{'mat-raised-button' : true}">
+        <button mat-button (click)="signUp()" [ngClass]="{'mat-raised-button' : true}">
           Sign up
-          <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="showSubscribeUser()">User</button>
-          <button mat-menu-item >zz</button>
-        </mat-menu>
       </ng-template>
-
     </mat-tab>
   </mat-tab-group>
 </div>
@@ -34,9 +26,10 @@
 <button mat-flat-button color = "primary" (click)="showLogin()" *ngIf="!isLogged" >Create a post</button>
 <button mat-flat-button color = "primary" (click)="showCreatePost()" *ngIf="isLogged" >Create a post</button>
 
-<app-post *ngIf="!showEditor"></app-post>
-
+<app-post></app-post>
 <full-code-editor *ngIf="showEditor"></full-code-editor>
+<app-profile *ngIf="showProfile"></app-profile>
+
 
 
 <!--

@@ -12,9 +12,14 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatSelectModule} from "@angular/material/select";
+import { SharedComponent } from './shared.component';
+import {MatDividerModule} from "@angular/material/divider";
+import {NgxDropzoneModule} from "ngx-dropzone";
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    SharedComponent
+  ],
   imports: [
     CommonModule
   ],
@@ -32,7 +37,9 @@ import {MatSelectModule} from "@angular/material/select";
     MatMenuModule,
     MatIconModule,
     MatDialogModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDividerModule,
+    NgxDropzoneModule
   ]
 })
 export class SharedModule {

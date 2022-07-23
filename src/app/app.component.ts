@@ -4,8 +4,6 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {User} from "@app/shared/models";
 import {MatTabGroup} from "@angular/material/tabs";
 import {MatDialog} from "@angular/material/dialog";
-import {DomSanitizer} from "@angular/platform-browser";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -17,12 +15,14 @@ export class AppComponent {
   isLogged = sessionStorage.getItem('token') !== null;
   private _url = "https://outofmemoryerror-back.azurewebsites.net/api"
 
+  showPost = false;
   showEditor = false
+  showProfile = false
 
   image: any;
   @ViewChild('tabGroup') tabGroup: MatTabGroup | undefined;
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private router: Router) {
+  constructor(private http: HttpClient, public dialog: MatDialog) {
     console.log(sessionStorage);
     this.image = sessionStorage.getItem('image');
   }
@@ -66,7 +66,11 @@ export class AppComponent {
     return null;
   }
 
-  LogOff(): void {
+  signUp() {
+
+  }
+
+  logOff(): void {
     this.isLogged = false;
     const token = sessionStorage.getItem('token');
     if (token !== null) {
@@ -77,15 +81,28 @@ export class AppComponent {
     }
   }
 
-  showSubscribeUser() {
-
+  resetAllTabs() {
+    this.showPost = true;
+    this.showEditor = false;
+    this.showProfile = false;
   }
 
-  resetAllTabs() {
+  showPosts() {
+    this.showPost = true;
     this.showEditor = false;
+    this.showProfile = false;
   }
 
   showCreatePost() {
+    this.showPost = false;
     this.showEditor = true;
+    this.showProfile = false;
   }
+
+  showUserProfile() {
+    this.showPost = false;
+    this.showEditor = false;
+    this.showProfile = true;
+  }
+
 }
