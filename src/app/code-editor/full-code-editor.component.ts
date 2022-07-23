@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {CodeModel} from "@ngstack/code-editor";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {lastValueFrom} from "rxjs";
 import {CodeEditorComponent} from '@ngstack/code-editor';
 
@@ -96,8 +96,13 @@ export class FullCodeEditorComponent implements OnInit {
     let file = new Blob([this.code], {type: programmingLanguage?.fileExtension});
     const formData: FormData = new FormData();
     formData.append('fileKey', file, programmingLanguage?.mainFile);
+    formData.append('commentId', 'e16bc063-5a08-4a87-9c88-866fe1c2bb55')
     console.log(programmingLanguage);
-    const data = await lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executor-container.azurewebsites.net/${programmingLanguage?.languageName}/`, formData));
+    const headers1 = new HttpHeaders()
+      .set('Authorization', `${sessionStorage.getItem('token')}`)
+    const data = await lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`,
+      formData,
+      { headers: headers1}));
     console.log(data);
     if (data.search('Process ended with error code : 0') === -1) {
       this.resultColor = 'red';
