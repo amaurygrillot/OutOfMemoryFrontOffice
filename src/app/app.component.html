@@ -1,4 +1,5 @@
-<div class="container mt-5">
+<mat-card>
+  <mat-card-content>
   <mat-tab-group color="primary" backgroundColor="primary" mat-align-tabs="center" #tabGroup>
 
     <mat-tab label="out of memory">
@@ -24,12 +25,9 @@
     </mat-tab>
 
   </mat-tab-group>
-</div>
-
-
 <full-code-editor *ngIf="showEditor"></full-code-editor>
-
-
+  </mat-card-content>
+</mat-card>
 <!--
 <footer style="background-color: black">
   <div class="text-center p-4" style="color: white">
