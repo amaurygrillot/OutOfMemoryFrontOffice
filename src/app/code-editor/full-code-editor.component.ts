@@ -86,17 +86,24 @@ export class FullCodeEditorComponent implements OnInit{
 
 
   async ngOnInit() {
-
+    let foundSavedFile = false;
       for (const programmingLanguage of this.programmingLanguageAssociations)
       {
           const value = await this.setLanguageBaseValue(programmingLanguage);
+          if(value !== programmingLanguage.baseValue && !foundSavedFile)
+          {
+              this.codeModel.value = value || this.codeModel.value;
+              this.code = this.codeModel.value;
+              this.codeModel.uri = programmingLanguage.mainFile;
+              this.selected = programmingLanguage.languageName;
+              this.codeModel.language = this.selected;
+              foundSavedFile = true;
+          }
           programmingLanguage.baseValue = value || '';
+
       }
-    this.codeModel.value = this.programmingLanguageAssociations[1].baseValue;
-    this.code = this.codeModel.value;
-    this.codeModel.uri = this.programmingLanguageAssociations[1].mainFile;
-    this.selected = this.programmingLanguageAssociations[1].languageName;
-    this.codeModel.language = this.selected;
+
+
     this.isEditorReady = true;
 
   }
