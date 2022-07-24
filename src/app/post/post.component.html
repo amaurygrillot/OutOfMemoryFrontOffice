@@ -1,9 +1,9 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
 <div *ngIf="posts && posts.length > 0 && !isLoading">
-  <ul *ngFor=" let post of posts">
-    <li>
-      <mat-card class="example-card">
+  <mat-card class="example-card" *ngFor=" let post of posts" style="max-height: 100%; max-width: 100%">
+    <mat-card-content>
+      <mat-card class="example-card" style="max-height: 100%; max-width: 100%; margin-top: 1%">
         <mat-card-header>
           <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}">
           <mat-card-title>{{ post.username }}</mat-card-title>
@@ -34,6 +34,6 @@
           <button mat-button>SHARE</button>
         </mat-card-actions>
       </mat-card>
-    </li>
-  </ul>
+    </mat-card-content>
+  </mat-card>
 </div>
