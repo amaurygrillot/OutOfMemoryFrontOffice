@@ -6,6 +6,7 @@ import {MatTabGroup} from "@angular/material/tabs";
 import {MatDialog} from "@angular/material/dialog";
 import {DomSanitizer} from "@angular/platform-browser";
 import {Router} from "@angular/router";
+import {PostComponent} from "@app/post/post.component";
 
 @Component({
   selector: 'app-root',
@@ -18,13 +19,14 @@ export class AppComponent {
   private _url = "https://outofmemoryerror-back.azurewebsites.net/api"
 
   showEditor = false
+  showMenuUser = false
+  showPostCreated = true
+  showSignup = false
 
-  image: any;
-  @ViewChild('tabGroup') tabGroup: MatTabGroup | undefined;
+  @ViewChild('tabGroup') tabGroup!: MatTabGroup;
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private router: Router) {
+  constructor(private http: HttpClient, public dialog: MatDialog) {
     console.log(sessionStorage);
-    this.image = sessionStorage.getItem('image');
   }
 
   updateLoginStatus($event: boolean) {
@@ -39,27 +41,14 @@ export class AppComponent {
           .set('Authorization', `${sessionStorage.getItem('token')}`)
           .set('Content-Type', 'application/json');
         this.isLogged = true;
+        this.showMenuUser = true;
 
         const user = await this.http.get<any>(`${this._url}/user/getAnotherUserById/${sessionStorage.getItem('userId')}`,
           {headers: header})
           .toPromise();
 
         console.log(JSON.stringify(user));
-
-        /*
-        const arrayBufferImage = await this.http.get(`http://localhost:3000/user/file/${user.image}`,
-          {headers: header, responseType: 'arraybuffer'}).toPromise();
-        let binary = '';
-        const bytes = new Uint8Array( arrayBufferImage );
-        const len = bytes.byteLength;
-        for (let i = 0; i < len; i++) {
-          binary += String.fromCharCode( bytes[ i ] );
-        }
-        const image = 'data:image/jpeg;base64,' + btoa(binary);
-        sessionStorage.setItem('image', image);
-
-         */
-
+        this.tabGroup.selectedIndex = 0;
       }
       return null;
     });
@@ -72,6 +61,7 @@ export class AppComponent {
     if (token !== null) {
       sessionStorage.clear();
       this.resetAllTabs();
+      this.tabGroup.selectedIndex = 0;
     } else {
       return;
     }
@@ -82,10 +72,27 @@ export class AppComponent {
   }
 
   resetAllTabs() {
+    this.showPostCreated = true;
     this.showEditor = false;
+    this.showMenuUser = false;
+    this.showSignup = false;
+  }
+
+  showPost() {
+    this.showPostCreated = true;
+    this.showEditor = false;
+    this.showSignup = false;
   }
 
   showCreatePost() {
+    this.showPostCreated = false;
     this.showEditor = true;
+    this.showSignup = false;
+  }
+
+  showSignUp() {
+    this.showPostCreated = false;
+    this.showEditor = false;
+    this.showSignup = true;
   }
 }

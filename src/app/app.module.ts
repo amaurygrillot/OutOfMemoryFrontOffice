@@ -12,8 +12,6 @@ import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {UserModule} from "@app/user/user.module";
 import {PostModule} from "@app/post/post.module";
 import {FullCodeEditorModule} from "@app/code-editor/full-code-editor.module";
-import {PostService} from "@app/services/post.service";
-import {UserService} from "@app/services/user.service";
 
 export const MY_DATE_FORMATS = {
   parse: {

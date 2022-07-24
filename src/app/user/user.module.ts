@@ -8,8 +8,6 @@ import {UserService} from "@app/services/user.service";
 import { MenuUserComponent } from './menu-user/menu-user.component';
 import {MatDividerModule} from "@angular/material/divider";
 
-
-
 @NgModule({
   declarations: [
     UserComponent,
