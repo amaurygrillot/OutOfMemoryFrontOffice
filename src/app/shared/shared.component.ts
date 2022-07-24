@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {DatePipe} from "@angular/common";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-shared',
@@ -8,13 +9,17 @@ import {DatePipe} from "@angular/common";
 })
 export class SharedComponent implements OnInit {
 
-  constructor(private datePipe: DatePipe) { }
+  constructor(private _datePipe: DatePipe, private _http: HttpClient) { }
 
   ngOnInit(): void {
   }
 
   formatDate(date: string) {
-    return this.datePipe.transform(date, 'yyyy/MM/dd hh:mm') || "";
+    return this._datePipe.transform(date, 'yyyy/MM/dd hh:mm') || "";
+  }
+
+  readFileFromAPI(url: string, fileName: string) {
+    return this._http.get(`${url}/${fileName}`);
   }
 
 }

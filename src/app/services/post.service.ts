@@ -77,4 +77,20 @@ export class PostService {
       })
     });
   }
+
+  createNewPost(file: File, title: string, description: string) {
+    const formData = new FormData();
+    formData.append('imagePosts', file);
+    formData.append('type_privacy', '1');
+    formData.append('title', title);
+    formData.append('description', description);
+
+    const createPostHeader = new HttpHeaders()
+      .set('Authorization', `${sessionStorage.getItem('token')}`)
+      .set('enctype', 'multipart/form-data')
+      .set('Accept', 'application/json')
+
+    return this.http.post(`${this._API_URL}/post/createNewPost`, formData, { headers: createPostHeader });
+
+  }
 }

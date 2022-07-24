@@ -5,6 +5,7 @@ import {CreatePostComponent} from "./create-post/create-post.component";
 import {SharedModule} from "../shared/shared.module";
 import {PostService} from "@app/services/post.service";
 import {FullCodeEditorModule} from "@app/code-editor/full-code-editor.module";
+import {NgxDropzoneModule} from "ngx-dropzone";
 
 
 
@@ -20,7 +21,8 @@ import {FullCodeEditorModule} from "@app/code-editor/full-code-editor.module";
   imports: [
     CommonModule,
     SharedModule,
-    FullCodeEditorModule
+    FullCodeEditorModule,
+    NgxDropzoneModule
   ],
   providers: [
     PostService

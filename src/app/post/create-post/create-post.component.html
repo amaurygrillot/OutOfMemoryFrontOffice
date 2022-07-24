@@ -24,15 +24,38 @@
       </mat-form-field>
     </mat-card-content>
 
-    <mat-tab-group class="center" dynamicHeight>
+    <mat-tab-group class="center" dynamicHeight #contentTabGroup [selectedIndex]="0">
+
+      <mat-tab label="No content">
+
+      </mat-tab>
+
       <mat-tab label="Code">
         <full-code-editor></full-code-editor>
       </mat-tab>
-      <mat-tab label="Image">
 
+      <mat-tab label="Image">
+        <mat-card-subtitle>Only the first file will be uploaded.</mat-card-subtitle>
+        <ngx-dropzone accept="image/jpeg,image/jpg,image/png" [multiple]="false" (change)="onSelect($event)">
+          <ngx-dropzone-label>
+            Drag your image
+            <br>or<br>
+            Click to select your image
+          </ngx-dropzone-label>
+          <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+            <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+          </ngx-dropzone-preview>
+        </ngx-dropzone>
+        <mat-error *ngIf="this.files.length < 1">
+          You must upload an image.
+        </mat-error>
       </mat-tab>
+
     </mat-tab-group>
 
+    <br>
+    <button mat-flat-button color="primary" [disabled]="!postIsValid()" (click)="submitPost()">Submit post</button>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
 
   </form>
 </mat-card>
