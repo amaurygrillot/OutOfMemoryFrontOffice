@@ -1,0 +1,51 @@
+<mat-card style="max-height: 100%; max-width: 90%">
+  <mat-card-title>
+    Sign up
+  </mat-card-title>
+
+  <mat-card-content>
+
+    <form [formGroup]="signUpGroup" class="signup-form">
+      <mat-form-field class="row-form-width" appearance="fill">
+        <mat-label>Username</mat-label>
+        <input type="text" matInput formGroupName="username"
+               placeholder="Ex. example" [ngClass]="{'is-invalid': signUpGroup.get('username')?.errors}">
+      </mat-form-field>
+
+      <mat-form-field class="row-form-width" appearance="fill">
+        <mat-label>Full name</mat-label>
+        <input type="text" matInput formGroupName="fullname" [ngClass]="{'is-invalid': signUpGroup.get('fullname')?.errors}">
+      </mat-form-field>
+
+      <mat-form-field class="row-form-width" appearance="fill">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput formGroupName="email"
+               placeholder="Ex. example@example.com"  [ngClass]="{'is-invalid': signUpGroup.get('email')?.errors}">
+      </mat-form-field>
+
+      <br><mat-divider></mat-divider><br>
+
+      <div formGroupName="passwordGroup">
+        <mat-form-field class="row-form-width" appearance="fill">
+          <mat-label>Password</mat-label>
+          <input type="password" matInput formGroupName="password"
+                 [ngClass]="{'is-invalid': signUpGroup.get('passwordGroup')?.errors ||
+                    (signUpGroup.get('passwordGroup.password')?.touched && !signUpGroup.get('passwordGroup.password')?.valid)}">
+        </mat-form-field>
+
+        <mat-form-field class="row-form-width" appearance="fill">
+          <mat-label>Confirm password</mat-label>
+          <input type="password" matInput formGroupName="confirmPassword"
+                 [ngClass]="{'is-invalid': signUpGroup.get('passwordGroup')?.errors ||
+                    (signUpGroup.get('passwordGroup.confirmPassword')?.touched && !signUpGroup.get('passwordGroup.confirmPassword')?.valid)}">
+        </mat-form-field>
+      </div>
+    </form>
+
+    <button mat-flat-button color = "primary" type="submit"
+            [disabled]="signUpGroup.invalid">
+      Submit
+    </button>
+
+  </mat-card-content>
+</mat-card>

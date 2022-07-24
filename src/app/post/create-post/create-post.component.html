@@ -1,23 +1,39 @@
-<p>create-post works!</p>
-
-<!--
 <mat-card>
   <mat-card-header class="center">
     <mat-card-title>
-      <h5>Création d'un Post : </h5>
-      <hr>
+      Post creation
     </mat-card-title>
   </mat-card-header>
-  <mat-tab-group class="center" dynamicHeight>
-    <mat-tab label="Texte">
-      <app-submit-text></app-submit-text>
-    </mat-tab>
-    <mat-tab label="Image/Vidéo">
-      <app-submit-image-video></app-submit-image-video>
-    </mat-tab>
-    <mat-tab label="Code">
-      <app-code-runner></app-code-runner>
-    </mat-tab>
-  </mat-tab-group>
+
+  <form class="create-post-form">
+    <mat-card-content>
+      <mat-form-field class="row-form-width" appearance="fill">
+        <mat-label>Title</mat-label>
+        <input matInput [formControl]="titleFormControl">
+        <mat-error *ngIf="titleFormControl.hasError('required')">
+          Title is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="row-form-width" appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea matInput [formControl]="descriptionFormControl"></textarea>
+        <mat-error *ngIf="descriptionFormControl.hasError('required')">
+          Description is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-tab-group class="center" dynamicHeight>
+      <mat-tab label="Code">
+        <full-code-editor></full-code-editor>
+      </mat-tab>
+      <mat-tab label="Image">
+
+      </mat-tab>
+    </mat-tab-group>
+
+
+  </form>
 </mat-card>
--->
+

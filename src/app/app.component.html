@@ -1,38 +1,32 @@
 <div class="container mt-5">
-  <mat-tab-group color="primary" #tabGroup>
+  <mat-tab-group color="primary" backgroundColor="primary" mat-align-tabs="center" #tabGroup>
 
-    <mat-tab label="out of memory"> </mat-tab>
+    <mat-tab label="out of memory">
+      <app-post></app-post>
+    </mat-tab>
 
+
+    <mat-tab label="New post" *ngIf="isLogged">
+      <app-create-post></app-create-post>
+    </mat-tab>
 
     <mat-tab [disabled]="true">
       <ng-template mat-tab-label>
-        <button mat-flat-button color = "primary" (click)="showLogin()" *ngIf="!isLogged" >
+        <button mat-flat-button color="primary" (click)="showLogin()" *ngIf="!isLogged">
           Sign In
         </button>
-
         <app-user *ngIf="isLogged"></app-user>
-
-        <button mat-flat-button color = "warn" (click)="logOff()" *ngIf="isLogged">
-          Log off
-        </button>
-
-      </ng-template>
-
-    </mat-tab>
-    <mat-tab *ngIf="!isLogged" [disabled]="true">
-      <ng-template mat-tab-label>
-        <button mat-button [ngClass]="{'mat-raised-button' : true}">
-          Sign up
-        </button>
       </ng-template>
     </mat-tab>
+
+    <mat-tab *ngIf="!isLogged" label="Sign up">
+      <app-signup></app-signup>
+    </mat-tab>
+
   </mat-tab-group>
 </div>
 
-<button mat-flat-button color = "primary" (click)="showLogin()" *ngIf="!isLogged" >Create a post</button>
-<button mat-flat-button color = "primary" (click)="showCreatePost()" *ngIf="isLogged" >Create a post</button>
 
-<app-post *ngIf="showPostCreated"></app-post>
 <full-code-editor *ngIf="showEditor"></full-code-editor>
 
 

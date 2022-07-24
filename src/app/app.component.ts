@@ -20,9 +20,10 @@ export class AppComponent {
   showEditor = false
   showMenuUser = false
   showPostCreated = true
+  showSignup = false
 
   image: any;
-  @ViewChild('tabGroup') tabGroup: MatTabGroup | undefined;
+  @ViewChild('tabGroup') tabGroup!: MatTabGroup;
 
   constructor(private http: HttpClient, public dialog: MatDialog, private router: Router) {
     console.log(sessionStorage);
@@ -48,6 +49,7 @@ export class AppComponent {
           .toPromise();
 
         console.log(JSON.stringify(user));
+        this.tabGroup.selectedIndex = 0;
 
         /*
         const arrayBufferImage = await this.http.get(`http://localhost:3000/user/file/${user.image}`,
@@ -88,15 +90,24 @@ export class AppComponent {
     this.showPostCreated = true;
     this.showEditor = false;
     this.showMenuUser = false;
+    this.showSignup = false;
   }
 
   showPost() {
     this.showPostCreated = true;
     this.showEditor = false;
+    this.showSignup = false;
   }
 
   showCreatePost() {
     this.showPostCreated = false;
     this.showEditor = true;
+    this.showSignup = false;
+  }
+
+  showSignUp() {
+    this.showPostCreated = false;
+    this.showEditor = false;
+    this.showSignup = true;
   }
 }
