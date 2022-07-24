@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild } from '@angular/core';
 import {CodeModel} from "@ngstack/code-editor";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {lastValueFrom} from "rxjs";
@@ -18,11 +18,12 @@ type ProgrammingLanguageAssociation = {
   styleUrls: ['./full-code-editor.component.css']
 })
 
-export class FullCodeEditorComponent implements OnInit {
+export class FullCodeEditorComponent implements OnInit{
   @ViewChild('codeEditor') codeEditor !: CodeEditorComponent;
   @ViewChild('secondCodeEditor') secondCodeEditor !: CodeEditorComponent;
-  selected = 'java';
+  selected = '';
   loading = false;
+  loadingBaseValues = false;
   hasLoaded = false;
   result = "";
   resultColor = '';
@@ -31,7 +32,13 @@ export class FullCodeEditorComponent implements OnInit {
   programmingLanguageAssociations: ProgrammingLanguageAssociation[] =
 
     [
-      {languageName: 'python', displayLanguageName: 'Python', mainFile: 'main.py', fileExtension: '.py', baseValue: ''},
+      {
+        languageName: 'python',
+        displayLanguageName: 'Python',
+        mainFile: 'main.py',
+        fileExtension: '.py',
+        baseValue: ''
+      },
       {
         languageName: 'java',
         displayLanguageName: 'Java',
@@ -51,23 +58,19 @@ export class FullCodeEditorComponent implements OnInit {
           '  printf("Hello World\\n");\n' +
           '  return 0;\n' +
           '}'
-      },
+      }/*,
       {
         languageName: 'typescript',
         displayLanguageName: 'Typescript',
         mainFile: 'main.ts',
         fileExtension: '.ts',
         baseValue: ''
-      }
+      }*/
     ];
   codeModel: CodeModel = {
     language: this.selected,
-    uri: this.programmingLanguageAssociations.find((item) => {
-      return item.languageName === this.selected
-    })?.mainFile || 'main.py',
-    value: this.programmingLanguageAssociations.find((item) => {
-      return item.languageName === 'java'
-    })?.baseValue || ''
+    uri: '',
+    value: ''
   };
 
   options = {
@@ -77,15 +80,23 @@ export class FullCodeEditorComponent implements OnInit {
     },
   };
   changingLanguage = false;
+  isEditorReady = false;
+  title: any;
 
   constructor(private http: HttpClient) {
   }
 
-  ngOnInit(): void {
+
+  ngOnInit() {
+      this.loadAllLanguagesBaseValue(15 * 1000);
   }
+
+
 
   onCodeChanged(value: any) {
     this.code = value;
+    if(this.hasLoaded)
+      this.hasLoaded = false;
   }
 
   async sendData() {
@@ -100,28 +111,98 @@ export class FullCodeEditorComponent implements OnInit {
     console.log(programmingLanguage);
     const headers1 = new HttpHeaders()
       .set('Authorization', `${sessionStorage.getItem('token')}`)
-    const data = await lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`,
+    lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`,
       formData,
-      { headers: headers1}));
-    console.log(data);
-    if (data.search('Process ended with error code : 0') === -1) {
-      this.resultColor = 'red';
-    } else {
-      this.resultColor = 'green';
-    }
-    this.result = data.substring(0, data.lastIndexOf('\n'));
-    this.hasLoaded = true;
-    this.loading = false;
+      { headers: headers1}))
+      .then((data) =>
+      {
+          console.log(data);
+          this.resultColor = 'green';
+          this.result = data.substring(0, data.lastIndexOf('\n'))
+      })
+      .catch((reason) => {
+          this.resultColor = 'red';
+          this.result = reason.error;
+      })
+      .finally(() =>
+      {
+          this.title = "Résultat d'exécution :";
+          this.hasLoaded = true;
+          this.loading = false;
+      });
+
   }
 
-  changeLanguage(languageName: string): void {
+  changeLanguage(languageName: string) {
+    this.loading = true;
     this.changingLanguage = !this.changingLanguage;
     const programmingLanguage = this.programmingLanguageAssociations.find((item) => {
       return item.languageName === languageName
     });
-    this.codeModel.value = programmingLanguage?.baseValue || '';
     this.codeModel.language = programmingLanguage?.languageName || 'python';
     this.codeModel.uri = programmingLanguage?.mainFile || 'main.py';
+    this.codeModel.value = programmingLanguage?.baseValue || '';
+    this.code = programmingLanguage?.baseValue || '';
+    this.onCodeChanged(this.code);
+    this.loading = false;
+
   }
+
+  async setLanguageBaseValue(programmingLanguage: ProgrammingLanguageAssociation): Promise<string | undefined>
+  {
+    //filePath : post_uid/user_uid
+    const filePath = `e16bc063-5a08-4a87-9c88-866fe1c2bb55/41aaef93-5341-43e3-b3ca-955374f2d0f8`
+    return this.http.get<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage.languageName}/${filePath}`).toPromise();
+
+  }
+
+  async getAllLanguagesBaseValue(timeout: number): Promise<boolean>
+  {
+      return new Promise(async (accept, reject) => {
+        setTimeout(() => {
+            reject("Il y a eu un problème lors du chargement des fichiers");
+          },
+          (timeout)
+        );
+        this.loadingBaseValues = true;
+        let foundSavedFile = false;
+        for (const programmingLanguage of this.programmingLanguageAssociations) {
+          const value = await this.setLanguageBaseValue(programmingLanguage);
+          if (value !== programmingLanguage.baseValue && !foundSavedFile) {
+            this.codeModel.value = value || this.codeModel.value;
+            this.code = this.codeModel.value;
+            this.codeModel.uri = programmingLanguage.mainFile;
+            this.selected = programmingLanguage.languageName;
+            this.codeModel.language = this.selected;
+            foundSavedFile = true;
+          }
+          programmingLanguage.baseValue = value || '';
+        }
+        accept(true);
+    });
+  }
+
+  loadAllLanguagesBaseValue(timeout: number)
+  {
+    this.getAllLanguagesBaseValue(timeout)
+      .then((value: any) =>
+      {
+        this.isEditorReady = true;
+        this.loadingBaseValues = false;
+        this.hasLoaded = false;
+        this.loading = false;
+      })
+      .catch((reason: any) =>
+      {
+        this.loadingBaseValues = false;
+        this.title = reason;
+        this.result = "Veuillez attendre quelques minutes et réessayer";
+        this.hasLoaded = true;
+        this.loading = false;
+        this.resultColor = 'red';
+      });
+  }
+
+
 
 }
