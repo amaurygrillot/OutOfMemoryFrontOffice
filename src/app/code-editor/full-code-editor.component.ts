@@ -23,6 +23,7 @@ export class FullCodeEditorComponent implements OnInit{
   @ViewChild('secondCodeEditor') secondCodeEditor !: CodeEditorComponent;
   selected = '';
   loading = false;
+  loadingBaseValues = false;
   hasLoaded = false;
   result = "";
   resultColor = '';
@@ -80,32 +81,14 @@ export class FullCodeEditorComponent implements OnInit{
   };
   changingLanguage = false;
   isEditorReady = false;
+  title: any;
 
   constructor(private http: HttpClient) {
   }
 
 
-  async ngOnInit() {
-    let foundSavedFile = false;
-      for (const programmingLanguage of this.programmingLanguageAssociations)
-      {
-          const value = await this.setLanguageBaseValue(programmingLanguage);
-          if(value !== programmingLanguage.baseValue && !foundSavedFile)
-          {
-              this.codeModel.value = value || this.codeModel.value;
-              this.code = this.codeModel.value;
-              this.codeModel.uri = programmingLanguage.mainFile;
-              this.selected = programmingLanguage.languageName;
-              this.codeModel.language = this.selected;
-              foundSavedFile = true;
-          }
-          programmingLanguage.baseValue = value || '';
-
-      }
-
-
-    this.isEditorReady = true;
-
+  ngOnInit() {
+      this.loadAllLanguagesBaseValue(15 * 1000);
   }
 
 
@@ -130,12 +113,15 @@ export class FullCodeEditorComponent implements OnInit{
       formData,
       { headers: headers1}));
     console.log(data);
-    if (data.search('Process ended with error code : 0') === -1) {
+    if (data.search('ended with code : 0') === -1) {
       this.resultColor = 'red';
+      this.result = data;
     } else {
       this.resultColor = 'green';
+      this.result = data.substring(0, data.lastIndexOf('\n'))
     }
-    this.result = data.substring(0, data.lastIndexOf('\n'));
+    ;
+    this.title = "Résultat d'exécution :";
     this.hasLoaded = true;
     this.loading = false;
   }
@@ -161,6 +147,53 @@ export class FullCodeEditorComponent implements OnInit{
     const filePath = `e16bc063-5a08-4a87-9c88-866fe1c2bb55/41aaef93-5341-43e3-b3ca-955374f2d0f8`
     return this.http.get<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage.languageName}/${filePath}`).toPromise();
 
+  }
+
+  async getAllLanguagesBaseValue(timeout: number): Promise<boolean>
+  {
+      return new Promise(async (accept, reject) => {
+        setTimeout(() => {
+            reject("Il y a eu un problème lors du chargement des fichiers");
+          },
+          (timeout)
+        );
+        this.loadingBaseValues = true;
+        let foundSavedFile = false;
+        for (const programmingLanguage of this.programmingLanguageAssociations) {
+          const value = await this.setLanguageBaseValue(programmingLanguage);
+          if (value !== programmingLanguage.baseValue && !foundSavedFile) {
+            this.codeModel.value = value || this.codeModel.value;
+            this.code = this.codeModel.value;
+            this.codeModel.uri = programmingLanguage.mainFile;
+            this.selected = programmingLanguage.languageName;
+            this.codeModel.language = this.selected;
+            foundSavedFile = true;
+          }
+          programmingLanguage.baseValue = value || '';
+        }
+        accept(true);
+    });
+  }
+
+  loadAllLanguagesBaseValue(timeout: number)
+  {
+    this.getAllLanguagesBaseValue(timeout)
+      .then((value: any) =>
+      {
+        this.isEditorReady = true;
+        this.loadingBaseValues = false;
+        this.hasLoaded = false;
+        this.loading = false;
+      })
+      .catch((reason: any) =>
+      {
+        this.loadingBaseValues = false;
+        this.title = reason;
+        this.result = "Veuillez attendre quelques minutes et réessayer";
+        this.hasLoaded = true;
+        this.loading = false;
+        this.resultColor = 'red';
+      });
   }
 
 
