@@ -95,6 +95,8 @@ export class FullCodeEditorComponent implements OnInit{
 
   onCodeChanged(value: any) {
     this.code = value;
+    if(this.hasLoaded)
+      this.hasLoaded = false;
   }
 
   async sendData() {
@@ -109,21 +111,26 @@ export class FullCodeEditorComponent implements OnInit{
     console.log(programmingLanguage);
     const headers1 = new HttpHeaders()
       .set('Authorization', `${sessionStorage.getItem('token')}`)
-    const data = await lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`,
+    lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`,
       formData,
-      { headers: headers1}));
-    console.log(data);
-    if (data.search('ended with code : 0') === -1) {
-      this.resultColor = 'red';
-      this.result = data;
-    } else {
-      this.resultColor = 'green';
-      this.result = data.substring(0, data.lastIndexOf('\n'))
-    }
-    ;
-    this.title = "Résultat d'exécution :";
-    this.hasLoaded = true;
-    this.loading = false;
+      { headers: headers1}))
+      .then((data) =>
+      {
+          console.log(data);
+          this.resultColor = 'green';
+          this.result = data.substring(0, data.lastIndexOf('\n'))
+      })
+      .catch((reason) => {
+          this.resultColor = 'red';
+          this.result = reason.error;
+      })
+      .finally(() =>
+      {
+          this.title = "Résultat d'exécution :";
+          this.hasLoaded = true;
+          this.loading = false;
+      });
+
   }
 
   changeLanguage(languageName: string) {
