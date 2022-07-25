@@ -3,6 +3,7 @@ import {Observable} from "rxjs";
 import {Post} from "../shared/models";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {SharedComponent} from "../shared/shared.component";
+import {CodeModel} from "@ngstack/code-editor";
 
 @Injectable()
 export class PostService {
@@ -90,7 +91,30 @@ export class PostService {
       .set('enctype', 'multipart/form-data')
       .set('Accept', 'application/json')
 
-    return this.http.post(`${this._API_URL}/post/createNewPost`, formData, { headers: createPostHeader });
+    return this.http.post<any>(`${this._API_URL}/post/createNewPost`, formData, { headers: createPostHeader });
 
+  }
+
+  saveCode(post_uid: string, codeModel: CodeModel)
+  {
+    let file = new Blob([ codeModel.value],
+      {type:  codeModel.uri.substring(codeModel.uri.indexOf('.'))});
+    const formData: FormData = new FormData();
+    formData.append('fileKey', file, codeModel.uri);
+    formData.append('commentId', `${post_uid}`)
+    const headers1 = new HttpHeaders()
+      .set('Authorization', `${sessionStorage.getItem('token')}`)
+
+    this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${codeModel.language}/saveFile`,
+      formData,
+      { headers: headers1}
+    ).toPromise().then( () =>
+    {
+      console.log("yeah")
+    }
+    ).catch(() =>
+    {
+      console.log("non")
+    });
   }
 }
