@@ -39,27 +39,21 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
         displayLanguageName: 'Python',
         mainFile: 'main.py',
         fileExtension: '.py',
-        baseValue: ''
+        baseValue: 'print("Hello world !")\r\n'
       },
       {
         languageName: 'java',
         displayLanguageName: 'Java',
         mainFile: 'Main.java',
         fileExtension: '.java',
-        baseValue: 'public class Main {\n\n\tpublic static void main(String[] args) {\n\n\t\tSystem.out.println("Hello world!");\n\t}\n\n}'
+        baseValue: "public class Main {\n\n\tpublic static void main(String[] args) {\n\n\t\tSystem.out.println(\"Hello world!\");\n\t}\n\n}\r\n"
       },
       {
         languageName: 'c',
         displayLanguageName: 'C',
         mainFile: 'main.c',
         fileExtension: '.c',
-        baseValue: '#include <stdlib.h>\n' +
-          '#include <stdio.h>\n' +
-          '\n' +
-          'int main(int argc, char** argv) {\n' +
-          '  printf("Hello World\\n");\n' +
-          '  return 0;\n' +
-          '}'
+        baseValue: "#include <stdlib.h>\r\n#include <stdio.h>\r\n\r\nint main(int argc, char** argv) {\r\n  printf(\"Hello World\\n\");\r\n  return 0;\r\n}\r\n"
       }/*,
       {
         languageName: 'typescript',
@@ -103,6 +97,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     }
     this.loadAllLanguagesBaseValue(30 * 1000);
     this.contentReady = true;
+    console.log(this.codeModel)
   }
 
 
@@ -111,6 +106,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     this.code = value;
     if(this.hasLoaded)
       this.hasLoaded = false;
+
   }
 
   async sendData() {
@@ -183,7 +179,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
         for (const programmingLanguage of this.programmingLanguageAssociations) {
           const value = await this.setLanguageBaseValue(programmingLanguage);
           if (value !== programmingLanguage.baseValue && !foundSavedFile) {
-            console.log("value :" + value);
             this.codeModel.value = value || ' ';
             this.code = this.codeModel.value;
             this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
@@ -196,11 +191,11 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
         }
         if(!foundSavedFile)
         {
-          this.codeModel.value = this.programmingLanguageAssociations[1].baseValue;
-          this.code = this.programmingLanguageAssociations[1].baseValue;
-          this.codeModel.uri = this.post.post_uid + this.programmingLanguageAssociations[1].mainFile;
+          this.codeModel.value = this.programmingLanguageAssociations[0].baseValue;
+          this.code = this.programmingLanguageAssociations[0].baseValue;
+          this.codeModel.uri = this.post.post_uid + this.programmingLanguageAssociations[0].mainFile;
           console.log(this.codeModel.uri);
-          this.selected = this.programmingLanguageAssociations[1].languageName;
+          this.selected = this.programmingLanguageAssociations[0].languageName;
           this.codeModel.language = this.selected;
           foundSavedFile = true;
         }
