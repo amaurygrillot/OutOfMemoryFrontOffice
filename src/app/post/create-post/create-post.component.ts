@@ -4,6 +4,8 @@ import {MatTabGroup} from "@angular/material/tabs";
 import {PostService} from "@app/services/post.service";
 import {AppComponent} from "@app/app.component";
 import {PostComponent} from "@app/post/post.component";
+import {CodeEditorComponent} from "@ngstack/code-editor";
+import {HttpHeaders} from "@angular/common/http";
 
 @Component({
   selector: 'app-create-post',
@@ -17,8 +19,10 @@ export class CreatePostComponent implements OnInit {
 
   files: File[] = [];
   isLoading = false;
-  uploadedFile: File | undefined
+  uploadedFile: File | undefined;
+  post_uid = "";
 
+  @ViewChild('codeEditor') codeEditor !: CodeEditorComponent;
   @ViewChild("contentTabGroup") contentTabGroup!: MatTabGroup
 
   constructor(private postService: PostService, private appComponent: AppComponent) {
@@ -66,14 +70,15 @@ export class CreatePostComponent implements OnInit {
     });
   }
 
-  createPost(file: File, title: string, description: string) {
-    this.postService.createNewPost(file, title, description).subscribe(result => {
-      console.log(result);
+  async createPost(file: File, title: string, description: string) {
+    const result = await this.postService.createNewPost(file, title, description).toPromise();
+    this.post_uid = result.post_uid;
+    this.postService.saveCode(this.post_uid, this.codeEditor.codeModel).finally(() =>
+    {
       this.appComponent.tabGroup.selectedIndex = 0;
       this.isLoading = false;
-    }, error => {
-      console.log(error)
     });
+
   }
 
   postIsValid() {

@@ -3,7 +3,7 @@
   <mat-tab-group color="primary" backgroundColor="primary" mat-align-tabs="center" #tabGroup>
 
     <mat-tab label="out of memory">
-      <app-post></app-post>
+      <app-post *ngIf="tabGroup.selectedIndex === 0"></app-post>
     </mat-tab>
 
 

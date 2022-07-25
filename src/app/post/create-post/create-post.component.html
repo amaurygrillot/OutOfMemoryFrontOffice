@@ -31,7 +31,7 @@
       </mat-tab>
 
       <mat-tab label="Code">
-        <full-code-editor></full-code-editor>
+        <full-code-editor [postCreation]="true" #codeEditor></full-code-editor>
       </mat-tab>
 
       <mat-tab label="Image">
@@ -54,7 +54,7 @@
     </mat-tab-group>
 
     <br>
-    <button mat-flat-button color="primary" [disabled]="!postIsValid()" (click)="submitPost()">Submit post</button>
+    <button mat-flat-button color="primary" [disabled]="!postIsValid()" (click)="submitPost()" *ngIf="!isLoading">Submit post</button>
     <mat-spinner *ngIf="isLoading"></mat-spinner>
 
   </form>

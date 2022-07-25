@@ -5,7 +5,7 @@ import {lastValueFrom, Observable} from "rxjs";
 import {CodeEditorComponent} from '@ngstack/code-editor';
 import {Post} from "@app/shared/models";
 
-type ProgrammingLanguageAssociation = {
+export type ProgrammingLanguageAssociation = {
   languageName: string;
   displayLanguageName: string;
   mainFile: string;
@@ -21,6 +21,7 @@ type ProgrammingLanguageAssociation = {
 
 export class FullCodeEditorComponent implements OnInit, OnChanges{
   @Input() post !: Post;
+  @Input() postCreation !: boolean;
   @ViewChild('codeEditor') codeEditor !: CodeEditorComponent;
   @ViewChild('secondCodeEditor') secondCodeEditor !: CodeEditorComponent;
   selected = '';
@@ -75,6 +76,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       enabled: false,
     },
   };
+  selectedProgrammingLanguage = this.programmingLanguageAssociations[0];
   changingLanguage = false;
   isEditorReady = false;
   title: any;
@@ -89,11 +91,24 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
   ngOnInit() {
   }
   ngOnChanges(): void {
-    if(sessionStorage.getItem('userId') !== this.post.person_uid)
+    if(this.postCreation === undefined || !this.postCreation)
     {
-      this.readonly = true;
+        if(sessionStorage.getItem('userId') !== this.post.person_uid)
+        {
+          this.readonly = true;
+        }
+        this.loadAllLanguagesBaseValue(30 * 1000);
     }
-    this.loadAllLanguagesBaseValue(30 * 1000);
+    else
+    {
+      this.codeModel.language = this.programmingLanguageAssociations[0].languageName;
+      this.codeModel.uri = this.programmingLanguageAssociations[0].mainFile;
+      this.codeModel.value = this.programmingLanguageAssociations[0].baseValue;
+      this.code = this.programmingLanguageAssociations[0].baseValue;
+      this.contentReady = true;
+      this.isEditorReady = true;
+    }
+
   }
 
 
@@ -138,16 +153,22 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
   }
 
-  changeLanguage(languageName: string) {
+  changeLanguage(programmingLanguage: ProgrammingLanguageAssociation) {
     this.loading = true;
     this.changingLanguage = !this.changingLanguage;
-    const programmingLanguage = this.programmingLanguageAssociations.find((item) => {
-      return item.languageName === languageName
-    });
-    this.codeModel.language = programmingLanguage?.languageName || 'python';
-    this.codeModel.uri = this.post.post_uid + programmingLanguage?.mainFile || 'main.py';
-    this.codeModel.value = programmingLanguage?.baseValue || '';
-    this.code = programmingLanguage?.baseValue || '';
+    this.selectedProgrammingLanguage = programmingLanguage;
+    this.codeModel.language = programmingLanguage.languageName;
+    if(this.postCreation)
+    {
+      this.codeModel.uri = programmingLanguage.mainFile;
+    }
+    else
+    {
+      this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
+    }
+
+    this.codeModel.value = programmingLanguage.baseValue;
+    this.code = programmingLanguage.baseValue;
     this.onCodeChanged(this.code);
     this.loading = false;
 
@@ -230,8 +251,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
       });
   }
-
-
 
 
 
