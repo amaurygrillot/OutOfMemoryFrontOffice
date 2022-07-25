@@ -1,8 +1,9 @@
-import {Component, OnInit, ViewChild } from '@angular/core';
+import {AfterContentInit, Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {CodeModel} from "@ngstack/code-editor";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {lastValueFrom} from "rxjs";
 import {CodeEditorComponent} from '@ngstack/code-editor';
+import {Post} from "@app/shared/models";
 
 type ProgrammingLanguageAssociation = {
   languageName: string;
@@ -18,7 +19,8 @@ type ProgrammingLanguageAssociation = {
   styleUrls: ['./full-code-editor.component.css']
 })
 
-export class FullCodeEditorComponent implements OnInit{
+export class FullCodeEditorComponent implements OnInit, OnChanges{
+  @Input() post !: Post;
   @ViewChild('codeEditor') codeEditor !: CodeEditorComponent;
   @ViewChild('secondCodeEditor') secondCodeEditor !: CodeEditorComponent;
   selected = '';
@@ -82,13 +84,25 @@ export class FullCodeEditorComponent implements OnInit{
   changingLanguage = false;
   isEditorReady = false;
   title: any;
+  contentReady = false;
+  readonly = false;
 
   constructor(private http: HttpClient) {
   }
 
 
   ngOnInit() {
-      this.loadAllLanguagesBaseValue(15 * 1000);
+    console.log("on init post : " + this.post)
+
+
+  }
+  ngOnChanges(): void {
+    if(sessionStorage.getItem('userId') !== this.post.person_uid)
+    {
+      this.readonly = true;
+    }
+    this.loadAllLanguagesBaseValue(30 * 1000);
+    this.contentReady = true;
   }
 
 
@@ -107,7 +121,7 @@ export class FullCodeEditorComponent implements OnInit{
     let file = new Blob([this.code], {type: programmingLanguage?.fileExtension});
     const formData: FormData = new FormData();
     formData.append('fileKey', file, programmingLanguage?.mainFile);
-    formData.append('commentId', 'e16bc063-5a08-4a87-9c88-866fe1c2bb55')
+    formData.append('commentId', `${this.post.post_uid}`)
     console.log(programmingLanguage);
     const headers1 = new HttpHeaders()
       .set('Authorization', `${sessionStorage.getItem('token')}`)
@@ -151,7 +165,7 @@ export class FullCodeEditorComponent implements OnInit{
   async setLanguageBaseValue(programmingLanguage: ProgrammingLanguageAssociation): Promise<string | undefined>
   {
     //filePath : post_uid/user_uid
-    const filePath = `e16bc063-5a08-4a87-9c88-866fe1c2bb55/41aaef93-5341-43e3-b3ca-955374f2d0f8`
+    const filePath = `${this.post.post_uid}/${this.post.person_uid}`
     return this.http.get<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage.languageName}/${filePath}`).toPromise();
 
   }
@@ -169,14 +183,26 @@ export class FullCodeEditorComponent implements OnInit{
         for (const programmingLanguage of this.programmingLanguageAssociations) {
           const value = await this.setLanguageBaseValue(programmingLanguage);
           if (value !== programmingLanguage.baseValue && !foundSavedFile) {
-            this.codeModel.value = value || this.codeModel.value;
+            console.log("value :" + value);
+            this.codeModel.value = value || ' ';
             this.code = this.codeModel.value;
-            this.codeModel.uri = programmingLanguage.mainFile;
+            this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
+            console.log(this.codeModel.uri);
             this.selected = programmingLanguage.languageName;
             this.codeModel.language = this.selected;
             foundSavedFile = true;
           }
           programmingLanguage.baseValue = value || '';
+        }
+        if(!foundSavedFile)
+        {
+          this.codeModel.value = this.programmingLanguageAssociations[1].baseValue;
+          this.code = this.programmingLanguageAssociations[1].baseValue;
+          this.codeModel.uri = this.post.post_uid + this.programmingLanguageAssociations[1].mainFile;
+          console.log(this.codeModel.uri);
+          this.selected = this.programmingLanguageAssociations[1].languageName;
+          this.codeModel.language = this.selected;
+          foundSavedFile = true;
         }
         accept(true);
     });
@@ -202,6 +228,9 @@ export class FullCodeEditorComponent implements OnInit{
         this.resultColor = 'red';
       });
   }
+
+
+
 
 
 

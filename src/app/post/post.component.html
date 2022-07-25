@@ -15,6 +15,8 @@
           <p>
             {{ post.description }}
           </p>
+          user : {{post.person_uid}}
+          post : {{post.post_uid}}
         </mat-card-content>
 
         <div
@@ -23,9 +25,7 @@
           <img class="image-card" mat-card-image src="{{ this.URL }}/{{ post.images }}" alt="{{ post.images }}">
         </ng-template>
         <ng-template #codeContent>
-          <!-- Insert code content here -->
-          {{ post.images }}
-          <full-code-editor></full-code-editor>
+          <full-code-editor [post]="post"></full-code-editor>
         </ng-template>
 
         <mat-card-actions>

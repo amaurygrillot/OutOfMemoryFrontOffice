@@ -1,7 +1,7 @@
 <mat-card style="max-height: 100%; max-width: 100%">
   <mat-card-title>Editeur</mat-card-title>
 
-  <mat-card-content>
+  <mat-card-content *ngIf="contentReady">
     <mat-card-actions *ngIf="isEditorReady">
       <mat-form-field appearance="fill">
         <mat-label>Select an option</mat-label>
@@ -18,16 +18,18 @@
       [theme]="theme"
       [codeModel]="codeModel"
       [options]="options"
+      [readOnly]="readonly"
       (valueChanged)="onCodeChanged($event)"
-      *ngIf="!changingLanguage &&isEditorReady"
+      *ngIf="!changingLanguage && isEditorReady"
       #codeEditor>
     </ngs-code-editor>
     <ngs-code-editor
       [theme]="theme"
       [codeModel]="codeModel"
       [options]="options"
+      [readOnly]="readonly"
       (valueChanged)="onCodeChanged($event)"
-      *ngIf="changingLanguage"
+      *ngIf="changingLanguage && isEditorReady"
       #secondCodeEditor>
     </ngs-code-editor>
     <mat-spinner *ngIf="!isEditorReady && loadingBaseValues"></mat-spinner>
