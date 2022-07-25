@@ -95,7 +95,7 @@ export class PostService {
 
   }
 
-  saveCode(post_uid: string, codeModel: CodeModel)
+  async saveCode(post_uid: string, codeModel: CodeModel): Promise<string | undefined>
   {
     let file = new Blob([ codeModel.value],
       {type:  codeModel.uri.substring(codeModel.uri.indexOf('.'))});
@@ -105,16 +105,9 @@ export class PostService {
     const headers1 = new HttpHeaders()
       .set('Authorization', `${sessionStorage.getItem('token')}`)
 
-    this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${codeModel.language}/saveFile`,
+    return this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${codeModel.language}/saveFile`,
       formData,
       { headers: headers1}
-    ).toPromise().then( () =>
-    {
-      console.log("yeah")
-    }
-    ).catch(() =>
-    {
-      console.log("non")
-    });
+    ).toPromise();
   }
 }

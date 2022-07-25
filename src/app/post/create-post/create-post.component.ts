@@ -72,10 +72,13 @@ export class CreatePostComponent implements OnInit {
 
   async createPost(file: File, title: string, description: string) {
     const result = await this.postService.createNewPost(file, title, description).toPromise();
-    this.appComponent.tabGroup.selectedIndex = 0;
     this.post_uid = result.post_uid;
-    this.postService.saveCode(this.post_uid, this.codeEditor.codeModel);
-    this.isLoading = false;
+    this.postService.saveCode(this.post_uid, this.codeEditor.codeModel).finally(() =>
+    {
+      this.appComponent.tabGroup.selectedIndex = 0;
+      this.isLoading = false;
+    });
+
   }
 
   postIsValid() {
