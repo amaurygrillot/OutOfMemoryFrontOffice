@@ -15,7 +15,7 @@ export class SharedComponent implements OnInit {
   }
 
   formatDate(date: string) {
-    return this._datePipe.transform(date, 'yyyy/MM/dd hh:mm') || "";
+    return this._datePipe.transform(date, 'yyyy/MM/dd hh:mm a') || "";
   }
 
   readFileFromAPI(url: string, fileName: string) {
