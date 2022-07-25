@@ -1,7 +1,7 @@
 import {AfterContentInit, Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {CodeModel} from "@ngstack/code-editor";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {lastValueFrom} from "rxjs";
+import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
+import {lastValueFrom, Observable} from "rxjs";
 import {CodeEditorComponent} from '@ngstack/code-editor';
 import {Post} from "@app/shared/models";
 
@@ -80,15 +80,13 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
   title: any;
   contentReady = false;
   readonly = false;
+  foundSavedFile = false;
 
   constructor(private http: HttpClient) {
   }
 
 
   ngOnInit() {
-    console.log("on init post : " + this.post)
-
-
   }
   ngOnChanges(): void {
     if(sessionStorage.getItem('userId') !== this.post.person_uid)
@@ -96,8 +94,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       this.readonly = true;
     }
     this.loadAllLanguagesBaseValue(30 * 1000);
-    this.contentReady = true;
-    console.log(this.codeModel)
   }
 
 
@@ -118,7 +114,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     const formData: FormData = new FormData();
     formData.append('fileKey', file, programmingLanguage?.mainFile);
     formData.append('commentId', `${this.post.post_uid}`)
-    console.log(programmingLanguage);
     const headers1 = new HttpHeaders()
       .set('Authorization', `${sessionStorage.getItem('token')}`)
     lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`,
@@ -150,7 +145,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       return item.languageName === languageName
     });
     this.codeModel.language = programmingLanguage?.languageName || 'python';
-    this.codeModel.uri = programmingLanguage?.mainFile || 'main.py';
+    this.codeModel.uri = this.post.post_uid + programmingLanguage?.mainFile || 'main.py';
     this.codeModel.value = programmingLanguage?.baseValue || '';
     this.code = programmingLanguage?.baseValue || '';
     this.onCodeChanged(this.code);
@@ -158,69 +153,81 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
   }
 
-  async setLanguageBaseValue(programmingLanguage: ProgrammingLanguageAssociation): Promise<string | undefined>
+  async setLanguageBaseValue(programmingLanguage: ProgrammingLanguageAssociation): Promise<Observable<HttpResponse<string>>>
   {
     //filePath : post_uid/user_uid
     const filePath = `${this.post.post_uid}/${this.post.person_uid}`
-    return this.http.get<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage.languageName}/${filePath}`).toPromise();
+    return this.http.get<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage.languageName}/${filePath}`, {observe: 'response'});
 
   }
 
   async getAllLanguagesBaseValue(timeout: number): Promise<boolean>
   {
-      return new Promise(async (accept, reject) => {
+      return new Promise(async (accept, reject) =>
+      {
+        let code = 200;
         setTimeout(() => {
-            reject("Il y a eu un problème lors du chargement des fichiers");
+            reject({
+              message : "Il y a eu un problème lors du chargement des fichiers",
+              statusCode : code
+            });
           },
           (timeout)
         );
         this.loadingBaseValues = true;
-        let foundSavedFile = false;
         for (const programmingLanguage of this.programmingLanguageAssociations) {
           const value = await this.setLanguageBaseValue(programmingLanguage);
-          if (value !== programmingLanguage.baseValue && !foundSavedFile) {
-            this.codeModel.value = value || ' ';
-            this.code = this.codeModel.value;
-            this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
-            console.log(this.codeModel.uri);
-            this.selected = programmingLanguage.languageName;
-            this.codeModel.language = this.selected;
-            foundSavedFile = true;
-          }
-          programmingLanguage.baseValue = value || '';
+          value.subscribe(result =>
+          {
+            if (result.status === 200 && !this.foundSavedFile) {
+              this.codeModel.value = result.body || ' ';
+              this.code = this.codeModel.value;
+              this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
+              this.selected = programmingLanguage.languageName;
+              this.codeModel.language = this.selected;
+              this.foundSavedFile = true;
+              accept(this.foundSavedFile);
+            }
+            else if(result.status === 500)
+            {
+                code = result.status;
+            }
+            programmingLanguage.baseValue = result.body || '';
+          })
+
         }
-        if(!foundSavedFile)
-        {
-          this.codeModel.value = this.programmingLanguageAssociations[0].baseValue;
-          this.code = this.programmingLanguageAssociations[0].baseValue;
-          this.codeModel.uri = this.post.post_uid + this.programmingLanguageAssociations[0].mainFile;
-          console.log(this.codeModel.uri);
-          this.selected = this.programmingLanguageAssociations[0].languageName;
-          this.codeModel.language = this.selected;
-          foundSavedFile = true;
-        }
-        accept(true);
     });
   }
 
   loadAllLanguagesBaseValue(timeout: number)
   {
     this.getAllLanguagesBaseValue(timeout)
-      .then((value: any) =>
+      .then((value: boolean) =>
       {
-        this.isEditorReady = true;
-        this.loadingBaseValues = false;
-        this.hasLoaded = false;
-        this.loading = false;
+        console.log("value : " + value)
+        if(value)
+        {
+          this.contentReady = true;
+          this.isEditorReady = true;
+          this.loadingBaseValues = false;
+          this.hasLoaded = false;
+          this.loading = false;
+        }
+
       })
       .catch((reason: any) =>
       {
-        this.loadingBaseValues = false;
-        this.title = reason;
-        this.result = "Veuillez attendre quelques minutes et réessayer";
-        this.hasLoaded = true;
-        this.loading = false;
-        this.resultColor = 'red';
+        if(reason.code === 500)
+        {
+          this.loadingBaseValues = false;
+          this.title = reason.message;
+          this.result = "Veuillez attendre quelques minutes et réessayer";
+          this.hasLoaded = true;
+          this.loading = false;
+          this.resultColor = 'red';
+          this.contentReady = true;
+        }
+
       });
   }
 
