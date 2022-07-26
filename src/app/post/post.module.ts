@@ -6,17 +6,20 @@ import {SharedModule} from "../shared/shared.module";
 import {PostService} from "@app/services/post.service";
 import {FullCodeEditorModule} from "@app/code-editor/full-code-editor.module";
 import {NgxDropzoneModule} from "ngx-dropzone";
+import {AllPostsComponent} from "@app/post/all-posts/all-posts.component";
 
 
 
 @NgModule({
   declarations: [
     PostComponent,
-    CreatePostComponent
+    CreatePostComponent,
+    AllPostsComponent
   ],
   exports: [
     PostComponent,
-    CreatePostComponent
+    CreatePostComponent,
+    AllPostsComponent
   ],
   imports: [
     CommonModule,
