@@ -1,0 +1,13 @@
+.example-card {
+  max-width: 400px;
+}
+
+.image-card {
+  max-width: 400px;
+  max-height: 400px;
+  height: auto;
+}
+
+.example-header-image {
+  background-size: cover;
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Post} from "@app/shared/models";
 import {PostService} from "@app/services/post.service";
 import {AppComponent} from "@app/app.component";
@@ -9,21 +9,18 @@ import {SharedComponent} from "@app/shared/shared.component";
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.css']
 })
-export class PostComponent implements OnInit {
-
+export class PostComponent implements OnInit, OnChanges {
+  @Input() post!: Post;
   URL = "https://outofmemoryerror-back.azurewebsites.net"
-  posts!: Post[];
-
-  isLogged = sessionStorage.getItem('token') !== null;
-  isLoading = true;
+  hasLoaded = false;
 
   constructor(private postService: PostService) { }
 
   ngOnInit(): void {
-    this.postService.getAllPosts().subscribe(posts => {
-      this.posts = posts;
-      this.isLoading = false;
-    });
+  }
+
+  ngOnChanges(): void {
+    this.hasLoaded = true;
   }
 
 
