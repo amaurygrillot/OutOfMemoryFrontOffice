@@ -27,7 +27,10 @@
   <br>
 
   <div class="row">
-    <app-like-post class="col-1" [countLikes]="post.count_likes"></app-like-post>
+    <!--<app-like-post class="col-1" [countLikes]="post.count_likes"></app-like-post>-->
+    <div class="col-1">
+      <mat-icon>thumb_up</mat-icon>{{ count_likes }}
+    </div>
     <app-comment-post class="col-2" [countComments]="post.count_comment"></app-comment-post>
   </div>
 

@@ -20,9 +20,13 @@ export class PostComponent implements OnInit, OnChanges {
   hasLoaded = false;
   isLiked = false;
 
+  count_likes!: number
+
   constructor(private _appComponent: AppComponent, private _postService: PostService) {}
 
+
   ngOnInit(): void {
+    this.count_likes = this.post.count_likes;
   }
 
   ngOnChanges(): void {
@@ -37,7 +41,7 @@ export class PostComponent implements OnInit, OnChanges {
     console.log(this.post.post_uid, this.userId)
     this._postService.likeOrUnlikePost(this.post.post_uid, this.userId!).subscribe(res => {
       this.isLiked = res.message === 'like';
-      console.log("res", res);
+      this.isLiked ? this.count_likes++ : this.count_likes--;
     }, error => {
       console.log(error)
     });
