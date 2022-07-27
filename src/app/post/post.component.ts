@@ -2,7 +2,6 @@ import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Post} from "@app/shared/models";
 import {AppComponent} from "@app/app.component";
 import {PostService} from "@app/services/post.service";
-import {LikePostComponent} from "@app/post/like-post/like-post.component";
 
 @Component({
   selector: 'app-post',
