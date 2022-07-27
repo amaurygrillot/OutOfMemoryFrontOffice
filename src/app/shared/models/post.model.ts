@@ -9,11 +9,11 @@ export class Post {
   username: string;
   avatar: string;
   images: string;
-  count_comment: bigint;
-  count_likes: bigint;
-  is_like: bigint
+  count_comment: number;
+  count_likes: number;
+  is_like: number
 
-  constructor(post_uid: string, is_comment: bigint, type_privacy: string, title: string, description:string, created_at: string, person_uid: string, username: string, avatar: string, images: string, count_comment: bigint, count_likes: bigint, is_like: bigint) {
+  constructor(post_uid: string, is_comment: bigint, type_privacy: string, title: string, description:string, created_at: string, person_uid: string, username: string, avatar: string, images: string, count_comment: number, count_likes: number, is_like: number) {
     this.post_uid = post_uid;
     this.is_comment = is_comment;
     this.type_privacy = type_privacy;

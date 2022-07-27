@@ -18,7 +18,6 @@ export class PostService {
 
   reqPostHeader = new HttpHeaders()
     .set('Authorization', `${this._token}`)
-    .set('Content-Type', 'multipart/form-data')
     .set('Accept', 'application/json')
 
   constructor(private http: HttpClient, private sharedComponent: SharedComponent) { }
@@ -121,7 +120,7 @@ export class PostService {
     const body = new HttpParams().set('uidPost', post_uid)
     return new Observable<bigint>((observer) => {
       this.http.get(`${this._API_URL}/post/getLikes`, { headers : this.header, params: body}).subscribe(async (result: any) => {
-        const likes = result.posts[0].uid_likes;
+        const likes = result.posts[0][0].uid_likes;
         console.log("post likes", post_uid, likes);
         observer.next(likes);
         observer.complete();
@@ -133,17 +132,11 @@ export class PostService {
   }
 
   likeOrUnlikePost(post_uid: string, user_uid: string) {
-    const body = new HttpParams()
-      .set('uidPost', post_uid)
-      .set('uidPerson', user_uid);
-
-    console.log("xx", post_uid, user_uid)
-
-    const bodyData = new FormData();
-    bodyData.append('uidPost', post_uid);
-    bodyData.append('uidPerson', user_uid);
-
-    return this.http.post<any>(`${this._API_URL}/post/likeOrUnlikePost`, bodyData,{ headers: this.header });
+    const body = {
+      'uidPost': post_uid,
+      'uidPerson': user_uid
+    }
+    return this.http.post<any>(`${this._API_URL}/post/likeOrUnlikePost`, body, { headers: this.header });
 
   }
 }

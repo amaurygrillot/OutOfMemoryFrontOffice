@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Post} from "@app/shared/models";
 import {AppComponent} from "@app/app.component";
 import {PostService} from "@app/services/post.service";
+import {LikePostComponent} from "@app/post/like-post/like-post.component";
 
 @Component({
   selector: 'app-post',
@@ -19,7 +20,7 @@ export class PostComponent implements OnInit, OnChanges {
   hasLoaded = false;
   isLiked = false;
 
-  constructor(private _appComponent: AppComponent, private _postService: PostService) { }
+  constructor(private _appComponent: AppComponent, private _postService: PostService) {}
 
   ngOnInit(): void {
   }

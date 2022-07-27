@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {PostService} from "@app/services/post.service";
 
 @Component({
   selector: 'app-like-post',
@@ -6,11 +7,9 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./like-post.component.css']
 })
 export class LikePostComponent implements OnInit {
-  @Input() countLikes!: bigint;
+  @Input() countLikes!: number;
 
-  constructor() { }
+  constructor(private _postService: PostService) { }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {  }
 }

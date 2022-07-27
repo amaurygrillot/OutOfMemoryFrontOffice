@@ -7,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class CommentPostComponent implements OnInit {
 
-  @Input() countComments!: bigint
+  @Input() countComments!: number
 
   constructor() { }
 

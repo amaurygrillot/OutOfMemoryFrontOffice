@@ -8,11 +8,11 @@ export class User {
   created_at: string;
   username: string;
   description: string;
-  is_private: bigint;
-  is_online: bigint;
+  is_private: number;
+  is_online: number;
   email: string;
 
-  constructor(uid: string, fullname: string, phone: string, image: string, cover: string, birthday_date: string, created_at: string, username: string, description: string, is_private: bigint, is_online: bigint, email: string) {
+  constructor(uid: string, fullname: string, phone: string, image: string, cover: string, birthday_date: string, created_at: string, username: string, description: string, is_private: number, is_online: number, email: string) {
     this.uid = uid;
     this.fullname = fullname;
     this.phone = phone;
