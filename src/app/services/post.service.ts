@@ -56,9 +56,9 @@ export class PostService {
     return new Observable<Post[]>((observer) => {
       // @ts-ignore
       const body = new HttpParams().set("idPerson", userId);
-      this.http.get(`${this._API_URL}/post/getPostByIdPerson`,  { headers : this.header, params: body}).subscribe((results: any) => {
+      this.http.get(`${this._API_URL}/post/getAllPostByUserID`,  { headers : this.header, params: body}).subscribe((results: any) => {
         const posts = [];
-        for (const result of results.post) {
+        for (const result of results.postUser) {
           const post = new Post(
             result.post_uid,
             result.is_comment,
