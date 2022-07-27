@@ -125,13 +125,22 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     const programmingLanguage = await this.programmingLanguageAssociations.find((item) => {
       return item.languageName === this.selected
     });
-    let file = new Blob([this.code], {type: programmingLanguage?.fileExtension});
+    let url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`
     const formData: FormData = new FormData();
+    if(this.postCreation || this.post.person_uid !== sessionStorage.getItem('userId'))
+    {
+      url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/executeNoSave`
+    }
+    else
+    {
+      formData.append('commentId', `${this.post.post_uid}`)
+    }
+    let file = new Blob([this.code], {type: programmingLanguage?.fileExtension});
+
     formData.append('fileKey', file, programmingLanguage?.mainFile);
-    formData.append('commentId', `${this.post.post_uid}`)
     const headers1 = new HttpHeaders()
       .set('Authorization', `${sessionStorage.getItem('token')}`)
-    lastValueFrom(this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`,
+    lastValueFrom(this.http.post<string>(url,
       formData,
       { headers: headers1}))
       .then((data) =>

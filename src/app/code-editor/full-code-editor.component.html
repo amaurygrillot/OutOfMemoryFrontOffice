@@ -44,7 +44,7 @@
 
     <mat-card-actions>
       <mat-spinner *ngIf="loading"></mat-spinner>
-      <button mat-flat-button color="primary" (click)="sendData()" *ngIf="!loading && isEditorReady && !postCreation">Exécuter</button>
+      <button mat-flat-button color="primary" (click)="sendData()" *ngIf="!loading && isEditorReady">Exécuter</button>
       <button mat-flat-button color="primary" (click)="loadAllLanguagesBaseValue(10 * 1000)" *ngIf="!isEditorReady">Réessayer de charger</button>
     </mat-card-actions>
 
