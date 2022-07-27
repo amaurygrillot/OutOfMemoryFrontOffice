@@ -26,18 +26,22 @@
 
   <br>
 
+  <span>{{ message_like }}</span>
   <div class="row">
     <div class="col-1">
       <mat-icon>thumb_up</mat-icon>{{ count_likes }}
     </div>
-    <app-comment-post class="col-2" [countComments]="post.count_comment"></app-comment-post>
+    <div class="col-2">
+      <mat-icon>comment</mat-icon> {{ count_comments }}
+    </div>
   </div>
 
   <div *ngIf="isLogged; then online else guest"></div>
 
   <mat-card-actions>
     <ng-template #online>
-      <button mat-button (click)="setLike()" [ngClass]="{'like' : isLiked, 'dislike': !isLiked}">LIKE</button>
+      <!--<button mat-button (click)="setLike()" [ngClass]="{'like' : isLiked, 'dislike': !isLiked}">LIKE</button>-->
+      <button mat-button (click)="setLike()">LIKE</button>
       <button mat-button (click)="setComment()">COMMENT</button>
       <button mat-button>SHARE</button>
     </ng-template>

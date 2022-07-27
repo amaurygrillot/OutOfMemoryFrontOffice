@@ -2,6 +2,9 @@ import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Post} from "@app/shared/models";
 import {AppComponent} from "@app/app.component";
 import {PostService} from "@app/services/post.service";
+import {LoginComponent} from "@app/auth/login/login.component";
+import {AllCommentsByPostComponent} from "@app/post/all-comments-by-post/all-comments-by-post.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-post',
@@ -19,13 +22,16 @@ export class PostComponent implements OnInit, OnChanges {
   hasLoaded = false;
   isLiked = false;
 
-  count_likes!: number
+  count_likes!: number;
+  message_like!: string;
+  count_comments!: number;
 
-  constructor(private _appComponent: AppComponent, private _postService: PostService) {}
+  constructor(private _appComponent: AppComponent, private _postService: PostService, private _dialog: MatDialog) {}
 
 
   ngOnInit(): void {
     this.count_likes = this.post.count_likes;
+    this.count_comments = this.post.count_comment - 1;
   }
 
   ngOnChanges(): void {
@@ -41,6 +47,7 @@ export class PostComponent implements OnInit, OnChanges {
     this._postService.likeOrUnlikePost(this.post.post_uid, this.userId!).subscribe(res => {
       this.isLiked = res.message === 'like';
       this.isLiked ? this.count_likes++ : this.count_likes--;
+      this.isLiked ? this.message_like = "You liked this post." : this.message_like = "You removed your like.";
     }, error => {
       console.log(error)
     });
@@ -48,6 +55,14 @@ export class PostComponent implements OnInit, OnChanges {
   }
 
   setComment() {
-
+    const dialogRef = this._dialog.open(AllCommentsByPostComponent, {
+      data: {
+        'post_uid': this.post.post_uid,
+        'post_name': this.post.title
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log("setComment", result);
+    });
   }
 }

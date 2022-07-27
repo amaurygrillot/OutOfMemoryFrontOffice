@@ -1,0 +1,28 @@
+<app-create-comment-post [post_uid]="post_uid"></app-create-comment-post>
+
+<mat-card>
+  <mat-card-title>
+    List of comments for the post : {{ post_name }}
+  </mat-card-title>
+
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+  <div *ngIf="comments && comments.length > 0 && !isLoading; then hasComment else noComment"></div>
+
+  <ng-template #hasComment>
+    <div class="example-card" *ngFor=" let comment of comments" style="max-height: 100%; max-width: 100%">
+      <mat-card-content>
+        <app-comment-post [comment]="comment"></app-comment-post>
+      </mat-card-content>
+    </div>>
+  </ng-template>
+
+  <ng-template #noComment>
+    <div class="example-card" style="max-height: 100%; max-width: 100%">
+      <mat-card-content>
+        No comment yet.
+      </mat-card-content>
+    </div>
+  </ng-template>
+
+</mat-card>

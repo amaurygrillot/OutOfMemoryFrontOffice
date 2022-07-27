@@ -1,0 +1,20 @@
+<mat-card>
+  <mat-card-title>
+    Add a new comment
+  </mat-card-title>
+
+  <form class="create-comment-form">
+    <mat-card-content class="center-component">
+      <mat-form-field class="row-form-width" appearance="fill">
+        <mat-label>Comment message</mat-label>
+        <textarea matInput [formControl]="messageFormControl"></textarea>
+        <mat-error *ngIf="!messageIsNotNull">
+          The comment message is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </mat-card-content>
+
+    <button mat-flat-button color="primary" [disabled]="!messageIsNotNull()" (click)="submitComment()" *ngIf="!hasCommented">Submit comment</button>
+    <span>{{ message_comment }}</span>
+  </form>
+</mat-card>

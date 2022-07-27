@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {Comment} from "src/app/shared/models";
 
 @Component({
   selector: 'app-comment-post',
@@ -7,11 +8,17 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class CommentPostComponent implements OnInit {
 
-  @Input() countComments!: number
+  @Input() comment!: Comment
+
+  URL = "https://outofmemoryerror-back.azurewebsites.net";
+  count_likes!: number;
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  setLike() {
+
+  }
 }

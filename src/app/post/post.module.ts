@@ -7,7 +7,9 @@ import {PostService} from "@app/services/post.service";
 import {FullCodeEditorModule} from "@app/code-editor/full-code-editor.module";
 import {NgxDropzoneModule} from "ngx-dropzone";
 import {AllPostsComponent} from "@app/post/all-posts/all-posts.component";
-import { CommentPostComponent } from './comment-post/comment-post.component';
+import { CommentPostComponent } from './all-comments-by-post/comment-post/comment-post.component';
+import { AllCommentsByPostComponent } from './all-comments-by-post/all-comments-by-post.component';
+import { CreateCommentPostComponent } from './all-comments-by-post/create-comment-post/create-comment-post.component';
 
 
 
@@ -16,13 +18,16 @@ import { CommentPostComponent } from './comment-post/comment-post.component';
     PostComponent,
     CreatePostComponent,
     AllPostsComponent,
-    CommentPostComponent
+    CommentPostComponent,
+    AllCommentsByPostComponent,
+    CreateCommentPostComponent
   ],
   exports: [
     PostComponent,
     CreatePostComponent,
     AllPostsComponent,
-    CommentPostComponent
+    CommentPostComponent,
+    AllCommentsByPostComponent
   ],
   imports: [
     CommonModule,
