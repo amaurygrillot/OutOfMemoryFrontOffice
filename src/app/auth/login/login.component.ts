@@ -5,6 +5,7 @@ import {LocalStorageService} from "src/app/auth/services/local-storage.service";
 import {Router} from "@angular/router";
 import {MatDialogRef} from "@angular/material/dialog";
 import {TokenService} from "@app/auth/services/token.service";
+import {AppComponent} from "@app/app.component";
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,10 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
   constructor(
-    private http: HttpClient, private fb: FormBuilder, public dialogRef: MatDialogRef<LoginComponent>, private tokenService: TokenService
+    private http: HttpClient,
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<LoginComponent>,
+    private tokenService: TokenService
   ) {
   }
 

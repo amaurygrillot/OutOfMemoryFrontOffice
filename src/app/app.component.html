@@ -8,7 +8,7 @@
 
 
     <mat-tab label="New post" *ngIf="isLogged">
-      <app-create-post></app-create-post>
+      <app-create-post *ngIf="tabGroup.selectedIndex === 1"></app-create-post>
     </mat-tab>
 
     <mat-tab [disabled]="true">

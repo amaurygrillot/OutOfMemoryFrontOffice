@@ -11,3 +11,11 @@
 .example-header-image {
   background-size: cover;
 }
+
+.like {
+  color: dodgerblue;
+}
+
+.dislike {
+  color: black;
+}

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
-import {Post} from "../shared/models";
+import {Post, User} from "../shared/models";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {SharedComponent} from "../shared/shared.component";
 import {CodeModel} from "@ngstack/code-editor";
@@ -10,10 +10,16 @@ export class PostService {
 
   private _URL = "https://outofmemoryerror-back.azurewebsites.net"
   private _API_URL = `${this._URL}/api`
+  private _token = sessionStorage.getItem('token')
 
   header = new HttpHeaders()
-    .set('Authorization', `${sessionStorage.getItem('token')}`)
+    .set('Authorization', `${this._token}`)
     .set('Content-Type', 'application/json');
+
+  reqPostHeader = new HttpHeaders()
+    .set('Authorization', `${this._token}`)
+    .set('Content-Type', 'multipart/form-data')
+    .set('Accept', 'application/json')
 
   constructor(private http: HttpClient, private sharedComponent: SharedComponent) { }
 
@@ -87,7 +93,7 @@ export class PostService {
     formData.append('description', description);
 
     const createPostHeader = new HttpHeaders()
-      .set('Authorization', `${sessionStorage.getItem('token')}`)
+      .set('Authorization', `${this._token}`)
       .set('enctype', 'multipart/form-data')
       .set('Accept', 'application/json')
 
@@ -109,5 +115,35 @@ export class PostService {
       formData,
       { headers: headers1}
     ).toPromise();
+  }
+
+  getLikes(post_uid: string) {
+    const body = new HttpParams().set('uidPost', post_uid)
+    return new Observable<bigint>((observer) => {
+      this.http.get(`${this._API_URL}/post/getLikes`, { headers : this.header, params: body}).subscribe(async (result: any) => {
+        const likes = result.posts[0].uid_likes;
+        console.log("post likes", post_uid, likes);
+        observer.next(likes);
+        observer.complete();
+      }, error => {
+        observer.error(error);
+        observer.complete();
+      })
+    });
+  }
+
+  likeOrUnlikePost(post_uid: string, user_uid: string) {
+    const body = new HttpParams()
+      .set('uidPost', post_uid)
+      .set('uidPerson', user_uid);
+
+    console.log("xx", post_uid, user_uid)
+
+    const bodyData = new FormData();
+    bodyData.append('uidPost', post_uid);
+    bodyData.append('uidPerson', user_uid);
+
+    return this.http.post<any>(`${this._API_URL}/post/likeOrUnlikePost`, bodyData,{ headers: this.header });
+
   }
 }

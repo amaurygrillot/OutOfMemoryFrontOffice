@@ -4,9 +4,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {User} from "@app/shared/models";
 import {MatTabGroup} from "@angular/material/tabs";
 import {MatDialog} from "@angular/material/dialog";
-import {DomSanitizer} from "@angular/platform-browser";
-import {Router} from "@angular/router";
-import {PostComponent} from "@app/post/post.component";
+import {AllPostsComponent} from "@app/post/all-posts/all-posts.component";
 
 @Component({
   selector: 'app-root',
@@ -49,6 +47,7 @@ export class AppComponent {
 
         console.log(JSON.stringify(user));
         this.tabGroup.selectedIndex = 0;
+        window.location.reload()
       }
       return null;
     });
@@ -62,6 +61,7 @@ export class AppComponent {
       sessionStorage.clear();
       this.resetAllTabs();
       this.tabGroup.selectedIndex = 0;
+      window.location.reload()
     } else {
       return;
     }

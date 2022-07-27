@@ -1,31 +1,48 @@
 <mat-card class="example-card" style="max-height: 100%; max-width: 100%; margin-top: 1%" *ngIf="hasLoaded">
-        <mat-card-header>
-          <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}">
-          <mat-card-title>{{ post.username }}</mat-card-title>
-          <mat-card-subtitle>{{ post.created_at }}</mat-card-subtitle>
-        </mat-card-header>
+  <mat-card-header>
+    <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}">
+    <mat-card-title>{{ post.username }}</mat-card-title>
+    <mat-card-subtitle>{{ post.created_at }}</mat-card-subtitle>
+  </mat-card-header>
 
-        <mat-card-content>
-          <h2>{{ post.title }}</h2>
-          <p>
-            {{ post.description }}
-          </p>
-          user : {{post.person_uid}}
-          post : {{post.post_uid}}
-        </mat-card-content>
+  <mat-card-content>
+    <h2>{{ post.title }}</h2>
+    <p>
+      {{ post.description }}
+    </p>
+    user : {{post.person_uid}}
+    post : {{post.post_uid}}
+  </mat-card-content>
 
-        <div
-          *ngIf="post.images.toLowerCase().endsWith('.jpg') || post.images.toLowerCase().endsWith('.png') || post.images.toLowerCase().endsWith('.jpeg'); then imageContent else codeContent"></div>
-        <ng-template #imageContent>
-          <img class="image-card" mat-card-image src="{{ this.URL }}/{{ post.images }}" alt="{{ post.images }}">
-        </ng-template>
-        <ng-template #codeContent>
-          <full-code-editor *ngIf="hasLoaded" [post]="post"></full-code-editor>
-        </ng-template>
+  <div
+    *ngIf="post.images.toLowerCase().endsWith('.jpg') || post.images.toLowerCase().endsWith('.png') || post.images.toLowerCase().endsWith('.jpeg'); then imageContent else codeContent">
+  </div>
+  <ng-template #imageContent>
+    <img class="image-card" mat-card-image src="{{ this.URL }}/{{ post.images }}" alt="{{ post.images }}">
+  </ng-template>
+  <ng-template #codeContent>
+    <full-code-editor *ngIf="hasLoaded" [post]="post"></full-code-editor>
+  </ng-template>
 
-        <mat-card-actions>
-          <button mat-button>LIKE</button>
-          <button mat-button>COMMENT</button>
-          <button mat-button>SHARE</button>
-        </mat-card-actions>
+  <br>
+
+  <div class="row">
+    <app-like-post class="col-1" [countLikes]="post.count_likes"></app-like-post>
+    <app-comment-post class="col-2" [countComments]="post.count_comment"></app-comment-post>
+  </div>
+
+  <div *ngIf="isLogged; then online else guest"></div>
+
+  <mat-card-actions>
+    <ng-template #online>
+      <button mat-button (click)="setLike()" [ngClass]="{'like' : isLiked, 'dislike': !isLiked}">LIKE</button>
+      <button mat-button (click)="setComment()">COMMENT</button>
+      <button mat-button>SHARE</button>
+    </ng-template>
+    <ng-template #guest>
+      <button mat-button (click)="showLogin()">LIKE</button>
+      <button mat-button (click)="showLogin()">COMMENT</button>
+      <button mat-button>SHARE</button>
+    </ng-template>
+  </mat-card-actions>
 </mat-card>

@@ -1,8 +1,7 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Post} from "@app/shared/models";
-import {PostService} from "@app/services/post.service";
 import {AppComponent} from "@app/app.component";
-import {SharedComponent} from "@app/shared/shared.component";
+import {PostService} from "@app/services/post.service";
 
 @Component({
   selector: 'app-post',
@@ -11,10 +10,16 @@ import {SharedComponent} from "@app/shared/shared.component";
 })
 export class PostComponent implements OnInit, OnChanges {
   @Input() post!: Post;
-  URL = "https://outofmemoryerror-back.azurewebsites.net"
-  hasLoaded = false;
 
-  constructor(private postService: PostService) { }
+  URL = "https://outofmemoryerror-back.azurewebsites.net"
+
+  isLogged = sessionStorage.getItem('token') !== null
+  userId = sessionStorage.getItem('userId');
+
+  hasLoaded = false;
+  isLiked = false;
+
+  constructor(private _appComponent: AppComponent, private _postService: PostService) { }
 
   ngOnInit(): void {
   }
@@ -23,5 +28,22 @@ export class PostComponent implements OnInit, OnChanges {
     this.hasLoaded = true;
   }
 
+  showLogin() {
+    this._appComponent.showLogin();
+  }
 
+  setLike() {
+    console.log(this.post.post_uid, this.userId)
+    this._postService.likeOrUnlikePost(this.post.post_uid, this.userId!).subscribe(res => {
+      this.isLiked = res.message === 'like';
+      console.log("res", res);
+    }, error => {
+      console.log(error)
+    });
+    console.log("isLiked", this.isLiked)
+  }
+
+  setComment() {
+
+  }
 }
