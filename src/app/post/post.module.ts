@@ -9,6 +9,7 @@ import {NgxDropzoneModule} from "ngx-dropzone";
 import {AllPostsComponent} from "@app/post/all-posts/all-posts.component";
 import { LikePostComponent } from './like-post/like-post.component';
 import { CommentPostComponent } from './comment-post/comment-post.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 
 
@@ -31,7 +32,8 @@ import { CommentPostComponent } from './comment-post/comment-post.component';
     CommonModule,
     SharedModule,
     FullCodeEditorModule,
-    NgxDropzoneModule
+    NgxDropzoneModule,
+    MatAutocompleteModule
   ],
   providers: [
     PostService
