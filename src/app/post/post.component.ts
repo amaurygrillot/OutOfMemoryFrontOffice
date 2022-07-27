@@ -56,6 +56,8 @@ export class PostComponent implements OnInit, OnChanges {
 
   setComment() {
     const dialogRef = this._dialog.open(AllCommentsByPostComponent, {
+      width: '700px',
+      height: '550px',
       data: {
         'post_uid': this.post.post_uid,
         'post_name': this.post.title

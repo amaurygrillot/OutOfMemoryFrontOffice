@@ -165,7 +165,8 @@ export class PostService {
           );
           comments.push(comment);
         }
-        observer.next(comments);
+        // slice(1) to remove first default comment
+        observer.next(comments.slice(1));
         observer.complete();
       }, error => {
         observer.error(error);

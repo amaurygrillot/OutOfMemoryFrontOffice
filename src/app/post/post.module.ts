@@ -9,7 +9,6 @@ import {NgxDropzoneModule} from "ngx-dropzone";
 import {AllPostsComponent} from "@app/post/all-posts/all-posts.component";
 import { CommentPostComponent } from './all-comments-by-post/comment-post/comment-post.component';
 import { AllCommentsByPostComponent } from './all-comments-by-post/all-comments-by-post.component';
-import { CreateCommentPostComponent } from './all-comments-by-post/create-comment-post/create-comment-post.component';
 
 
 
@@ -19,8 +18,7 @@ import { CreateCommentPostComponent } from './all-comments-by-post/create-commen
     CreatePostComponent,
     AllPostsComponent,
     CommentPostComponent,
-    AllCommentsByPostComponent,
-    CreateCommentPostComponent
+    AllCommentsByPostComponent
   ],
   exports: [
     PostComponent,
