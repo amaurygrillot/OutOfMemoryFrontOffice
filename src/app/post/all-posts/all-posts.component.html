@@ -1,9 +1,25 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
 <div *ngIf="posts && posts.length > 0 && !isLoading">
-  <mat-form-field class="example-full-width" style="min-width : 30%">
+  <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
     <input type="text" placeholder="Recherchez un post" aria-label="Select Posts" matInput [formControl]="postControl">
   </mat-form-field>
+
+  <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <mat-select placeholder="Classer par..." [formControl]="sortControl" #selectSort>
+      <mat-option (click)="sortPosts('Popularité')" [value]="'Popularité'">Popularité</mat-option>
+      <mat-option (click)="sortPosts('Date')" [value]="'Date'">Date</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <mat-select placeholder="Voir les posts datant de : " [formControl]="ageControl" #selectDate>
+      <mat-option (click)="selectAge('Today')" [value]="'Today'">Aujourd'hui</mat-option>
+      <mat-option (click)="selectAge('Week')" [value]="'Week'">Cette semaine</mat-option>
+      <mat-option (click)="selectAge('All')" [value]="'All'">Tous les temps</mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <mat-card class="example-card" *ngFor=" let post of filteredPosts | async" style="max-height: 100%; max-width: 100%">
 
     <mat-card-content>
