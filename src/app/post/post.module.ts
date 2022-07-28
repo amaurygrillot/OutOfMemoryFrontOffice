@@ -7,9 +7,9 @@ import {PostService} from "@app/services/post.service";
 import {FullCodeEditorModule} from "@app/code-editor/full-code-editor.module";
 import {NgxDropzoneModule} from "ngx-dropzone";
 import {AllPostsComponent} from "@app/post/all-posts/all-posts.component";
-import { LikePostComponent } from './like-post/like-post.component';
-import { CommentPostComponent } from './comment-post/comment-post.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import { CommentPostComponent } from './all-comments-by-post/comment-post/comment-post.component';
+import { AllCommentsByPostComponent } from './all-comments-by-post/all-comments-by-post.component';
 
 
 
@@ -18,15 +18,15 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     PostComponent,
     CreatePostComponent,
     AllPostsComponent,
-    LikePostComponent,
-    CommentPostComponent
+    CommentPostComponent,
+    AllCommentsByPostComponent
   ],
   exports: [
     PostComponent,
     CreatePostComponent,
     AllPostsComponent,
-    LikePostComponent,
-    CommentPostComponent
+    CommentPostComponent,
+    AllCommentsByPostComponent
   ],
   imports: [
     CommonModule,
