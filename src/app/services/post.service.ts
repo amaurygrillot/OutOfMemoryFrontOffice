@@ -152,7 +152,6 @@ export class PostService {
       this.http.get(`${this._API_URL}/post/getCommentByIdPost/${post_uid}`, { headers: this.header }).subscribe((results: any) => {
         const comments = [];
         for (const result of results.comments) {
-          console.log(result.uid, result.comment)
           const comment = new Comment(
             result.uid,
             result.comment,
@@ -173,5 +172,13 @@ export class PostService {
         observer.complete();
       })
     });
+  }
+
+  likeOrUnlikeComment(comment_uid: string) {
+    const body = {
+      'uidComment': comment_uid
+    }
+    console.log("comment", comment_uid)
+    return this.http.put<any>(`${this._API_URL}/post/likeOrUnLikeComment`, body, { headers: this.header });
   }
 }
