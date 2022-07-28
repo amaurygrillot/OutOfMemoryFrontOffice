@@ -19,8 +19,6 @@ export class MenuUserComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.userComponent.user;
     this.url = this.userComponent.URL;
-    console.log("userMenu", this.user)
-    console.log("url", this.url)
   }
 
   logOff() {

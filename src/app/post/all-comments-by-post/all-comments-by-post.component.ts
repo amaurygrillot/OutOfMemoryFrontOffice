@@ -30,11 +30,8 @@ export class AllCommentsByPostComponent implements OnInit {
     console.log("all comments", this.post_uid)
     this._postService.getCommentsByPostId(this.post_uid).subscribe(comments => {
       this.comments = comments;
-      console.log(comments)
       this.isLoading = false;
-    }, error => {
-      console.log(error)
-    })
+    }, error => {})
   }
 
   messageIsNotNull() {

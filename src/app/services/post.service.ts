@@ -16,10 +16,6 @@ export class PostService {
     .set('Authorization', `${this._token}`)
     .set('Content-Type', 'application/json');
 
-  reqPostHeader = new HttpHeaders()
-    .set('Authorization', `${this._token}`)
-    .set('Accept', 'application/json')
-
   constructor(private http: HttpClient, private sharedComponent: SharedComponent) { }
 
   getAllPosts() {
@@ -121,7 +117,6 @@ export class PostService {
     return new Observable<bigint>((observer) => {
       this.http.get(`${this._API_URL}/post/getLikes`, { headers : this.header, params: body}).subscribe(async (result: any) => {
         const likes = result.posts[0][0].uid_likes;
-        console.log("post likes", post_uid, likes);
         observer.next(likes);
         observer.complete();
       }, error => {
@@ -178,7 +173,6 @@ export class PostService {
     const body = {
       'uidComment': comment_uid
     }
-    console.log("comment", comment_uid)
     return this.http.put<any>(`${this._API_URL}/post/likeOrUnLikeComment`, body, { headers: this.header });
   }
 }

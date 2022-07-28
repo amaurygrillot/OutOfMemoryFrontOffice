@@ -25,12 +25,9 @@ export class CommentPostComponent implements OnInit {
 
   setLike() {
     this._postService.likeOrUnlikeComment(this.comment.uid).subscribe(res => {
-      console.log(res);
       this.isLiked = res.message === 'like comment';
       this.isLiked ? this.count_likes++ : this.count_likes--;
       this.isLiked ? this.message_like = "You liked this comment." : this.message_like = "You removed your like.";
-    }, error => {
-      console.log(error)
-    });
+    }, error => {});
   }
 }

@@ -54,7 +54,6 @@ export class LoginComponent implements OnInit {
           this.loading = false;
           return;
         }
-        console.log('data : ' + JSON.stringify(data));
         sessionStorage.setItem('token', data.token);
         const userId = this.getUserId(data.token).idPerson;
         sessionStorage.setItem('userId', userId);

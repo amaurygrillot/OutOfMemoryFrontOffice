@@ -33,7 +33,6 @@ export class UserService {
           userInfo.is_online,
           userInfo.email
         );
-        console.log("user parse", user);
         observer.next(user);
         observer.complete();
       }, error => {
@@ -42,37 +41,4 @@ export class UserService {
       })
     });
   }
-
-  /*
-
-  getUserById(userId: string) {
-    return new Observable<User>((observer) => {
-      this.http.get(`${this._API_URL}/user/getAnotherUserById/${userId}`, { headers : this.header}).subscribe((result: any) => {
-        const userInfo = result.anotherUser;
-        const user = new User(
-          userInfo.uid,
-          userInfo.fullName,
-          userInfo.phone,
-          userInfo.image,
-          userInfo.cover,
-          userInfo.birthday_date,
-          userInfo.created_at,
-          userInfo.username,
-          userInfo.description,
-          userInfo.is_private,
-          userInfo.is_online,
-          userInfo.email
-        );
-        console.log("user parse", user);
-        observer.next(user);
-        observer.complete();
-      }, error => {
-        observer.error(error);
-        observer.complete();
-      })
-    });
-  }
-
-   */
-
 }

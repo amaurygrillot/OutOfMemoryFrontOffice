@@ -49,13 +49,11 @@ export class AllPostsComponent implements OnInit, OnChanges {
           map(value => typeof value === 'string' ? value : this.lastFilter),
           map(filter => this.selectAge(filter))
         );
-        console.log(posts)
         this.posts = posts;
         this.isLoading = false;
       });
     } else {
       this.postService.getPostsByUserId(sessionStorage.getItem('userId') || '').subscribe(async posts => {
-        console.log(posts)
         this.posts = posts;
         this.isLoading = false;
         this.filteredPosts = this.postControl.valueChanges.pipe(
@@ -93,7 +91,6 @@ export class AllPostsComponent implements OnInit, OnChanges {
   sortPosts(sortType: string) {
       if(sortType === 'Popularité')
       {
-        console.log("yes")
         return this.posts.sort(((a,b) => b.count_likes - a.count_likes))
       }
       else if(sortType === 'Date')
@@ -113,7 +110,6 @@ export class AllPostsComponent implements OnInit, OnChanges {
 
     if(sortType === 'Today')
     {
-      console.log("here")
       return this.posts.filter(option => {
         return (new Date().getTime() - new Date(option.created_at).getTime()) < this.oneDayMillisecond;
       })

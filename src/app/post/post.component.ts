@@ -43,7 +43,6 @@ export class PostComponent implements OnInit, OnChanges {
   }
 
   setLike() {
-    console.log(this.post.post_uid, this.userId)
     this._postService.likeOrUnlikePost(this.post.post_uid, this.userId!).subscribe(res => {
       this.isLiked = res.message === 'like';
       this.isLiked ? this.count_likes++ : this.count_likes--;
@@ -51,7 +50,6 @@ export class PostComponent implements OnInit, OnChanges {
     }, error => {
       console.log(error)
     });
-    console.log("isLiked", this.isLiked)
   }
 
   setComment() {
@@ -63,8 +61,7 @@ export class PostComponent implements OnInit, OnChanges {
         'post_name': this.post.title
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log("setComment", result);
-    });
+    dialogRef.afterClosed().subscribe(result => {});
+    this.count_comments = this.post.count_comment;
   }
 }

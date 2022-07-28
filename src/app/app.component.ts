@@ -4,7 +4,6 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {User} from "@app/shared/models";
 import {MatTabGroup} from "@angular/material/tabs";
 import {MatDialog} from "@angular/material/dialog";
-import {AllPostsComponent} from "@app/post/all-posts/all-posts.component";
 
 @Component({
   selector: 'app-root',
@@ -24,7 +23,7 @@ export class AppComponent {
   @ViewChild('tabGroup') tabGroup!: MatTabGroup;
 
   constructor(private http: HttpClient, public dialog: MatDialog) {
-    console.log(sessionStorage);
+    //console.log(sessionStorage);
   }
 
   updateLoginStatus($event: boolean) {
@@ -45,7 +44,6 @@ export class AppComponent {
           {headers: header})
           .toPromise();
 
-        console.log(JSON.stringify(user));
         this.tabGroup.selectedIndex = 0;
         window.location.reload()
       }
