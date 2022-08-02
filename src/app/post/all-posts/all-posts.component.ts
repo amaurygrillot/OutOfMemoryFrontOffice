@@ -33,27 +33,18 @@ export class AllPostsComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     if (this.allPosts) {
       this.postService.getAllPosts().subscribe(async posts => {
+        console.log("on est passé la")
         this.filteredPosts = this.postControl.valueChanges.pipe(
           startWith<string | Post[]>(this.posts),
           map(value => typeof value === 'string' ? value : this.lastFilter),
           map(filter => this.filter(filter))
-        );
-        this.filteredPosts = this.sortControl.valueChanges.pipe(
-          startWith<string | Post[]>(this.posts),
-          map(value => typeof value === 'string' ? value : this.lastFilter),
-          map(sort => this.sortPosts(sort))
-        );
-
-        this.filteredPosts = this.ageControl.valueChanges.pipe(
-          startWith<string | Post[]>(this.posts),
-          map(value => typeof value === 'string' ? value : this.lastFilter),
-          map(filter => this.selectAge(filter))
         );
         console.log(posts)
         this.posts = posts;
         this.isLoading = false;
       });
     } else {
+      console.log("mais aussi ici")
       this.postService.getPostsByUserId(sessionStorage.getItem('userId') || '').subscribe(async posts => {
         console.log(posts)
         this.posts = posts;
@@ -70,6 +61,7 @@ export class AllPostsComponent implements OnInit, OnChanges {
 
   filter(filter: string): Post[] {
     this.lastFilter = filter;
+    console.log("filter " + this.lastFilter);
     if (filter) {
       return this.posts.filter(option => {
         return option.title.toLowerCase().indexOf(filter.toLowerCase()) >= 0
@@ -91,42 +83,42 @@ export class AllPostsComponent implements OnInit, OnChanges {
 
 
   sortPosts(sortType: string) {
+    console.log("last filter " + this.lastFilter)
       if(sortType === 'Popularité')
       {
-        console.log("yes")
-        return this.posts.sort(((a,b) => b.count_likes - a.count_likes))
+        this.filteredPosts = this.filteredPosts.pipe(
+          map(array =>
+            array.sort(((a,b) => b.count_likes - a.count_likes))
+          )
+        )
       }
       else if(sortType === 'Date')
       {
-        return this.posts.sort(((a,b) =>
-        {
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        }))
-      }
-      else
-      {
-        return this.posts
+        this.filteredPosts = this.filteredPosts.pipe(
+          map(array =>
+            array.sort(((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()))
+          )
+        )
       }
   }
 
   selectAge(sortType: string) {
-
+    console.log("last filter " + this.lastFilter)
     if(sortType === 'Today')
     {
-      console.log("here")
-      return this.posts.filter(option => {
+      this.filteredPosts = this.filteredPosts.pipe(
+        map(array =>
+          array.filter(option => {
         return (new Date().getTime() - new Date(option.created_at).getTime()) < this.oneDayMillisecond;
-      })
+      })))
     }
     else if(sortType === 'Week')
     {
-      return this.posts.filter(option => {
+      this.filteredPosts = this.filteredPosts.pipe(
+        map(array =>
+          array.filter(option => {
         return (new Date().getTime() - new Date(option.created_at).getTime()) < this.oneDayMillisecond * 7;
-      })
-    }
-    else
-    {
-      return this.posts
+      })))
     }
   }
 }
