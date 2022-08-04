@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
-import {Post, User} from "../shared/models";
+import {Post, User, Comment} from "../shared/models";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {SharedComponent} from "../shared/shared.component";
 import {CodeModel} from "@ngstack/code-editor";
@@ -15,10 +15,6 @@ export class PostService {
   header = new HttpHeaders()
     .set('Authorization', `${this._token}`)
     .set('Content-Type', 'application/json');
-
-  reqPostHeader = new HttpHeaders()
-    .set('Authorization', `${this._token}`)
-    .set('Accept', 'application/json')
 
   constructor(private http: HttpClient, private sharedComponent: SharedComponent) { }
 
@@ -121,7 +117,6 @@ export class PostService {
     return new Observable<bigint>((observer) => {
       this.http.get(`${this._API_URL}/post/getLikes`, { headers : this.header, params: body}).subscribe(async (result: any) => {
         const likes = result.posts[0][0].uid_likes;
-        console.log("post likes", post_uid, likes);
         observer.next(likes);
         observer.complete();
       }, error => {
@@ -137,6 +132,47 @@ export class PostService {
       'uidPerson': user_uid
     }
     return this.http.post<any>(`${this._API_URL}/post/likeOrUnlikePost`, body, { headers: this.header });
+  }
 
+  createNewComment(post_uid: string, comment: string) {
+    const body = {
+      'uidPost': post_uid,
+      'comment': comment
+    }
+    return this.http.post<any>(`${this._API_URL}/post/addNewComment`, body, { headers: this.header});
+  }
+
+  getCommentsByPostId(post_uid: string) {
+    return new Observable<Comment[]>((observer) => {
+      this.http.get(`${this._API_URL}/post/getCommentByIdPost/${post_uid}`, { headers: this.header }).subscribe((results: any) => {
+        const comments = [];
+        for (const result of results.comments) {
+          const comment = new Comment(
+            result.uid,
+            result.comment,
+            result.is_like,
+            this.sharedComponent.formatDate(result.created_at),
+            result.person_uid,
+            result.post_uid,
+            result.username,
+            result.avatar
+          );
+          comments.push(comment);
+        }
+        // slice(1) to remove first default comment
+        observer.next(comments.slice(1));
+        observer.complete();
+      }, error => {
+        observer.error(error);
+        observer.complete();
+      })
+    });
+  }
+
+  likeOrUnlikeComment(comment_uid: string) {
+    const body = {
+      'uidComment': comment_uid
+    }
+    return this.http.put<any>(`${this._API_URL}/post/likeOrUnLikeComment`, body, { headers: this.header });
   }
 }

@@ -2,27 +2,21 @@
 
 <div *ngIf="posts && posts.length > 0 && !isLoading">
   <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
-    <input type="text" placeholder="Recherchez un post" aria-label="Select Posts" matInput [formControl]="postControl">
+    <input type="text" placeholder="Search a post" aria-label="Select Posts" matInput [formControl]="postControl">
   </mat-form-field>
 
   <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
-    <mat-select placeholder="Classer par..."
-                (selectionChange)="sortPosts($event.value, posts)"
-                [(value)]="lastSort"
-                [formControl]="sortControl" #selectSort>
-      <mat-option [value]="'Popularité'">Popularité</mat-option>
-      <mat-option [value]="'Date'">Date</mat-option>
+    <mat-select placeholder="Sort by..." [formControl]="sortControl" #selectSort>
+      <mat-option (click)="sortPosts('Popularité')" [value]="'Popularité'">Popularity</mat-option>
+      <mat-option (click)="sortPosts('Date')" [value]="'Date'">Date</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field  class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
-    <mat-select placeholder="Voir les posts datant de : "
-                (selectionChange)="selectAge($event.value, posts)"
-                [formControl]="ageControl"
-                [(value)]="lastAge">
-      <mat-option [value]="'Today'">Aujourd'hui</mat-option>
-      <mat-option [value]="'Week'">Cette semaine</mat-option>
-      <mat-option [value]="'All'">Tous les temps</mat-option>
+  <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <mat-select placeholder="See posts from : " [formControl]="ageControl" #selectDate>
+      <mat-option (click)="selectAge('Today')" [value]="'Today'">Today</mat-option>
+      <mat-option (click)="selectAge('Week')" [value]="'Week'">This week</mat-option>
+      <mat-option (click)="selectAge('All')" [value]="'All'">All time</mat-option>
     </mat-select>
   </mat-form-field>
 

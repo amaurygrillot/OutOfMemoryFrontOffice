@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LikePostComponent } from './like-post.component';
+import { AllCommentsByPostComponent } from './all-comments-by-post.component';
 
-describe('LikePostComponent', () => {
-  let component: LikePostComponent;
-  let fixture: ComponentFixture<LikePostComponent>;
+describe('AllCommentsByPostComponent', () => {
+  let component: AllCommentsByPostComponent;
+  let fixture: ComponentFixture<AllCommentsByPostComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LikePostComponent ]
+      declarations: [ AllCommentsByPostComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LikePostComponent);
+    fixture = TestBed.createComponent(AllCommentsByPostComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

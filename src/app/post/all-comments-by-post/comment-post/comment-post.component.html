@@ -1,0 +1,21 @@
+<mat-card style="max-height: 100%; max-width: 100%; margin-top: 1%">
+  <mat-card-header>
+    <img mat-card-avatar src="{{ this.URL }}/{{ comment.avatar }}" alt="{{ comment.avatar }}">
+    <mat-card-title>{{ comment.username }} commented :</mat-card-title>
+    <mat-card-subtitle>{{ comment.created_at }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    {{ comment.comment }}
+  </mat-card-content>
+
+  <span>{{ message_like }}</span>
+  <div class="row">
+    <div class="col-1">
+      <mat-icon>thumb_up</mat-icon>{{ count_likes }}
+    </div>
+  </div>
+
+  <button mat-button (click)="setLike()">LIKE</button>
+
+</mat-card>

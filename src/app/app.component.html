@@ -6,7 +6,7 @@
       <app-all-posts [allPosts]="true" *ngIf="tabGroup.selectedIndex === 0"></app-all-posts>
     </mat-tab>
 
-    <mat-tab label="Mes posts" *ngIf="isLogged">
+    <mat-tab label="My posts" *ngIf="isLogged">
       <app-all-posts [allPosts]="false" *ngIf="tabGroup.selectedIndex === 1"></app-all-posts>
     </mat-tab>
 
@@ -31,11 +31,3 @@
 <full-code-editor *ngIf="showEditor"></full-code-editor>
   </mat-card-content>
 </mat-card>
-<!--
-<footer style="background-color: black">
-  <div class="text-center p-4" style="color: white">
-    © 2022 Copyright:
-    <a class="text-reset fw-bold ">out of memory</a>
-  </div>
-</footer>
--->
