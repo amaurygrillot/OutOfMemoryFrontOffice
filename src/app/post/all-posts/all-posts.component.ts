@@ -1,7 +1,7 @@
-import {Component, ElementRef, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {Post} from "@app/shared/models";
 import {PostService} from "@app/services/post.service";
-import {map, Observable, startWith} from "rxjs";
+import {Observable, of} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {MatSelect} from "@angular/material/select";
 import {DatePipe} from "@angular/common";
@@ -21,6 +21,8 @@ export class AllPostsComponent implements OnInit, OnChanges {
   posts!: Post[];
   filteredPosts!: Observable<Post[]>;
   lastFilter = '';
+  lastSort = 'Date';
+  lastAge = 'All';
   isLoading = true;
   isLogged = sessionStorage.getItem('token') !== null;
   oneDayMillisecond = 1000 * 60 * 60 * 24;
@@ -33,44 +35,24 @@ export class AllPostsComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     if (this.allPosts) {
       this.postService.getAllPosts().subscribe(async posts => {
-        console.log("on est passé la")
-        this.filteredPosts = this.postControl.valueChanges.pipe(
-          startWith<string | Post[]>(this.posts),
-          map(value => typeof value === 'string' ? value : this.lastFilter),
-          map(filter => this.filter(filter))
-        );
-        console.log(posts)
         this.posts = posts;
         this.isLoading = false;
+        this.filter('', this.posts)
       });
     } else {
-      console.log("mais aussi ici")
       this.postService.getPostsByUserId(sessionStorage.getItem('userId') || '').subscribe(async posts => {
-        console.log(posts)
         this.posts = posts;
         this.isLoading = false;
-        this.filteredPosts = this.postControl.valueChanges.pipe(
-          startWith<string | Post[]>(this.posts),
-          map(value => typeof value === 'string' ? value : this.lastFilter),
-          map(filter => this.filter(filter))
-        );
+        this.filter('', this.posts)
       });
     }
+    this.postControl.valueChanges.subscribe((filter =>
+    {
+        this.filter(filter, this.posts);
+    }));
+
   }
 
-
-  filter(filter: string): Post[] {
-    this.lastFilter = filter;
-    console.log("filter " + this.lastFilter);
-    if (filter) {
-      return this.posts.filter(option => {
-        return option.title.toLowerCase().indexOf(filter.toLowerCase()) >= 0
-          || option.username.toLowerCase().indexOf(filter.toLowerCase()) >= 0;
-      });
-    } else {
-      return this.posts.slice();
-    }
-  }
 
   async setAllPosts(): Promise<Post[] | null>
   {
@@ -82,43 +64,66 @@ export class AllPostsComponent implements OnInit, OnChanges {
   }
 
 
-  sortPosts(sortType: string) {
-    console.log("last filter " + this.lastFilter)
+  filter(filter: string, startArray: Post[]): Post[] {
+    let newPosts = startArray.filter(option =>
+    {
+      return option.title.toLowerCase().indexOf(filter.toLowerCase()) >= 0
+        || option.username.toLowerCase().indexOf(filter.toLowerCase()) >= 0;
+    });
+    if(startArray === this.posts)
+    {
+      console.log(newPosts)
+      newPosts = this.sortPosts(this.lastSort, newPosts);
+      console.log(newPosts)
+      newPosts = this.selectAge(this.lastAge, newPosts);
+      this.filteredPosts = of(newPosts);
+      this.lastFilter = filter;
+    }
+    return newPosts
+  }
+
+  sortPosts(sortType: string, startArray: Post[]): Post[] {
+    let newPosts = startArray;
       if(sortType === 'Popularité')
       {
-        this.filteredPosts = this.filteredPosts.pipe(
-          map(array =>
-            array.sort(((a,b) => b.count_likes - a.count_likes))
-          )
-        )
+        newPosts = startArray.sort(((a,b) => b.count_likes - a.count_likes));
       }
       else if(sortType === 'Date')
       {
-        this.filteredPosts = this.filteredPosts.pipe(
-          map(array =>
-            array.sort(((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()))
-          )
-        )
+        newPosts = startArray.sort(((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
       }
+      if(startArray === this.posts)
+      {
+        newPosts = this.filter(this.lastFilter, newPosts);
+        newPosts = this.selectAge(this.lastAge, newPosts);
+        this.filteredPosts = of(newPosts);
+        this.lastSort = sortType
+      }
+      return newPosts;
   }
 
-  selectAge(sortType: string) {
-    console.log("last filter " + this.lastFilter)
-    if(sortType === 'Today')
+  selectAge(ageSelected: string, startArray: Post[]): Post[] {
+    let newPosts = startArray;
+    if(ageSelected === 'Today')
     {
-      this.filteredPosts = this.filteredPosts.pipe(
-        map(array =>
-          array.filter(option => {
-        return (new Date().getTime() - new Date(option.created_at).getTime()) < this.oneDayMillisecond;
-      })))
+       newPosts = startArray.filter(option =>
+          (new Date().getTime() - new Date(option.created_at).getTime()) < this.oneDayMillisecond
+       )
     }
-    else if(sortType === 'Week')
+    else if(ageSelected === 'Week')
     {
-      this.filteredPosts = this.filteredPosts.pipe(
-        map(array =>
-          array.filter(option => {
-        return (new Date().getTime() - new Date(option.created_at).getTime()) < this.oneDayMillisecond * 7;
-      })))
+      newPosts = startArray.filter(option =>
+        (new Date().getTime() - new Date(option.created_at).getTime()) < this.oneDayMillisecond * 7
+      )
+
     }
+    if(startArray === this.posts)
+    {
+      newPosts = this.filter(this.lastFilter, newPosts);
+      newPosts = this.sortPosts(this.lastSort, newPosts);
+      this.filteredPosts = of(newPosts);
+      this.lastAge = ageSelected;
+    }
+    return newPosts;
   }
 }
