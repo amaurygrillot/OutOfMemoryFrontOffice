@@ -24,4 +24,14 @@ export class MenuUserComponent implements OnInit {
   logOff() {
     this.appComponent.logOff()
   }
+
+  showProfile() {
+    this.appComponent.showProfile();
+    this.appComponent.tabGroup.selectedIndex = 4;
+  }
+
+  showSettings() {
+    this.appComponent.showSettings();
+    this.appComponent.tabGroup.selectedIndex = 4;
+  }
 }
