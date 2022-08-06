@@ -6,23 +6,23 @@
   </mat-form-field>
 
   <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
-    <mat-select placeholder="Classer par..."
+    <mat-select placeholder="Sort by..."
                 (selectionChange)="sortPosts($event.value, posts)"
                 [(value)]="lastSort"
                 [formControl]="sortControl" #selectSort>
-      <mat-option [value]="'Popularité'">Popularité</mat-option>
+      <mat-option [value]="'Popularité'">Popularity</mat-option>
       <mat-option [value]="'Date'">Date</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field  class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
-    <mat-select placeholder="Voir les posts datant de : "
+    <mat-select placeholder="Show posts from : "
                 (selectionChange)="selectAge($event.value, posts)"
                 [formControl]="ageControl"
                 [(value)]="lastAge">
-      <mat-option [value]="'Today'">Aujourd'hui</mat-option>
-      <mat-option [value]="'Week'">Cette semaine</mat-option>
-      <mat-option [value]="'All'">Tous les temps</mat-option>
+      <mat-option [value]="'Today'">Today</mat-option>
+      <mat-option [value]="'Week'">This week</mat-option>
+      <mat-option [value]="'All'">All time</mat-option>
     </mat-select>
   </mat-form-field>
 
