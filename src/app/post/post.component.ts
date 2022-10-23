@@ -5,6 +5,7 @@ import {PostService} from "@app/services/post.service";
 import {LoginComponent} from "@app/auth/login/login.component";
 import {AllCommentsByPostComponent} from "@app/post/all-comments-by-post/all-comments-by-post.component";
 import {MatDialog} from "@angular/material/dialog";
+import {environment} from "@environments/environment.prod";
 
 @Component({
   selector: 'app-post',
@@ -14,7 +15,7 @@ import {MatDialog} from "@angular/material/dialog";
 export class PostComponent implements OnInit, OnChanges {
   @Input() post!: Post;
 
-  URL = "https://outofmemoryerror-back.azurewebsites.net"
+  URL = environment.baseUrl;
 
   isLogged = sessionStorage.getItem('token') !== null
   userId = sessionStorage.getItem('userId');
@@ -40,6 +41,11 @@ export class PostComponent implements OnInit, OnChanges {
 
   showLogin() {
     this._appComponent.showLogin();
+  }
+
+  showPostProfile() {
+    this._appComponent.showPostProfile(this.post.person_uid);
+    if (this.isLogged) this._appComponent.tabGroup.selectedIndex = 4;
   }
 
   setLike() {

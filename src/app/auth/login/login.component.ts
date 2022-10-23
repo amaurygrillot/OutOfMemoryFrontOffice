@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {MatDialogRef} from "@angular/material/dialog";
 import {TokenService} from "@app/auth/services/token.service";
 import {AppComponent} from "@app/app.component";
+import {environment} from "@environments/environment";
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ import {AppComponent} from "@app/app.component";
 })
 
 export class LoginComponent implements OnInit {
-  private _url = "https://outofmemoryerror-back.azurewebsites.net/api";
+  private _url = environment.apiUrl;
   hide = false;
   show = true;
   loading = false;

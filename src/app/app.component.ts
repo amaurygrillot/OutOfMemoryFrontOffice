@@ -4,6 +4,8 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {User} from "@app/shared/models";
 import {MatTabChangeEvent, MatTabGroup} from "@angular/material/tabs";
 import {MatDialog} from "@angular/material/dialog";
+import {environment} from "@environments/environment";
+import {UserService} from "@app/services/user.service";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +15,7 @@ import {MatDialog} from "@angular/material/dialog";
 export class AppComponent{
   title = 'OutOfMemoryFrontOffice';
   isLogged = sessionStorage.getItem('token') !== null;
-  private _url = "https://outofmemoryerror-back.azurewebsites.net/api"
+  private _url = environment.apiUrl;
 
   showEditor = false
   displayMenuUser = false
@@ -23,11 +25,19 @@ export class AppComponent{
   displaySignUp = false
   displayProfile = false
   displaySettings = false
+  displayPostProfile = false
+
+  currentUser!: User
+  postUser!: User
 
   @ViewChild('tabGroup') tabGroup!: MatTabGroup;
 
-  constructor(private http: HttpClient, public dialog: MatDialog) {
+  constructor(private http: HttpClient, public dialog: MatDialog, private _userService: UserService) {
     //console.log(sessionStorage);
+    this._userService.getUserById(sessionStorage.getItem('userId')!).subscribe(user => {
+      this.currentUser = user;
+    });
+    console.log(this.currentUser);
   }
 
   public tabChanged(tabChangeEvent: MatTabChangeEvent): void {
@@ -98,6 +108,7 @@ export class AppComponent{
     this.displaySignUp = false;
     this.displayProfile = false;
     this.displaySettings = false;
+    this.displayPostProfile = false;
   }
 
   showMyPosts() {
@@ -109,6 +120,7 @@ export class AppComponent{
     this.displaySignUp = false;
     this.displayProfile = false;
     this.displaySettings = false;
+    this.displayPostProfile = false;
   }
 
   showCreatePost() {
@@ -120,6 +132,7 @@ export class AppComponent{
     this.displaySignUp = false;
     this.displayProfile = false;
     this.displaySettings = false;
+    this.displayPostProfile = false;
   }
 
   showSignUp() {
@@ -131,6 +144,7 @@ export class AppComponent{
     this.displaySignUp = true;
     this.displayProfile = false;
     this.displaySettings = false;
+    this.displayPostProfile = false;
   }
 
   showProfile() {
@@ -142,6 +156,7 @@ export class AppComponent{
     this.displaySignUp = false;
     this.displayProfile = true;
     this.displaySettings = false;
+    this.displayPostProfile = false;
   }
 
   showSettings() {
@@ -153,5 +168,21 @@ export class AppComponent{
     this.displaySignUp = false;
     this.displayProfile = false;
     this.displaySettings = true;
+    this.displayPostProfile = false;
+  }
+
+  showPostProfile(uid: string) {
+    this._userService.getUserById(uid).subscribe(user => {
+      this.postUser = user;
+    });
+    this.displayAllPosts = false;
+    this.displayMyPosts = false;
+    this.displayCreatePost = false;
+    this.showEditor = false;
+    this.displayMenuUser = false;
+    this.displaySignUp = false;
+    this.displayProfile = false;
+    this.displaySettings = false;
+    this.displayPostProfile = true;
   }
 }

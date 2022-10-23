@@ -29,6 +29,7 @@
 
     </mat-tab-group>
     <full-code-editor *ngIf="showEditor"></full-code-editor>
-    <app-profile *ngIf="displayProfile"></app-profile>
+    <app-profile [user]="currentUser" *ngIf="displayProfile"></app-profile>
+    <app-profile [user]="postUser" *ngIf="displayPostProfile"></app-profile>
   </mat-card-content>
 </mat-card>

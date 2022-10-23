@@ -1,7 +1,7 @@
 <mat-card class="example-card" style="max-height: 100%; max-width: 100%; margin-top: 1%" *ngIf="hasLoaded">
   <mat-card-header>
-    <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}">
-    <mat-card-title>{{ post.username }}</mat-card-title>
+    <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}" (click)="showPostProfile()">
+    <mat-card-title (click)="showPostProfile()">{{ post.username }}</mat-card-title>
     <mat-card-subtitle>{{ post.created_at }}</mat-card-subtitle>
   </mat-card-header>
 

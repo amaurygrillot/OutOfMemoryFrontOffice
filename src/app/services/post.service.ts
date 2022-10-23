@@ -4,11 +4,12 @@ import {Post, User, Comment} from "../shared/models";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {SharedComponent} from "../shared/shared.component";
 import {CodeModel} from "@ngstack/code-editor";
+import {environment} from "@environments/environment";
 
 @Injectable()
 export class PostService {
 
-  private _URL = "https://outofmemoryerror-back.azurewebsites.net"
+  private _URL = environment.baseUrl;
   private _API_URL = `${this._URL}/api`
   private _token = sessionStorage.getItem('token')
 

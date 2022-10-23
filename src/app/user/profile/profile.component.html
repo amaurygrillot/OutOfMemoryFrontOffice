@@ -1,1 +1,27 @@
-<p>profile works!</p>
+<mat-card>
+  <mat-card-header style="width: 150px;">
+    <img mat-card-avatar src="{{ this.URL }}/{{ this.user.image }}" alt="{{ this.user.image }}" class="img-fluid img-thumbnail mt-4 mb-2">
+    <mat-card-title class="mt-4 mb-2">{{ user.fullname }}</mat-card-title>
+    <mat-card-subtitle class="mt-4 mb-2">@{{ user.username }}</mat-card-subtitle>
+
+    <div class="p-4 text-black" style="background-color: #f8f9fa;">
+      <div class="d-flex justify-content-end text-center py-1">
+        <div>
+          <p class="mb-1 h5">{{ count_posts }}</p>
+          <p class="small text-muted mb-0">Posts</p>
+        </div>
+        <div class="px-3">
+          <p class="mb-1 h5">{{ count_following }}</p>
+          <p class="small text-muted mb-0">Following</p>
+        </div>
+        <div>
+          <p class="mb-1 h5">{{ count_followers }}</p>
+          <p class="small text-muted mb-0">Followers</p>
+        </div>
+      </div>
+    </div>
+
+    <button *ngIf="isNotLoggedUser" type="button" class="btn btn-primary">Follow</button>
+
+  </mat-card-header>
+</mat-card>

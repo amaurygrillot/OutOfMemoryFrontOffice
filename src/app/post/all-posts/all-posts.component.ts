@@ -5,6 +5,7 @@ import {Observable, of} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {MatSelect} from "@angular/material/select";
 import {DatePipe} from "@angular/common";
+import {environment} from "@environments/environment.prod";
 
 @Component({
   selector: 'app-all-posts',
@@ -17,7 +18,7 @@ export class AllPostsComponent implements OnInit, OnChanges {
   postControl = new FormControl();
   sortControl = new FormControl();
   ageControl = new FormControl();
-  URL = "https://outofmemoryerror-back.azurewebsites.net"
+  URL = environment.baseUrl
   posts!: Post[];
   filteredPosts!: Observable<Post[]>;
   lastFilter = '';
