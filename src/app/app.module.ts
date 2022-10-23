@@ -12,6 +12,11 @@ import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {UserModule} from "@app/user/user.module";
 import {PostModule} from "@app/post/post.module";
 import {FullCodeEditorModule} from "@app/code-editor/full-code-editor.module";
+import { ChallengeComponent } from './challenge/challenge/challenge.component';
+import { ChallengeBoardComponent } from './challenge/challenge-board/challenge-board.component';
+import { AllChallengesComponent } from './challenge/all-challenges/all-challenges.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatTreeModule} from "@angular/material/tree";
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -27,20 +32,25 @@ export const MY_DATE_FORMATS = {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ChallengeComponent,
+    ChallengeBoardComponent,
+    AllChallengesComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    SharedModule,
-    AuthModule,
-    RouterModule,
-    UserModule,
-    PostModule,
-    FullCodeEditorModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        AppRoutingModule,
+        SharedModule,
+        AuthModule,
+        RouterModule,
+        UserModule,
+        PostModule,
+        FullCodeEditorModule,
+        MatTableModule,
+        MatTreeModule
+    ],
   providers: [
     {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS}
   ],

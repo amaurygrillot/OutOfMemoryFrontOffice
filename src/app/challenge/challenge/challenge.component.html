@@ -1,0 +1,3 @@
+<p>{{challenge.description}}</p>
+<button mat-flat-button color="primary">Participer au challenge</button>
+<app-challenge-board *ngIf="hasLoaded" [challengeId]="challenge.uid"></app-challenge-board>

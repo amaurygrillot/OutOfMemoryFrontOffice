@@ -1,0 +1,53 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+
+<div *ngIf="challenges && challenges.length > 0 && !isLoading">
+  <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <input type="text" placeholder="Chercher un challenge" aria-label="Select Posts" matInput [formControl]="challengesControl">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <mat-select placeholder="Classer par..."
+                (selectionChange)="sortChallenges($event.value, challenges)"
+                [(value)]="lastSort"
+                [formControl]="sortControl" #selectSort>
+      <mat-option [value]="'Date'">Date</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field  class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <mat-select placeholder="Voir les challenges datant de : "
+                (selectionChange)="selectAge($event.value, challenges)"
+                [formControl]="ageControl"
+                [(value)]="lastAge">
+      <mat-option [value]="'Today'">Aujourd'hui</mat-option>
+      <mat-option [value]="'Week'">Cette semaine</mat-option>
+      <mat-option [value]="'All'">Tous les temps</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <mat-card class="example-card">
+
+    <mat-card-content>
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <!-- This is the tree node template for leaf nodes -->
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+          <!-- use a disabled button to provide padding for tree leaf -->
+          <button mat-icon-button disabled></button>
+          <app-challenge [challenge]="node.challenge"></app-challenge>
+        </mat-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+          <button mat-icon-button matTreeNodeToggle
+                  [attr.aria-label]="'Toggle ' + node.name">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
+          {{node.name}}
+
+        </mat-tree-node>
+      </mat-tree>
+    </mat-card-content>
+  </mat-card>
+</div>
