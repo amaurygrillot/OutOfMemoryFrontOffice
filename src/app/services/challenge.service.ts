@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {SharedComponent} from "../shared/shared.component";
-import {Observable} from "rxjs";
+import {lastValueFrom, Observable} from "rxjs";
 import {Comment, Post} from "../shared/models";
 import {CodeModel} from "@ngstack/code-editor";
 import {Challenge} from "../shared/models/challenge";
 import {ChallengeResult} from "@app/shared/models/challengeresult.model";
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +21,11 @@ export class ChallengeService {
   header = new HttpHeaders()
     .set('Authorization', `${this._token}`)
     .set('Content-Type', 'application/json');
+  isPosted = false;
 
-  constructor(private http: HttpClient, private sharedComponent: SharedComponent) { }
+  constructor(private http: HttpClient, private sharedComponent: SharedComponent) {
+
+  }
 
   getAllChallenges() {
     return new Observable<Challenge[]>((observer) => {
@@ -56,9 +61,10 @@ export class ChallengeService {
             challengeResult.resultat_obtenu,
             challengeResult.temps_execution,
             challengeResult.user_id,
-            this.sharedComponent.formatDate(challengeResult.created_at),
-            this.sharedComponent.formatDate(challengeResult.updated_at),
-            challengeResult.used_language
+            this.sharedComponent.formatDateEuropean(challengeResult.created_at),
+            this.sharedComponent.formatDateEuropean(challengeResult.updated_at),
+            challengeResult.used_language,
+            challengeResult.username
           );
           challengeResults.push(challenge);
         }
@@ -90,7 +96,38 @@ export class ChallengeService {
     });
   }
 
+  postChallengeResult(challengeResult: ChallengeResult, challengeResultExists: boolean): Promise<any>
+  {
+    const body: any = {
+      challenge_id : challengeResult.challenge_id,
+      resultat_obtenu : challengeResult.resultat_obtenu,
+      temps_execution : challengeResult.temps_execution,
+      used_language : challengeResult.used_language
+    }
 
+      let url = '';
+      if(challengeResultExists)
+        {
+          body.uid = challengeResult.uid;
+          url = `https://outofmemoryerror-back.azurewebsites.net/api/challenge/updateChallengeResultById`;
+        }
+        else
+        {
+          url = `https://outofmemoryerror-back.azurewebsites.net/api/challenge/createNewChallengeResult`
+        }
+      const headers1 = new HttpHeaders()
+        .set('Authorization', `${sessionStorage.getItem('token')}`)
+      return lastValueFrom(this.http.post<any>(url,
+        body, {headers: headers1}));
+  }
+
+  checkChallengeResultExists(challengeId: string) {
+    const url = `https://outofmemoryerror-back.azurewebsites.net/api/challenge/getChallengeResultByChallengeAndUserId/${challengeId}/${sessionStorage.getItem('userId')}`
+    const headers1 = new HttpHeaders()
+      .set('Authorization', `${sessionStorage.getItem('token')}`)
+    return lastValueFrom(this.http.get<any>(url,
+      { headers: headers1}));
+  }
 
 
 }

@@ -3,7 +3,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {environment} from '@environments/environment';
 import {RouterModule} from "@angular/router";
 import {SharedModule} from "@app/shared/shared.module";
 import {AppRoutingModule} from "@app/app-routing.module";
@@ -16,7 +15,7 @@ import { ChallengeComponent } from './challenge/challenge/challenge.component';
 import { ChallengeBoardComponent } from './challenge/challenge-board/challenge-board.component';
 import { AllChallengesComponent } from './challenge/all-challenges/all-challenges.component';
 import {MatTableModule} from "@angular/material/table";
-import {MatTreeModule} from "@angular/material/tree";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -49,7 +48,7 @@ export const MY_DATE_FORMATS = {
         PostModule,
         FullCodeEditorModule,
         MatTableModule,
-        MatTreeModule
+        MatExpansionModule
     ],
   providers: [
     {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS}

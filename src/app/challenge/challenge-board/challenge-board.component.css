@@ -1,0 +1,34 @@
+.challenge-table {
+  width: 100%;
+}
+
+.mat-column-username {
+  width: 10%;
+  border-right: 1px solid currentColor;
+  padding-right: 24px;
+  text-align: left;
+}
+
+.mat-column-resultat_obtenu {
+  width: 20%;
+  padding-left: 16px;
+}
+
+.mat-column-temps_execution {
+  width: 10%;
+}
+
+.mat-column-created_at {
+  width: 20%;
+  text-align: left;
+}
+
+.mat-column-updated_at {
+  width: 20%;
+  text-align: left;
+}
+
+.mat-column-language_used {
+  width: 10%;
+  text-align: center;
+}

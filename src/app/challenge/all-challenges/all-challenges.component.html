@@ -1,3 +1,6 @@
+
+
+
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
 <div *ngIf="challenges && challenges.length > 0 && !isLoading">
@@ -26,28 +29,26 @@
   </mat-form-field>
 
 
-  <mat-card class="example-card">
+  <mat-card  class="example-card">
 
     <mat-card-content>
-      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-        <!-- This is the tree node template for leaf nodes -->
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-          <!-- use a disabled button to provide padding for tree leaf -->
-          <button mat-icon-button disabled></button>
-          <app-challenge [challenge]="node.challenge"></app-challenge>
-        </mat-tree-node>
-        <!-- This is the tree node template for expandable nodes -->
-        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-          <button mat-icon-button matTreeNodeToggle
-                  [attr.aria-label]="'Toggle ' + node.name">
-            <mat-icon class="mat-icon-rtl-mirror">
-              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-            </mat-icon>
-          </button>
-          {{node.name}}
+      <mat-accordion>
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                             (closed)="panelOpenState = false"
+        *ngFor="let challenge of challenges">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{challenge.title}}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{panelOpenState ? '' : 'Cliquez pour plus de détail'}}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <app-challenge [challenge]="challenge"></app-challenge>
+        </mat-expansion-panel>
+      </mat-accordion>
 
-        </mat-tree-node>
-      </mat-tree>
+
     </mat-card-content>
   </mat-card>
 </div>

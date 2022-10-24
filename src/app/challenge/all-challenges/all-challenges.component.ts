@@ -5,21 +5,6 @@ import {Challenge} from "@app/shared/models/challenge";
 import {Observable, of} from "rxjs";
 import {ChallengeService} from "@app/services/challenge.service";
 import {DatePipe} from "@angular/common";
-import {FlatTreeControl} from "@angular/cdk/tree";
-import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material/tree";
-
-interface ChallengeNode {
-  name: string;
-  challenge: Challenge;
-  children?: ChallengeNode[];
-}
-
-interface ExampleFlatNode {
-  expandable: boolean;
-  name: string;
-  challenge: Challenge;
-  level: number;
-}
 
 @Component({
   selector: 'app-all-challenges',
@@ -42,26 +27,7 @@ export class AllChallengesComponent implements OnInit {
   isLoading = true;
   isLogged = sessionStorage.getItem('token') !== null;
   oneDayMillisecond = 1000 * 60 * 60 * 24;
-  private _transformer = (node: ChallengeNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.challenge.title,
-      challenge: node.challenge,
-      level: level,
-    };
-  };
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-    node => node.level,
-    node => node.expandable,
-  );
-  treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    node => node.level,
-    node => node.expandable,
-    node => node.children,
-  );
-
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  panelOpenState!: boolean;
 
   constructor(private challengeService: ChallengeService, private datePipe: DatePipe) { }
 
@@ -75,11 +41,6 @@ export class AllChallengesComponent implements OnInit {
       this.challenges = challenges;
       this.isLoading = false;
       this.filter('', this.challenges)
-      let challengeNodes: ChallengeNode[] = [];
-      this.challenges.forEach(challenge => {
-          challengeNodes.push({name: challenge.title, challenge: challenge, children: [{name: challenge.title, challenge: challenge}]});
-      });
-      this.dataSource.data = challengeNodes;
     });
     /*} else {
       this.challengeService.getPostsByUserId(sessionStorage.getItem('userId') || '').subscribe(async challenges => {
@@ -165,6 +126,5 @@ export class AllChallengesComponent implements OnInit {
     return newChallenges;
   }
 
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
 }

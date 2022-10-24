@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {lastValueFrom, Observable} from "rxjs";
 import {CodeEditorComponent} from '@ngstack/code-editor';
 import {Post} from "@app/shared/models";
+import {ChallengeResult} from "@app/shared/models/challengeresult.model";
 
 export type ProgrammingLanguageAssociation = {
   languageName: string;
@@ -20,11 +21,19 @@ export type ProgrammingLanguageAssociation = {
 })
 
 export class FullCodeEditorComponent implements OnInit, OnChanges{
+  get challengeResult(): ChallengeResult {
+    return this._challengeResult;
+  }
+  set challengeResult(value: ChallengeResult) {
+    this._challengeResult = value;
+  }
   @Input() post !: Post;
-  @Input() postCreation !: boolean;
+  @Input() challengeId !: string;
+  @Input() executeNoSave !: boolean;
+  @Input() challengeParticipation !: boolean;
   @ViewChild('codeEditor') codeEditor !: CodeEditorComponent;
   @ViewChild('secondCodeEditor') secondCodeEditor !: CodeEditorComponent;
-  selected = '';
+  private _challengeResult!: ChallengeResult;
   loading = false;
   loadingBaseValues = false;
   hasLoaded = false;
@@ -64,6 +73,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
         baseValue: ''
       }*/
     ];
+  selected = this.programmingLanguageAssociations[0].languageName;
   codeModel: CodeModel = {
     language: this.selected,
     uri: '',
@@ -91,7 +101,11 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
   ngOnInit() {
   }
   ngOnChanges(): void {
-    if(this.postCreation === undefined || !this.postCreation)
+    if(this.challengeParticipation)
+    {
+      return;
+    }
+    else if(this.executeNoSave === undefined || !this.executeNoSave)
     {
         if(sessionStorage.getItem('userId') !== this.post.person_uid)
         {
@@ -127,7 +141,29 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     });
     let url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`
     const formData: FormData = new FormData();
-    if(this.postCreation || this.post.person_uid !== sessionStorage.getItem('userId'))
+    if(this.challengeParticipation && !this.executeNoSave)
+    {
+      if(sessionStorage.getItem('userId'))
+      {
+        if(this._challengeResult)
+        {
+          url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/challenge`
+          formData.append('challengeResultId', `${this._challengeResult.uid}`)
+        }
+        else
+        {
+          url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/executeNoSave`
+        }
+
+      }
+      else
+      {
+        alert("Veuillez vous connecter avant de participer au challenge.")
+        this.loading = false;
+        return;
+      }
+    }
+    else if(this.executeNoSave || this.post.person_uid !== sessionStorage.getItem('userId'))
     {
       url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/executeNoSave`
     }
@@ -151,7 +187,8 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       })
       .catch((reason) => {
           this.resultColor = 'red';
-          this.result = reason.error;
+          this.result = reason.message;
+
       })
       .finally(() =>
       {
@@ -167,9 +204,13 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     this.changingLanguage = !this.changingLanguage;
     this.selectedProgrammingLanguage = programmingLanguage;
     this.codeModel.language = programmingLanguage.languageName;
-    if(this.postCreation)
+    if(this.executeNoSave)
     {
       this.codeModel.uri = programmingLanguage.mainFile;
+    }
+    else if(this.challengeParticipation)
+    {
+      this.codeModel.uri = this.challengeId + programmingLanguage.mainFile;
     }
     else
     {
@@ -185,10 +226,16 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
   async setLanguageBaseValue(programmingLanguage: ProgrammingLanguageAssociation): Promise<Observable<HttpResponse<string>>>
   {
-    //filePath : post_uid/user_uid
-    const filePath = `${this.post.post_uid}/${this.post.person_uid}`
+    let filePath = '';
+    if(this.challengeParticipation)
+    {
+      filePath = `challenge/${this.challengeId}/${sessionStorage.getItem('userId')}`
+    }
+    else
+    {
+      filePath = `${this.post.post_uid}/${this.post.person_uid}`
+    }
     return this.http.get<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage.languageName}/${filePath}`, {observe: 'response'});
-
   }
 
   async getAllLanguagesBaseValue(timeout: number): Promise<boolean>
@@ -212,7 +259,14 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
             if (result.status === 200 && !this.foundSavedFile) {
               this.codeModel.value = result.body || ' ';
               this.code = this.codeModel.value;
-              this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
+              if(this.challengeParticipation)
+              {
+                this.codeModel.uri = this.challengeId + programmingLanguage.mainFile;
+              }
+              else
+              {
+                this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
+              }
               this.selected = programmingLanguage.languageName;
               this.codeModel.language = this.selected;
               this.foundSavedFile = true;
