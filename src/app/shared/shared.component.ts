@@ -19,11 +19,11 @@ export class SharedComponent implements OnInit {
   }
 
   formatDateDB(date: string) {
-    return this._datePipe.transform(date, 'yyyy/MM/dd hh:mm:ss') || "";
+    return this._datePipe.transform(date, 'yyyy/MM/dd HH:mm:ss') || "";
   }
 
   formatDateEuropean(date: string) {
-    return this._datePipe.transform(date, 'dd/MM/yyyy HH:mm') || "";
+    return this._datePipe.transform(date, 'dd/MM/yyyy HH:mm','+00') || "";
   }
 
   readFileFromAPI(url: string, fileName: string) {

@@ -75,9 +75,7 @@ export class AllChallengesComponent implements OnInit {
     });
     if(startArray === this.challenges)
     {
-      console.log(newChallenges)
       newChallenges = this.sortChallenges(this.lastSort, newChallenges);
-      console.log(newChallenges)
       newChallenges = this.selectAge(this.lastAge, newChallenges);
       this.filteredChallenges = of(newChallenges);
       this.lastFilter = filter;
