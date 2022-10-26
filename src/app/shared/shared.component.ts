@@ -18,6 +18,10 @@ export class SharedComponent implements OnInit {
     return this._datePipe.transform(date, 'yyyy/MM/dd hh:mm a') || "";
   }
 
+  formatDateDB(date: string) {
+    return this._datePipe.transform(date, 'yyyy/MM/dd hh:mm:ss') || "";
+  }
+
   formatDateEuropean(date: string) {
     return this._datePipe.transform(date, 'dd/MM/yyyy HH:mm') || "";
   }
@@ -25,5 +29,7 @@ export class SharedComponent implements OnInit {
   readFileFromAPI(url: string, fileName: string) {
     return this._http.get(`${url}/${fileName}`);
   }
+
+
 
 }

@@ -6,6 +6,7 @@ import {ChallengeService} from "@app/services/challenge.service";
 import {ChallengeResult} from "@app/shared/models/challengeresult.model";
 import {FullCodeEditorComponent} from "@app/code-editor/full-code-editor.component";
 import {SharedComponent} from "@app/shared/shared.component";
+import {ChallengeBoardComponent} from "@app/challenge/challenge-board/challenge-board.component";
 
 @Component({
   selector: 'app-challenge',
@@ -16,6 +17,7 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
 
   @Input() challenge!: Challenge;
   @ViewChild('codeEditor') codeEditor!: FullCodeEditorComponent;
+  @ViewChild('challengeBoard') challengeBoard!: ChallengeBoardComponent;
   URL = "https://outofmemoryerror-back.azurewebsites.net"
 
   hasLoaded = false;
@@ -58,15 +60,15 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
           result.ChallengeResults[0].resultat_obtenu,
           result.ChallengeResults[0].temps_execution,
           result.ChallengeResults[0].user_id,
-          result.ChallengeResults[0].created_at,
-          result.ChallengeResults[0].updated_at,
-          result.ChallengeResults[0].used_language
+          this._sharedComponent.formatDateEuropean(result.ChallengeResults[0].created_at),
+          this._sharedComponent.formatDateEuropean(result.ChallengeResults[0].updated_at),
+          result.ChallengeResults[0].used_language,
+          result.ChallengeResults[0].username
         )
 
         }
     }).finally(()=> {
       this.hasLoaded = true;
-
     });
 
   }
@@ -92,24 +94,24 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
     }
     this._challengeService.postChallengeResult(challengeResult, this.challengeResultExists).then((data) =>
     {
-      if(!this.challengeResultExists && challengeResult !== null)
+      if(this.challengeResultExists && challengeResult !== null)
       {
-        challengeResult.uid = data.Challenge_uid;
         this.challengeResult = challengeResult;
+        this.challengeResult.uid = data.uidChallengeResult;
+        this.challengeResult.updated_at = this._sharedComponent.formatDateEuropean(new Date().toString());
         this.codeEditor.challengeResult = this.challengeResult;
+        this.challengeResultExists = true;
       }
-      console.log(data);
     })
       .catch((reason) => {
         console.log(reason.error);
       })
       .finally(() =>
       {
-        this.codeEditor.executeNoSave = false;
-        this.codeEditor.sendData().then((result) =>
+        this.codeEditor.saveCodeNoExecution().then((result) =>
         {
           this.loading = false;
-          this.codeEditor.executeNoSave = true;
+          this.challengeBoard.updateChallengeBoard()
         })
       });
 
@@ -131,8 +133,9 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
       parseFloat(temps_execution),
       sessionStorage.getItem('userId') || '',
       '',
-      this._sharedComponent.formatDate(new Date().toString()),
+      this._sharedComponent.formatDateEuropean(new Date().toString()),
       this.codeEditor.selectedProgrammingLanguage.languageName,
+      sessionStorage.getItem("username") || ''
     )
     if(this.challengeResultExists)
     {

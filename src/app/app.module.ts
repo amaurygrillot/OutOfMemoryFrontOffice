@@ -16,6 +16,7 @@ import { ChallengeBoardComponent } from './challenge/challenge-board/challenge-b
 import { AllChallengesComponent } from './challenge/all-challenges/all-challenges.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {MatSortModule} from "@angular/material/sort";
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -48,7 +49,8 @@ export const MY_DATE_FORMATS = {
         PostModule,
         FullCodeEditorModule,
         MatTableModule,
-        MatExpansionModule
+        MatExpansionModule,
+        MatSortModule
     ],
   providers: [
     {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS}

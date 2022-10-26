@@ -64,7 +64,8 @@ export class ChallengeService {
             this.sharedComponent.formatDateEuropean(challengeResult.created_at),
             this.sharedComponent.formatDateEuropean(challengeResult.updated_at),
             challengeResult.used_language,
-            challengeResult.username
+            challengeResult.username,
+            challengeResult.position
           );
           challengeResults.push(challenge);
         }
@@ -109,6 +110,7 @@ export class ChallengeService {
       if(challengeResultExists)
         {
           body.uid = challengeResult.uid;
+          body.updated_at = this.sharedComponent.formatDateDB(new Date().toString())
           url = `https://outofmemoryerror-back.azurewebsites.net/api/challenge/updateChallengeResultById`;
         }
         else

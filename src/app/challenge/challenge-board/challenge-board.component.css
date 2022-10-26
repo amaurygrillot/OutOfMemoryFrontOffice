@@ -1,17 +1,21 @@
 .challenge-table {
   width: 100%;
 }
-
-.mat-column-username {
+.mat-column-position {
   width: 10%;
   border-right: 1px solid currentColor;
   padding-right: 24px;
   text-align: left;
 }
 
+.mat-column-username {
+  width: 15%;
+  text-align: left;
+  padding-left: 16px;
+}
+
 .mat-column-resultat_obtenu {
   width: 20%;
-  padding-left: 16px;
 }
 
 .mat-column-temps_execution {

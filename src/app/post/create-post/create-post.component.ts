@@ -3,9 +3,7 @@ import {FormControl, Validators} from "@angular/forms";
 import {MatTabGroup} from "@angular/material/tabs";
 import {PostService} from "@app/services/post.service";
 import {AppComponent} from "@app/app.component";
-import {PostComponent} from "@app/post/post.component";
 import {CodeEditorComponent} from "@ngstack/code-editor";
-import {HttpHeaders} from "@angular/common/http";
 
 @Component({
   selector: 'app-create-post',

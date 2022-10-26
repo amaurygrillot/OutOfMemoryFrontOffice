@@ -101,11 +101,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
   ngOnInit() {
   }
   ngOnChanges(): void {
-    if(this.challengeParticipation)
-    {
-      return;
-    }
-    else if(this.executeNoSave === undefined || !this.executeNoSave)
+    if(this.executeNoSave === undefined || !this.executeNoSave)
     {
         if(sessionStorage.getItem('userId') !== this.post.person_uid)
         {
@@ -139,7 +135,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     const programmingLanguage = await this.programmingLanguageAssociations.find((item) => {
       return item.languageName === this.selected
     });
-    let url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`
+    let url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}`
     const formData: FormData = new FormData();
     if(this.challengeParticipation && !this.executeNoSave)
     {
@@ -147,14 +143,13 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       {
         if(this._challengeResult)
         {
-          url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/challenge`
+          url += `/challenge`
           formData.append('challengeResultId', `${this._challengeResult.uid}`)
         }
         else
         {
-          url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/executeNoSave`
+          url += `/executeNoSave`
         }
-
       }
       else
       {
@@ -165,7 +160,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     }
     else if(this.executeNoSave || this.post.person_uid !== sessionStorage.getItem('userId'))
     {
-      url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/executeNoSave`
+      url += `/executeNoSave`
     }
     else
     {
@@ -174,29 +169,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     let file = new Blob([this.code], {type: programmingLanguage?.fileExtension});
 
     formData.append('fileKey', file, programmingLanguage?.mainFile);
-    const headers1 = new HttpHeaders()
-      .set('Authorization', `${sessionStorage.getItem('token')}`)
-    lastValueFrom(this.http.post<string>(url,
-      formData,
-      { headers: headers1}))
-      .then((data) =>
-      {
-          console.log(data);
-          this.resultColor = 'green';
-          this.result = data.substring(0, data.lastIndexOf('\n'))
-      })
-      .catch((reason) => {
-          this.resultColor = 'red';
-          this.result = reason.message;
-
-      })
-      .finally(() =>
-      {
-          this.title = "Résultat d'exécution :";
-          this.hasLoaded = true;
-          this.loading = false;
-      });
-
+    this.executeWithSave(url, formData)
   }
 
   changeLanguage(programmingLanguage: ProgrammingLanguageAssociation) {
@@ -316,6 +289,55 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
   }
 
 
+  private executeWithSave(url: string, formData: FormData) {
+    const headers1 = new HttpHeaders()
+      .set('Authorization', `${sessionStorage.getItem('token')}`)
+    lastValueFrom(this.http.post<string>(url,
+      formData,
+      { headers: headers1}))
+      .then((data) =>
+      {
+        console.log(data);
+        this.resultColor = 'green';
+        this.result = data.substring(0, data.lastIndexOf('\n'))
+      })
+      .catch((reason) => {
+        this.resultColor = 'red';
+        this.result = reason.message;
 
+      })
+      .finally(() =>
+      {
+        this.title = "Résultat d'exécution :";
+        this.hasLoaded = true;
+        this.loading = false;
+      });
+  }
 
+  async saveCodeNoExecution(): Promise<string>
+  {
+    const programmingLanguage = await this.programmingLanguageAssociations.find((item) => {
+      return item.languageName === this.selected
+    });
+    let url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}`
+    const formData: FormData = new FormData();
+    if(this.challengeParticipation)
+    {
+      url += `/challenge`;
+      formData.append('challengeResultId', `${this._challengeResult.uid}`);
+      formData.append('challengeId', `${this._challengeResult.challenge_id}`);
+    }
+    else
+    {
+      formData.append('commentId', `${this.post.post_uid}`)
+    }
+    url += `/saveFile`;
+    let file = new Blob([this.code], {type: programmingLanguage?.fileExtension});
+    formData.append('fileKey', file, programmingLanguage?.mainFile);
+    const headers1 = new HttpHeaders()
+      .set('Authorization', `${sessionStorage.getItem('token')}`)
+    return lastValueFrom(this.http.post<string>(url,
+      formData,
+      {headers: headers1}));
+  }
 }

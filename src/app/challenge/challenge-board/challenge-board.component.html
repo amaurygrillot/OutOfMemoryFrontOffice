@@ -1,11 +1,15 @@
 <mat-card>
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 challenge-table">
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 challenge-table"
+       matSort
+       (matSortChange)="announceSortChange($event)">
 
-  <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
+  <ng-container matColumnDef="position">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Classement </th>
+    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+  </ng-container>
 
   <ng-container matColumnDef="username">
-    <th mat-header-cell *matHeaderCellDef> Utilisateur </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Utilisateur </th>
     <td mat-cell *matCellDef="let element"> {{element.username}} </td>
   </ng-container>
 
@@ -16,23 +20,23 @@
 
   <!-- Symbol Column -->
   <ng-container matColumnDef="temps_execution">
-    <th mat-header-cell *matHeaderCellDef> Temps d'exécution </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Temps d'exécution </th>
     <td mat-cell *matCellDef="let element"> {{element.temps_execution}} secondes</td>
   </ng-container>
 
 
   <ng-container matColumnDef="created_at">
-    <th mat-header-cell *matHeaderCellDef> Créé le : </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Créé le : </th>
     <td mat-cell *matCellDef="let element"> {{element.created_at}} </td>
   </ng-container>
 
   <ng-container matColumnDef="updated_at">
-    <th mat-header-cell *matHeaderCellDef> Mis à jour le : </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Mis à jour le : </th>
     <td mat-cell *matCellDef="let element"> {{element.updated_at}} </td>
   </ng-container>
 
   <ng-container matColumnDef="language_used">
-    <th mat-header-cell *matHeaderCellDef> Langage utilisé </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Langage utilisé </th>
     <td mat-cell *matCellDef="let element"> {{element.used_language}} </td>
   </ng-container>
 

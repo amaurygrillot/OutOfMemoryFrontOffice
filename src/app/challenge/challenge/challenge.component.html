@@ -8,8 +8,9 @@
 <button mat-stroked-button color="primary" style="margin-top: 1%; margin-bottom: 1%;"
         *ngIf="(participating || challengeResultExists) && !loading" (click)="submitResult()">Soumettre le résultat</button>
 <mat-spinner style="margin-top: 1%; margin-bottom: 1%;"
-        *ngIf="participating && loading" (click)="submitResult()">Soumettre le résultat</mat-spinner>
+        *ngIf="(participating || challengeResultExists) && loading"></mat-spinner>
 <app-challenge-board style="max-height: 100%; max-width: 100%"
   *ngIf="hasLoaded"
-  [challengeId]="challenge.uid">
+  [challengeId]="challenge.uid"
+  #challengeBoard>
 </app-challenge-board>
