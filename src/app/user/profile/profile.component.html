@@ -1,4 +1,10 @@
-<mat-card>
+<button mat-icon-button class="close-button"[mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+
+<mat-card class="example-card">
   <mat-card-header style="width: 150px;">
     <img mat-card-avatar src="{{ this.URL }}/{{ this.user.image }}" alt="{{ this.user.image }}" class="img-fluid img-thumbnail mt-4 mb-2">
     <mat-card-title class="mt-4 mb-2">{{ user.fullname }}</mat-card-title>
@@ -21,7 +27,9 @@
       </div>
     </div>
 
-    <button *ngIf="isNotLoggedUser" type="button" class="btn btn-primary">Follow</button>
+    <button *ngIf="!isFollowing" mat-flat-button color="primary" (click)="follow()">FOLLOW</button>
+    <button *ngIf="isNotLoggedUser && isFollowing" mat-stroked-button (click)="unfollow()" (mouseover)="setUnfollowButton()" (mouseout)="setFollowedButton()" [ngClass]="{'followed' : !mouseOverFollow, 'unfollow': mouseOverFollow}">{{ followButtonValue }}</button>
+    <button *ngIf="isPending" mat-flat-button disabled>PENDING REQUEST</button>
 
   </mat-card-header>
 </mat-card>

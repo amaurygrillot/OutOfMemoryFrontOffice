@@ -1,0 +1,25 @@
+.example-card {
+  margin-top: 20px;
+}
+
+.followed {
+  color: dodgerblue;
+}
+
+.unfollow {
+  color: red;
+}
+
+.close-button{
+  float: right;
+  top:-22px;
+  right:-22px;
+}
+
+.close-icon {
+  transition: 1s ease-in-out;
+}
+
+.close-icon:hover {
+  transform: rotate(180deg);
+}

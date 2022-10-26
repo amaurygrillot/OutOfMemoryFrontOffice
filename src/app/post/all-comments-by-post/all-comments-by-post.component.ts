@@ -22,8 +22,8 @@ export class AllCommentsByPostComponent implements OnInit {
   isLoading = true;
 
   constructor(private _postService: PostService, @Inject(MAT_DIALOG_DATA) public data: any) {
-    this.post_uid = this.data.post_uid;
-    this.post_name = this.data.post_name;
+    this.post_uid = data.post_uid;
+    this.post_name = data.post_name;
   }
 
   ngOnInit(): void {
@@ -31,7 +31,7 @@ export class AllCommentsByPostComponent implements OnInit {
     this._postService.getCommentsByPostId(this.post_uid).subscribe(comments => {
       this.comments = comments;
       this.isLoading = false;
-    }, error => {})
+    });
   }
 
   messageIsNotNull() {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
-import {Post, User, Comment} from "../shared/models";
+import {Post, Comment} from "../shared/models";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {SharedComponent} from "../shared/shared.component";
 import {CodeModel} from "@ngstack/code-editor";
@@ -81,6 +81,33 @@ export class PostService {
     });
   }
 
+  getPostByPostId(postId: string) {
+    return new Observable<Post>((observer) => {
+      this.http.get(`${this._API_URL}/post/getPostById/${postId}`, {headers: this.header}).subscribe(async (results: any) => {
+        const result = results.posts[0];
+        const post = new Post(
+          result.post_uid,
+          result.is_comment,
+          result.type_privacy,
+          result.title,
+          result.description,
+          this.sharedComponent.formatDate(result.created_at),
+          result.person_uid,
+          result.username,
+          result.avatar,
+          result.images,
+          result.count_comment,
+          result.count_likes,
+          result.is_like);
+        observer.next(post);
+        observer.complete();
+      }, error => {
+        observer.error(error);
+        observer.complete();
+      })
+    });
+  }
+
   createNewPost(file: File, title: string, description: string) {
     const formData = new FormData();
     formData.append('imagePosts', file);
@@ -125,6 +152,20 @@ export class PostService {
         observer.complete();
       })
     });
+  }
+
+  getLikesUser(post_uid: string) {
+    return new Observable<any>((observer) => {
+      this.http.get(`${this._API_URL}/post/getLikeUserByPost/${post_uid}`, { headers : this.header}).subscribe(async (result: any) => {
+        const isLike = result.isLikedb[0].total_likes;
+        observer.next(isLike);
+        observer.complete();
+      }, error => {
+        observer.error(error);
+        observer.complete();
+      })
+    });
+
   }
 
   likeOrUnlikePost(post_uid: string, user_uid: string) {

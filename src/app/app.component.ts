@@ -26,6 +26,7 @@ export class AppComponent{
   displayProfile = false
   displaySettings = false
   displayPostProfile = false
+  displayMyNotifications = false
 
   currentUser!: User
   postUser!: User
@@ -49,6 +50,8 @@ export class AppComponent{
     } else if (index == 2) {
       if (this.isLogged) this.showCreatePost();
       else this.showSignUp();
+    } else if (index == 3) {
+      this.showMyNotifications();
     }
   }
 
@@ -109,6 +112,7 @@ export class AppComponent{
     this.displayProfile = false;
     this.displaySettings = false;
     this.displayPostProfile = false;
+    this.displayMyNotifications = false;
   }
 
   showMyPosts() {
@@ -121,6 +125,7 @@ export class AppComponent{
     this.displayProfile = false;
     this.displaySettings = false;
     this.displayPostProfile = false;
+    this.displayMyNotifications = false;
   }
 
   showCreatePost() {
@@ -133,6 +138,7 @@ export class AppComponent{
     this.displayProfile = false;
     this.displaySettings = false;
     this.displayPostProfile = false;
+    this.displayMyNotifications = false;
   }
 
   showSignUp() {
@@ -145,6 +151,7 @@ export class AppComponent{
     this.displayProfile = false;
     this.displaySettings = false;
     this.displayPostProfile = false;
+    this.displayMyNotifications = false;
   }
 
   showProfile() {
@@ -157,6 +164,7 @@ export class AppComponent{
     this.displayProfile = true;
     this.displaySettings = false;
     this.displayPostProfile = false;
+    this.displayMyNotifications = false;
   }
 
   showSettings() {
@@ -169,6 +177,7 @@ export class AppComponent{
     this.displayProfile = false;
     this.displaySettings = true;
     this.displayPostProfile = false;
+    this.displayMyNotifications = false;
   }
 
   showPostProfile(uid: string) {
@@ -184,5 +193,19 @@ export class AppComponent{
     this.displayProfile = false;
     this.displaySettings = false;
     this.displayPostProfile = true;
+    this.displayMyNotifications = false;
+  }
+
+  showMyNotifications() {
+    this.displayAllPosts = false;
+    this.displayMyPosts = false;
+    this.displayCreatePost = false;
+    this.showEditor = false;
+    this.displayMenuUser = false;
+    this.displaySignUp = false;
+    this.displayProfile = false;
+    this.displaySettings = false;
+    this.displayPostProfile = false;
+    this.displayMyNotifications = true;
   }
 }

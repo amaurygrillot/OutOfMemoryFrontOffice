@@ -1,0 +1,11 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+
+<div *ngIf="notificationsdb && notificationsdb.length > 0 && !isLoading">
+  <div *ngFor="let notif of notificationsdb" style="max-height: 100%; max-width: 100%">
+    <app-notification [notification]="notif"></app-notification>
+  </div>
+</div>
+
+<div *ngIf="notificationsdb.length == 0 && !isLoading">
+  <mat-card-content>You do not have any notification.</mat-card-content>
+</div>

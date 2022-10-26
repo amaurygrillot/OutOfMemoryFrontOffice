@@ -1,7 +1,13 @@
 <mat-card class="example-card" style="max-height: 100%; max-width: 100%; margin-top: 1%" *ngIf="hasLoaded">
-  <mat-card-header>
-    <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}" (click)="showPostProfile()">
-    <mat-card-title (click)="showPostProfile()">{{ post.username }}</mat-card-title>
+  <mat-card-header *ngIf="isLogged">
+    <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}" (click)="openProfile()"
+         class="pointer">
+    <mat-card-title (click)="openProfile()" class="pointer">{{ post.username }}</mat-card-title>
+    <mat-card-subtitle>{{ post.created_at }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-header *ngIf="!isLogged">
+    <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}">
+    <mat-card-title>{{ post.username }}</mat-card-title>
     <mat-card-subtitle>{{ post.created_at }}</mat-card-subtitle>
   </mat-card-header>
 
@@ -27,10 +33,12 @@
   <span>{{ message_like }}</span>
   <div class="row">
     <div class="col-1">
-      <mat-icon>thumb_up</mat-icon>{{ count_likes }}
+      <mat-icon>thumb_up</mat-icon>
+      {{ count_likes }}
     </div>
     <div class="col-2">
-      <mat-icon>comment</mat-icon> {{ count_comments }}
+      <mat-icon>comment</mat-icon>
+      {{ count_comments }}
     </div>
   </div>
 
@@ -38,15 +46,12 @@
 
   <mat-card-actions>
     <ng-template #online>
-      <!--<button mat-button (click)="setLike()" [ngClass]="{'like' : isLiked, 'dislike': !isLiked}">LIKE</button>-->
-      <button mat-button (click)="setLike()">LIKE</button>
+      <button mat-button (click)="setLike()" [ngClass]="{'like' : isLiked, 'dislike': !isLiked}">LIKE</button>
       <button mat-button (click)="setComment()">COMMENT</button>
-      <button mat-button>SHARE</button>
     </ng-template>
     <ng-template #guest>
       <button mat-button (click)="showLogin()">LIKE</button>
       <button mat-button (click)="showLogin()">COMMENT</button>
-      <button mat-button>SHARE</button>
     </ng-template>
   </mat-card-actions>
 </mat-card>

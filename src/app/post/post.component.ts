@@ -6,6 +6,7 @@ import {LoginComponent} from "@app/auth/login/login.component";
 import {AllCommentsByPostComponent} from "@app/post/all-comments-by-post/all-comments-by-post.component";
 import {MatDialog} from "@angular/material/dialog";
 import {environment} from "@environments/environment.prod";
+import {ProfileComponent} from "@app/user/profile/profile.component";
 
 @Component({
   selector: 'app-post',
@@ -33,6 +34,7 @@ export class PostComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.count_likes = this.post.count_likes;
     this.count_comments = this.post.count_comment - 1;
+    this.hasLike()
   }
 
   ngOnChanges(): void {
@@ -46,6 +48,13 @@ export class PostComponent implements OnInit, OnChanges {
   showPostProfile() {
     this._appComponent.showPostProfile(this.post.person_uid);
     if (this.isLogged) this._appComponent.tabGroup.selectedIndex = 4;
+  }
+
+  hasLike() {
+    this._postService.getLikesUser(this.post.post_uid).subscribe(res => {
+      this.isLiked = res === 1
+      console.log(`isLike: ${res}`)
+    });
   }
 
   setLike() {
@@ -69,5 +78,16 @@ export class PostComponent implements OnInit, OnChanges {
     });
     dialogRef.afterClosed().subscribe(result => {});
     this.count_comments = this.post.count_comment;
+  }
+
+  openProfile() {
+    const dialogRef = this._dialog.open(ProfileComponent, {
+      width: '800px',
+      height: '750px',
+      data: {
+        'userId': this.post.person_uid
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {});
   }
 }
