@@ -5,6 +5,7 @@ import {lastValueFrom, Observable} from "rxjs";
 import {CodeEditorComponent} from '@ngstack/code-editor';
 import {Post} from "@app/shared/models";
 import {ChallengeResult} from "@app/shared/models/challengeresult.model";
+import {environment} from "@environments/environment";
 
 export type ProgrammingLanguageAssociation = {
   languageName: string;
@@ -124,7 +125,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       {
         return item.languageName === this.selected
       });
-    let url = `${process.env.CODE_EXECUTOR_URL}/${programmingLanguage?.languageName}`
+    let url = `${environment.CODE_EXECUTOR_URL}/${programmingLanguage?.languageName}`
     const formData: FormData = new FormData();
     if(this.challengeParticipation && !this.executeNoSave)
     {
@@ -182,7 +183,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     {
       filePath = `${this.post.post_uid}/${this.post.person_uid}`
     }
-    return this.http.get<string>(`${process.env.CODE_EXECUTOR_URL}/${programmingLanguage.languageName}/${filePath}`, {observe: 'response'});
+    return this.http.get<string>(`${environment.CODE_EXECUTOR_URL}/${programmingLanguage.languageName}/${filePath}`, {observe: 'response'});
   }
 
   async getAllLanguagesBaseValue(timeout: number): Promise<boolean>
@@ -282,7 +283,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     const programmingLanguage = await this.programmingLanguageAssociations.find((item) => {
       return item.languageName === this.selected
     });
-    let url = `${process.env.CODE_EXECUTOR_URL}/${programmingLanguage?.languageName}`
+    let url = `${environment.CODE_EXECUTOR_URL}/${programmingLanguage?.languageName}`
     const formData: FormData = new FormData();
     if(this.challengeParticipation)
     {

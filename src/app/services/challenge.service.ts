@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {SharedComponent} from "../shared/shared.component";
 import {lastValueFrom, Observable} from "rxjs";
-import {Comment, Post} from "../shared/models";
-import {CodeModel} from "@ngstack/code-editor";
+import {environment} from "@environments/environment";
 import {Challenge} from "../shared/models/challenge";
 import {ChallengeResult} from "@app/shared/models/challengeresult.model";
 
@@ -26,7 +25,7 @@ export class ChallengeService {
 
   getAllChallenges() {
     return new Observable<Challenge[]>((observer) => {
-      this.http.get(`${process.env.API_URL}/challenge/getchallenge`, { headers : this.header}).subscribe((results: any) => {
+      this.http.get(`${environment.API_URL}/challenge/getchallenge`, { headers : this.header}).subscribe((results: any) => {
         const challenges = [];
         for (const result of results.challengesdb) {
           const challenge = new Challenge(
@@ -49,7 +48,7 @@ export class ChallengeService {
 
   getAllChallengeResults(challengeId: string) {
     return new Observable<ChallengeResult[]>((observer) => {
-      this.http.get(`${process.env.API_URL}/challenge/getChallengeResultByIdChallenge/${challengeId}`, { headers : this.header}).subscribe((results: any) => {
+      this.http.get(`${environment.API_URL}/challenge/getChallengeResultByIdChallenge/${challengeId}`, { headers : this.header}).subscribe((results: any) => {
         const challengeResults = [];
         for (const challengeResult of results.ChallengeResults) {
           const challenge = new ChallengeResult(
@@ -77,7 +76,7 @@ export class ChallengeService {
 
   getChallengeById(id: string) {
     return new Observable<Challenge>((observer) => {
-      this.http.get(`${process.env.API_URL}/challenge/getChallengeByIdChallenge/${id}`,  { headers : this.header}).subscribe((result: any) => {
+      this.http.get(`${environment.API_URL}/challenge/getChallengeByIdChallenge/${id}`,  { headers : this.header}).subscribe((result: any) => {
           const challenge = new Challenge(
             result.challenge_uid,
             result.title,
@@ -108,11 +107,11 @@ export class ChallengeService {
         {
           body.uid = challengeResult.uid;
           body.updated_at = this.sharedComponent.formatDateDB(new Date().toString())
-          url = `${process.env.API_URL}/challenge/updateChallengeResultById`;
+          url = `${environment.API_URL}/challenge/updateChallengeResultById`;
         }
         else
         {
-          url = `${process.env.API_URL}/challenge/createNewChallengeResult`
+          url = `${environment.API_URL}/challenge/createNewChallengeResult`
         }
       const headers1 = new HttpHeaders()
         .set('Authorization', `${sessionStorage.getItem('token')}`)
@@ -121,7 +120,7 @@ export class ChallengeService {
   }
 
   checkChallengeResultExists(challengeId: string) {
-    const url = `${process.env.API_URL}/challenge/getChallengeResultByChallengeAndUserId/${challengeId}/${sessionStorage.getItem('userId')}`
+    const url = `${environment.API_URL}/challenge/getChallengeResultByChallengeAndUserId/${challengeId}/${sessionStorage.getItem('userId')}`
     const headers1 = new HttpHeaders()
       .set('Authorization', `${sessionStorage.getItem('token')}`)
     return lastValueFrom(this.http.get<any>(url,

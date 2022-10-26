@@ -25,7 +25,6 @@
     "ngx-dropzone": "^3.1.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "dotenv": "^16.0.1",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
@@ -34,7 +33,6 @@
     "@angular/compiler-cli": "~13.3.0",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
-    "@types/dotenv": "^8.2.0",
     "jasmine-core": "~4.0.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
