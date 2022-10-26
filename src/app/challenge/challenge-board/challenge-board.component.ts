@@ -56,11 +56,6 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
   }
 
   announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    console.log("here")
     console.log(sortState);
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
@@ -71,7 +66,6 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
 
 
   isCurrentUser(row: any): boolean {
-    console.log(row.username === sessionStorage.getItem('username'))
     return row.username === sessionStorage.getItem('username')
   }
 }

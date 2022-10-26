@@ -101,40 +101,29 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
   ngOnInit() {
   }
   ngOnChanges(): void {
-    if(this.executeNoSave === undefined || !this.executeNoSave)
-    {
-        if(sessionStorage.getItem('userId') !== this.post.person_uid)
-        {
-          this.readonly = true;
-        }
-        this.loadAllLanguagesBaseValue(30 * 1000);
-    }
-    else
-    {
-      this.codeModel.language = this.programmingLanguageAssociations[0].languageName;
-      this.codeModel.uri = this.programmingLanguageAssociations[0].mainFile;
-      this.codeModel.value = this.programmingLanguageAssociations[0].baseValue;
-      this.code = this.programmingLanguageAssociations[0].baseValue;
-      this.contentReady = true;
-      this.isEditorReady = true;
-    }
 
+    if(this.post !== undefined
+      && this.post !== null
+      && sessionStorage.getItem('userId') !== this.post.person_uid)
+    {
+      this.readonly = true;
+    }
+    this.loadAllLanguagesBaseValue(30 * 1000);
   }
-
-
 
   onCodeChanged(value: any) {
     this.code = value;
     if(this.hasLoaded)
       this.hasLoaded = false;
-
   }
 
   async sendData() {
     this.loading = true;
-    const programmingLanguage = await this.programmingLanguageAssociations.find((item) => {
-      return item.languageName === this.selected
-    });
+    const programmingLanguage = await this.programmingLanguageAssociations
+      .find((item) =>
+      {
+        return item.languageName === this.selected
+      });
     let url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}`
     const formData: FormData = new FormData();
     if(this.challengeParticipation && !this.executeNoSave)
@@ -176,22 +165,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     this.loading = true;
     this.changingLanguage = !this.changingLanguage;
     this.selectedProgrammingLanguage = programmingLanguage;
-    this.codeModel.language = programmingLanguage.languageName;
-    if(this.executeNoSave)
-    {
-      this.codeModel.uri = programmingLanguage.mainFile;
-    }
-    else if(this.challengeParticipation)
-    {
-      this.codeModel.uri = this.challengeId + programmingLanguage.mainFile;
-    }
-    else
-    {
-      this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
-    }
-
-    this.codeModel.value = programmingLanguage.baseValue;
-    this.code = programmingLanguage.baseValue;
+    this.setEditorValues()
     this.onCodeChanged(this.code);
     this.loading = false;
 
@@ -230,18 +204,9 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
           value.subscribe(result =>
           {
             if (result.status === 200 && !this.foundSavedFile) {
-              this.codeModel.value = result.body || ' ';
-              this.code = this.codeModel.value;
-              if(this.challengeParticipation)
-              {
-                this.codeModel.uri = this.challengeId + programmingLanguage.mainFile;
-              }
-              else
-              {
-                this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
-              }
-              this.selected = programmingLanguage.languageName;
-              this.codeModel.language = this.selected;
+              programmingLanguage.baseValue = result.body || ' ';
+              this.code = programmingLanguage.baseValue;
+              this.selectedProgrammingLanguage = programmingLanguage;
               this.foundSavedFile = true;
               accept(this.foundSavedFile);
             }
@@ -249,7 +214,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
             {
                 code = result.status;
             }
-            programmingLanguage.baseValue = result.body || '';
           })
 
         }
@@ -261,9 +225,9 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     this.getAllLanguagesBaseValue(timeout)
       .then((value: boolean) =>
       {
-        console.log("value : " + value)
         if(value)
         {
+          this.setEditorValues();
           this.contentReady = true;
           this.isEditorReady = true;
           this.loadingBaseValues = false;
@@ -297,7 +261,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       { headers: headers1}))
       .then((data) =>
       {
-        console.log(data);
         this.resultColor = 'green';
         this.result = data.substring(0, data.lastIndexOf('\n'))
       })
@@ -339,5 +302,26 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     return lastValueFrom(this.http.post<string>(url,
       formData,
       {headers: headers1}));
+  }
+
+  public setEditorValues()
+  {
+    this.codeModel.language = this.selectedProgrammingLanguage.languageName;
+    if(this.challengeParticipation)
+    {
+      this.codeModel.uri = this.challengeId + this.selectedProgrammingLanguage.mainFile;
+    }
+    else if(this.post !== undefined)
+    {
+      this.codeModel.uri = this.post.post_uid + this.selectedProgrammingLanguage.mainFile;
+    }
+    else
+    {
+      this.codeModel.uri = this.selectedProgrammingLanguage.mainFile;
+    }
+    this.codeModel.value = this.selectedProgrammingLanguage.baseValue;
+    this.code = this.selectedProgrammingLanguage.baseValue;
+    this.contentReady = true;
+    this.isEditorReady = true;
   }
 }
