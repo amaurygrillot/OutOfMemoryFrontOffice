@@ -70,6 +70,8 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
   }
 
 
-
-
+  isCurrentUser(row: any): boolean {
+    console.log(row.username === sessionStorage.getItem('username'))
+    return row.username === sessionStorage.getItem('username')
+  }
 }

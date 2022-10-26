@@ -36,3 +36,7 @@
   width: 10%;
   text-align: center;
 }
+
+.highlighted {
+  background-color: #9d959c;
+}

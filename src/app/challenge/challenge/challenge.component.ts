@@ -1,4 +1,4 @@
-import {AfterContentChecked, AfterContentInit, Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import {AfterContentChecked, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {AppComponent} from "@app/app.component";
 import {MatDialog} from "@angular/material/dialog";
 import {Challenge} from "@app/shared/models/challenge";
