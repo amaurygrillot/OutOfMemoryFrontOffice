@@ -124,7 +124,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       {
         return item.languageName === this.selected
       });
-    let url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}`
+    let url = `${process.env.CODE_EXECUTOR_URL}/${programmingLanguage?.languageName}`
     const formData: FormData = new FormData();
     if(this.challengeParticipation && !this.executeNoSave)
     {
@@ -182,7 +182,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     {
       filePath = `${this.post.post_uid}/${this.post.person_uid}`
     }
-    return this.http.get<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage.languageName}/${filePath}`, {observe: 'response'});
+    return this.http.get<string>(`${process.env.CODE_EXECUTOR_URL}/${programmingLanguage.languageName}/${filePath}`, {observe: 'response'});
   }
 
   async getAllLanguagesBaseValue(timeout: number): Promise<boolean>
@@ -282,7 +282,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     const programmingLanguage = await this.programmingLanguageAssociations.find((item) => {
       return item.languageName === this.selected
     });
-    let url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}`
+    let url = `${process.env.CODE_EXECUTOR_URL}/${programmingLanguage?.languageName}`
     const formData: FormData = new FormData();
     if(this.challengeParticipation)
     {

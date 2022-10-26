@@ -18,11 +18,7 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
   @Input() challenge!: Challenge;
   @ViewChild('codeEditor') codeEditor!: FullCodeEditorComponent;
   @ViewChild('challengeBoard') challengeBoard!: ChallengeBoardComponent;
-  URL = "https://outofmemoryerror-back.azurewebsites.net"
-
   hasLoaded = false;
-
-  count_likes!: number;
   participating = false;
   loading = false;
   challengeResultExists = false;
