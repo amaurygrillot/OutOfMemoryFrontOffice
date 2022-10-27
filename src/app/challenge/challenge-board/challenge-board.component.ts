@@ -4,6 +4,7 @@ import {ChallengeResult} from "@app/shared/models/challengeresult.model";
 import {MatSort, Sort} from "@angular/material/sort";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatTableDataSource} from "@angular/material/table";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-challenge-board',
@@ -16,6 +17,7 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
   allChallengeResults: ChallengeResult[] = [];
   dataSource = new MatTableDataSource<ChallengeResult>();
   displayedColumns: string[] = ['position', 'username','resultat_obtenu', 'temps_execution', 'created_at', 'updated_at', 'language_used'];
+  searchControl = new FormControl();
 
 
   constructor(private challengeService: ChallengeService, private _liveAnnouncer: LiveAnnouncer) { }
@@ -26,6 +28,10 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+    this.searchControl.valueChanges.subscribe((filter =>
+    {
+      this.filterUsers(filter)
+    }))
   }
 
   updateChallengeBoard()
@@ -67,5 +73,13 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
 
   isCurrentUser(row: any): boolean {
     return row.username === sessionStorage.getItem('username')
+  }
+
+  filterUsers(filter: string)
+  {
+    this.dataSource.data = this.allChallengeResults.filter((challengeResult =>
+    {
+      return challengeResult.username?.includes(filter);
+    }))
   }
 }

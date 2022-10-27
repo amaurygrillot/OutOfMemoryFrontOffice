@@ -174,7 +174,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
   async setLanguageBaseValue(programmingLanguage: ProgrammingLanguageAssociation): Promise<Observable<HttpResponse<string>>>
   {
-    let filePath = '';
+    let filePath: string;
     if(this.challengeParticipation)
     {
       filePath = `challenge/${this.challengeId}/${sessionStorage.getItem('userId')}`

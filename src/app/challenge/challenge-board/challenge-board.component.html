@@ -1,4 +1,7 @@
 <mat-card>
+  <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <input type="text" placeholder="Cherchez un utilisateur" aria-label="Select user" matInput [formControl]="searchControl">
+  </mat-form-field>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 challenge-table"
        matSort
        (matSortChange)="announceSortChange($event)">
