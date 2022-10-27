@@ -2,6 +2,16 @@
   <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
     <input type="text" placeholder="Cherchez un utilisateur" aria-label="Select user" matInput [formControl]="searchControl">
   </mat-form-field>
+
+  <mat-form-field  *ngIf="arrayInitiated" class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <mat-select  placeholder="Voir uniquement les résultats écrits en : "
+                (selectionChange)="selectLanguage($event.value)"
+                [formControl]="languageControl">
+      <mat-option [value]="'Tous'">Tout languages</mat-option>
+      <mat-option *ngFor="let language of languageArray" [value]="language">{{language}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 challenge-table"
        matSort
        (matSortChange)="announceSortChange($event)">

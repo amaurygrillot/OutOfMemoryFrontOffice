@@ -17,13 +17,16 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
   allChallengeResults: ChallengeResult[] = [];
   dataSource = new MatTableDataSource<ChallengeResult>();
   displayedColumns: string[] = ['position', 'username','resultat_obtenu', 'temps_execution', 'created_at', 'updated_at', 'language_used'];
+  languageArray: string[] = [];
   searchControl = new FormControl();
-
+  arrayInitiated = false;
+  languageControl = new FormControl();
 
   constructor(private challengeService: ChallengeService, private _liveAnnouncer: LiveAnnouncer) { }
 
   ngOnInit(): void {
-      this.updateChallengeBoard()
+      this.updateChallengeBoard();
+      this.arrayInitiated = true;
   }
 
   ngAfterViewInit() {
@@ -39,7 +42,12 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
     this.challengeService.getAllChallengeResults(this.challengeId).subscribe(allChallengeResults => {
       this.allChallengeResults = allChallengeResults as ChallengeResult[]
       this.dataSource.data = this.allChallengeResults;
+      console.log(this.allChallengeResults);
+      const languageNames = this.allChallengeResults.map(cr => cr.used_language);
+      console.log(languageNames)
+      this.languageArray = [...new Set(languageNames)];
     })
+
   }
 
   addChallengeResultToBoard(challengeResult: ChallengeResult)
@@ -80,6 +88,18 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
     this.dataSource.data = this.allChallengeResults.filter((challengeResult =>
     {
       return challengeResult.username?.includes(filter);
+    }))
+  }
+
+  selectLanguage(value: any) {
+    if(value === 'Tous')
+    {
+      this.dataSource.data = this.allChallengeResults;
+      return;
+    }
+    this.dataSource.data = this.allChallengeResults.filter((challengeResult =>
+    {
+      return challengeResult.used_language === value;
     }))
   }
 }
