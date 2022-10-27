@@ -5,6 +5,7 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatTableDataSource} from "@angular/material/table";
 import {FormControl} from "@angular/forms";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-challenge-board',
@@ -14,6 +15,7 @@ import {FormControl} from "@angular/forms";
 export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
   @Input() challengeId!: string;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   allChallengeResults: ChallengeResult[] = [];
   dataSource = new MatTableDataSource<ChallengeResult>();
   displayedColumns: string[] = ['position', 'username','resultat_obtenu', 'temps_execution', 'created_at', 'updated_at', 'language_used'];
@@ -31,6 +33,7 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
     this.searchControl.valueChanges.subscribe((filter =>
     {
       this.filterUsers(filter)
@@ -42,9 +45,7 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
     this.challengeService.getAllChallengeResults(this.challengeId).subscribe(allChallengeResults => {
       this.allChallengeResults = allChallengeResults as ChallengeResult[]
       this.dataSource.data = this.allChallengeResults;
-      console.log(this.allChallengeResults);
       const languageNames = this.allChallengeResults.map(cr => cr.used_language);
-      console.log(languageNames)
       this.languageArray = [...new Set(languageNames)];
     })
 

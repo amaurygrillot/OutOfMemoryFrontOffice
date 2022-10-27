@@ -57,4 +57,9 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"
   [ngClass]="{'highlighted' : isCurrentUser(row)}"></tr>
 </table>
+  <mat-paginator [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 25, 50, 100]"
+                 showFirstLastButtons
+                 aria-label="Select page">
+  </mat-paginator>
 </mat-card>
