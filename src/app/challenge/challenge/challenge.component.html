@@ -2,7 +2,7 @@
 <button (click)="participateChallenge()" *ngIf="!participating && !challengeResultExists" mat-flat-button color="primary">Participer au challenge</button>
 <full-code-editor *ngIf="participating || challengeResultExists"
                   [challengeParticipation]="true"
-                  [challengeId]="challenge.uid"
+                  [challengeId]="challenge.challenge_id"
                   [executeNoSave]="true"
                   #codeEditor></full-code-editor>
 <button mat-stroked-button color="primary" style="margin-top: 1%; margin-bottom: 1%;"
@@ -11,6 +11,6 @@
         *ngIf="(participating || challengeResultExists) && loading"></mat-spinner>
 <app-challenge-board style="max-height: 100%; max-width: 100%"
   *ngIf="hasLoaded"
-  [challengeId]="challenge.uid"
+  [challengeId]="challenge.challenge_id"
   #challengeBoard>
 </app-challenge-board>

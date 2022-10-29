@@ -45,24 +45,16 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
   }
 
   ngOnChanges(): void {
-    this._challengeService.checkChallengeResultExists(this.challenge.uid).then(result =>
+    this._challengeService.checkChallengeResultExists(this.challenge.challenge_id).then(result =>
     {
       if(result.ChallengeResults.length > 0)
       {
         this.challengeResultExists = true;
-        this.challengeResult = new ChallengeResult(
-          result.ChallengeResults[0].uid,
-          result.ChallengeResults[0].challenge_id,
-          result.ChallengeResults[0].resultat_obtenu,
-          result.ChallengeResults[0].temps_execution,
-          result.ChallengeResults[0].user_id,
-          this._sharedComponent.formatDateEuropean(result.ChallengeResults[0].created_at),
-          this._sharedComponent.formatDateEuropean(result.ChallengeResults[0].updated_at),
-          result.ChallengeResults[0].used_language,
-          result.ChallengeResults[0].username
-        )
+        this.challengeResult = result.ChallengeResults[0] as ChallengeResult;
+        this.challengeResult.created_at = this._sharedComponent.formatDateEuropean(this.challengeResult.created_at);
+        this.challengeResult.updated_at = this._sharedComponent.formatDateEuropean(this.challengeResult.updated_at);
 
-        }
+      }
     }).finally(()=> {
       this.hasLoaded = true;
     });
@@ -124,7 +116,7 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
     const temps_execution = this.codeEditor.result.substring(this.codeEditor.result.indexOf(' : ') + 3, this.codeEditor.result.indexOf(' seconde'))
     const challengeResult = new ChallengeResult(
       '',
-      this.challenge.uid,
+      this.challenge.challenge_id,
       resultat_obtenu,
       parseFloat(temps_execution),
       sessionStorage.getItem('userId') || '',

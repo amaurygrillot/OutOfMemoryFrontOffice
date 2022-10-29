@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {User} from "@app/shared/models";
 import {MatTabGroup} from "@angular/material/tabs";
 import {MatDialog} from "@angular/material/dialog";
+import {SharedComponent} from "@app/shared/shared.component";
 
 @Component({
   selector: 'app-root',
@@ -19,11 +20,11 @@ export class AppComponent implements OnInit{
   showMenuUser = false
   showPostCreated = true
   showSignup = false
-
+  static sharedComponent: SharedComponent;
   @ViewChild('tabGroup') tabGroup!: MatTabGroup;
 
-  constructor(private http: HttpClient, public dialog: MatDialog) {
-
+  constructor(private http: HttpClient, public dialog: MatDialog, private _sharedComponent: SharedComponent) {
+    AppComponent.sharedComponent = _sharedComponent;
   }
   ngOnInit(): void {
 

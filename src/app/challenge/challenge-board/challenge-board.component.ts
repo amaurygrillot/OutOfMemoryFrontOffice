@@ -6,6 +6,7 @@ import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatTableDataSource} from "@angular/material/table";
 import {FormControl} from "@angular/forms";
 import {MatPaginator} from "@angular/material/paginator";
+import {AppComponent} from "@app/app.component";
 
 @Component({
   selector: 'app-challenge-board',
@@ -43,7 +44,14 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
   updateChallengeBoard()
   {
     this.challengeService.getAllChallengeResults(this.challengeId).subscribe(allChallengeResults => {
-      this.allChallengeResults = allChallengeResults as ChallengeResult[]
+      this.allChallengeResults = allChallengeResults as ChallengeResult[];
+      console.log(typeof this.allChallengeResults)
+      this.allChallengeResults.forEach(element =>
+      {
+        element.created_at = AppComponent.sharedComponent.formatDateEuropean(element.created_at) || '';
+        element.updated_at = AppComponent.sharedComponent.formatDateEuropean(element.updated_at) || '';
+
+      })
       this.dataSource.data = this.allChallengeResults;
       const languageNames = this.allChallengeResults.map(cr => cr.used_language);
       this.languageArray = [...new Set(languageNames)];

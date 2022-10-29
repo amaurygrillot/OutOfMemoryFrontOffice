@@ -1,14 +1,19 @@
+import {SharedComponent} from "@app/shared/shared.component";
+import {AppComponent} from "@app/app.component";
+
 export class Challenge {
-  uid: string;
+  challenge_id: string;
   title: string;
   description: string;
   created_at: string;
+  updated_at: string;
 
 
-  constructor(uid: string, title: string, description:string, created_at: string) {
-    this.uid = uid;
+  constructor(challenge_id: string, title: string, description:string, created_at: string, updated_at: string) {
+    this.challenge_id = challenge_id;
     this.title = title;
     this.description = description;
-    this.created_at = created_at;
+    this.created_at = AppComponent.sharedComponent.formatDateEuropean(created_at);
+    this.updated_at = AppComponent.sharedComponent.formatDateEuropean(updated_at);
   }
 }

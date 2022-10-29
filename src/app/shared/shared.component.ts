@@ -8,8 +8,8 @@ import {HttpClient} from "@angular/common/http";
   styleUrls: ['./shared.component.css']
 })
 export class SharedComponent implements OnInit {
-
-  constructor(private _datePipe: DatePipe, private _http: HttpClient) { }
+  constructor(private _datePipe: DatePipe, private _http: HttpClient) {
+  }
 
   ngOnInit(): void {
   }

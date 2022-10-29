@@ -5,6 +5,7 @@ import {lastValueFrom, Observable} from "rxjs";
 import {environment} from "@environments/environment";
 import {Challenge} from "../shared/models/challenge";
 import {ChallengeResult} from "@app/shared/models/challengeresult.model";
+import {AppComponent} from "@app/app.component";
 
 
 
@@ -26,17 +27,12 @@ export class ChallengeService {
   getAllChallenges() {
     return new Observable<Challenge[]>((observer) => {
       this.http.get(`${environment.API_URL}/challenge/getchallenge`, { headers : this.header}).subscribe((results: any) => {
-        const challenges = [];
-        for (const result of results.challengesdb) {
-          const challenge = new Challenge(
-            result.challenge_id,
-            result.title,
-            result.description,
-            new Date().toString()
-            //this.sharedComponent.formatDate(result.created_at)
-          );
-          challenges.push(challenge);
-        }
+        const challenges = results.challengesdb as Challenge[];
+        challenges.forEach(element =>
+        {
+          element.created_at = AppComponent.sharedComponent.formatDateEuropean(element.created_at) || '';
+          element.updated_at = AppComponent.sharedComponent.formatDateEuropean(element.updated_at) || '';
+        })
         observer.next(challenges);
         observer.complete();
       }, error => {
@@ -49,22 +45,7 @@ export class ChallengeService {
   getAllChallengeResults(challengeId: string) {
     return new Observable<ChallengeResult[]>((observer) => {
       this.http.get(`${environment.API_URL}/challenge/getChallengeResultByIdChallenge/${challengeId}`, { headers : this.header}).subscribe((results: any) => {
-        const challengeResults = [];
-        for (const challengeResult of results.ChallengeResults) {
-          const challenge = new ChallengeResult(
-            challengeResult.uid,
-            challengeResult.challenge_id,
-            challengeResult.resultat_obtenu,
-            challengeResult.temps_execution,
-            challengeResult.user_id,
-            this.sharedComponent.formatDateEuropean(challengeResult.created_at),
-            this.sharedComponent.formatDateEuropean(challengeResult.updated_at),
-            challengeResult.used_language,
-            challengeResult.username,
-            challengeResult.position
-          );
-          challengeResults.push(challenge);
-        }
+        const challengeResults = results.ChallengeResults as ChallengeResult[];
         observer.next(challengeResults);
         observer.complete();
       }, error => {
@@ -73,17 +54,11 @@ export class ChallengeService {
       })
     });
   }
-
+/*
   getChallengeById(id: string) {
     return new Observable<Challenge>((observer) => {
-      this.http.get(`${environment.API_URL}/challenge/getChallengeByIdChallenge/${id}`,  { headers : this.header}).subscribe((result: any) => {
-          const challenge = new Challenge(
-            result.challenge_uid,
-            result.title,
-            result.description,
-            //this.sharedComponent.formatDate(result.created_at),
-            new Date().toString()
-            );
+      this.http.get<Challenge>(`${environment.API_URL}/challenge/getChallengeByIdChallenge/${id}`,  { headers : this.header}).subscribe((result) => {
+          const challenge = result
           observer.next(challenge)
         observer.complete();
       }, error => {
@@ -92,7 +67,7 @@ export class ChallengeService {
       })
     });
   }
-
+*/
   postChallengeResult(challengeResult: ChallengeResult, challengeResultExists: boolean): Promise<any>
   {
     const body: any = {
