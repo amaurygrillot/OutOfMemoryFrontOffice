@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {PostService} from "@app/services/post.service";
 import {Comment} from "@app/shared/models";
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormControl, Validators} from "@angular/forms";
 
 @Component({
@@ -27,7 +27,6 @@ export class AllCommentsByPostComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("all comments", this.post_uid)
     this._postService.getCommentsByPostId(this.post_uid).subscribe(comments => {
       this.comments = comments;
       this.isLoading = false;

@@ -1,0 +1,9 @@
+<mat-card style="max-height: 100%; max-width: 100%; margin-top: 1%">
+  <mat-card-header>
+    <img mat-card-avatar class="img-thumbnail" src="{{ this.URL }}/{{ follower.avatar }}" alt="{{ follower.avatar }}">
+    <mat-card-title>{{ follower.fullname }} </mat-card-title>
+    <mat-card-subtitle>{{ follower.username }}</mat-card-subtitle>
+  </mat-card-header>
+  <button mat-stroked-button (click)="removeFollower()">Remove</button>
+
+</mat-card>

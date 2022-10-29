@@ -25,7 +25,11 @@ export class NotificationComponent implements OnInit {
 
   userId = sessionStorage.getItem("userId");
 
-  constructor(private _postService: PostService, private _userService: UserService, private _dialog: MatDialog) { }
+  constructor(
+    private _postService: PostService,
+    private _userService: UserService,
+    private _dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.notificationUsername = this.notification.followers_uid === this.userId ? "You" : this.notification.follower;

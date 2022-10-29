@@ -10,6 +10,7 @@ import {AllPostsComponent} from "@app/post/all-posts/all-posts.component";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { CommentPostComponent } from './all-comments-by-post/comment-post/comment-post.component';
 import { AllCommentsByPostComponent } from './all-comments-by-post/all-comments-by-post.component';
+import { ProfilePostComponent } from './profile-post/profile-post.component';
 
 
 
@@ -19,15 +20,17 @@ import { AllCommentsByPostComponent } from './all-comments-by-post/all-comments-
     CreatePostComponent,
     AllPostsComponent,
     CommentPostComponent,
-    AllCommentsByPostComponent
+    AllCommentsByPostComponent,
+    ProfilePostComponent
   ],
-  exports: [
-    PostComponent,
-    CreatePostComponent,
-    AllPostsComponent,
-    CommentPostComponent,
-    AllCommentsByPostComponent
-  ],
+    exports: [
+        PostComponent,
+        CreatePostComponent,
+        AllPostsComponent,
+        CommentPostComponent,
+        AllCommentsByPostComponent,
+        ProfilePostComponent
+    ],
   imports: [
     CommonModule,
     SharedModule,

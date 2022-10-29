@@ -1,4 +1,4 @@
-<button mat-icon-button class="close-button"[mat-dialog-close]="true">
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
   <mat-icon class="close-icon" color="warn">close</mat-icon>
 </button>
 
@@ -6,30 +6,55 @@
 
 <mat-card class="example-card">
   <mat-card-header style="width: 150px;">
-    <img mat-card-avatar src="{{ this.URL }}/{{ this.user.image }}" alt="{{ this.user.image }}" class="img-fluid img-thumbnail mt-4 mb-2">
-    <mat-card-title class="mt-4 mb-2">{{ user.fullname }}</mat-card-title>
-    <mat-card-subtitle class="mt-4 mb-2">@{{ user.username }}</mat-card-subtitle>
+    <img mat-card-avatar mat-card-md-image src="{{ this.URL }}/{{ this.user.image }}" alt="{{ this.user.image }}"
+         class="img-fluid figure-img">
+    <div>
+      <mat-card-title>{{ user.fullname }}</mat-card-title>
+      <mat-card-subtitle>@{{ user.username }}</mat-card-subtitle>
 
-    <div class="p-4 text-black" style="background-color: #f8f9fa;">
-      <div class="d-flex justify-content-end text-center py-1">
-        <div>
-          <p class="mb-1 h5">{{ count_posts }}</p>
-          <p class="small text-muted mb-0">Posts</p>
-        </div>
-        <div class="px-3">
-          <p class="mb-1 h5">{{ count_following }}</p>
-          <p class="small text-muted mb-0">Following</p>
-        </div>
-        <div>
-          <p class="mb-1 h5">{{ count_followers }}</p>
-          <p class="small text-muted mb-0">Followers</p>
+
+      <div class="p-4 text-black">
+        <div class="d-flex justify-content-end text-center py-1">
+          <div>
+            <p class="mb-1 h5">{{ count_posts }}</p>
+            <p class="small text-muted mb-0">Posts</p>
+          </div>
+          <div class="px-3">
+            <p class="mb-1 h5">{{ count_following }}</p>
+            <p *ngIf="isNotLoggedUser" class="small text-muted mb-0">Following</p>
+            <p *ngIf="!isNotLoggedUser" (click)="showFollowing()" class="small text-muted mb-0 pointer">Following</p>
+          </div>
+          <div>
+            <p class="mb-1 h5">{{ count_followers }}</p>
+            <p *ngIf="isNotLoggedUser" class="small text-muted mb-0">Followers</p>
+            <p *ngIf="!isNotLoggedUser" (click)="showFollowers()" class="small text-muted mb-0 pointer">Followers</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <button *ngIf="!isFollowing" mat-flat-button color="primary" (click)="follow()">FOLLOW</button>
-    <button *ngIf="isNotLoggedUser && isFollowing" mat-stroked-button (click)="unfollow()" (mouseover)="setUnfollowButton()" (mouseout)="setFollowedButton()" [ngClass]="{'followed' : !mouseOverFollow, 'unfollow': mouseOverFollow}">{{ followButtonValue }}</button>
-    <button *ngIf="isPending" mat-flat-button disabled>PENDING REQUEST</button>
-
+    <div style="justify-content: flex-end;">
+      <mat-card-content>
+        <button *ngIf="isNotLoggedUser && !isPending && !isFollowing" mat-flat-button color="primary"
+                (click)="follow()">
+          FOLLOW
+        </button>
+        <button *ngIf="isNotLoggedUser && !isPending && isFollowing" mat-stroked-button (click)="unfollow()"
+                (mouseover)="setUnfollowButton()" (mouseout)="setFollowedButton()"
+                [ngClass]="{'followed' : !mouseOverFollow, 'unfollow': mouseOverFollow}">{{ followButtonValue }}</button>
+        <button *ngIf="isPending" mat-flat-button disabled>PENDING</button>
+      </mat-card-content>
+    </div>
   </mat-card-header>
+
+
+  <mat-tab-group class="center" [selectedIndex]="0">
+
+    <mat-tab label="Posts">
+      <mat-dialog-content *ngFor=" let post of profilePosts" style="max-height: 100%; max-width: 100%">
+        <app-profile-post [post]="post" [hasLoaded]="true"></app-profile-post>
+      </mat-dialog-content>
+    </mat-tab>
+
+  </mat-tab-group>
 </mat-card>

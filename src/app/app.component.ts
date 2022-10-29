@@ -38,7 +38,7 @@ export class AppComponent{
     this._userService.getUserById(sessionStorage.getItem('userId')!).subscribe(user => {
       this.currentUser = user;
     });
-    console.log(this.currentUser);
+    //console.log(this.currentUser);
   }
 
   public tabChanged(tabChangeEvent: MatTabChangeEvent): void {

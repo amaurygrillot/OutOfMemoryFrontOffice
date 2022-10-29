@@ -22,6 +22,7 @@ export class AllNotificationsComponent implements OnInit {
   setAllNotifications() {
     this._userService.getAllNotificationsByUser().subscribe(async (notifications) => {
       this.notificationsdb = notifications;
+      this.notificationsdb.sort((a, b) => b.created_at.localeCompare(a.created_at))
       this.isLoading = false;
     });
   }

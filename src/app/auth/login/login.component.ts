@@ -1,11 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {LocalStorageService} from "src/app/auth/services/local-storage.service";
-import {Router} from "@angular/router";
 import {MatDialogRef} from "@angular/material/dialog";
 import {TokenService} from "@app/auth/services/token.service";
-import {AppComponent} from "@app/app.component";
 import {environment} from "@environments/environment";
 
 @Component({

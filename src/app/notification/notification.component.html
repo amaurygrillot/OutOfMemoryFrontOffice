@@ -3,8 +3,10 @@
     <mat-card-header>
       <img mat-card-avatar src="{{ this.URL }}/{{ notification.avatar }}" alt="{{ notification.avatar }}" (click)="openProfile()" class="pointer">
       <mat-card-title (click)="openProfile()" class="pointer">{{ notificationUsername }}</mat-card-title>
-      <mat-card-subtitle>wants to follow you</mat-card-subtitle>
-      <button (click)="acceptFollow()" [disabled]="hasConfirmed" mat-flat-button color="primary">{{ confirmationButtonValue }}</button>
+      <mat-card-subtitle>wants to follow you. ({{ notification.created_at }})</mat-card-subtitle>
+      <div>
+        <button (click)="acceptFollow()" [disabled]="hasConfirmed" mat-flat-button color="primary">{{ confirmationButtonValue }}</button>
+      </div>
     </mat-card-header>
   </mat-card>
 </div>
@@ -14,7 +16,7 @@
     <mat-card-header>
       <img mat-card-avatar src="{{ this.URL }}/{{ notification.avatar }}" alt="{{ notification.avatar }}">
       <mat-card-title>{{ notificationUsername }}</mat-card-title>
-      <mat-card-subtitle>liked the post [{{ post_title }}].</mat-card-subtitle>
+      <mat-card-subtitle>liked the post [{{ post_title }}]. ({{ notification.created_at }})</mat-card-subtitle>
     </mat-card-header>
   </mat-card>
 </div>
@@ -24,7 +26,7 @@
     <mat-card-header>
       <img mat-card-avatar src="{{ this.URL }}/{{ notification.avatar }}" alt="{{ notification.avatar }}" (click)="openProfile()" class="pointer">
       <mat-card-title (click)="openProfile()" class="pointer">{{ notificationUsername }}</mat-card-title>
-      <mat-card-subtitle>is now following you.</mat-card-subtitle>
+      <mat-card-subtitle>is now following you. ({{ notification.created_at }})</mat-card-subtitle>
     </mat-card-header>
   </mat-card>
 </div>

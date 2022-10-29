@@ -1,15 +1,22 @@
 <mat-card class="example-card" style="max-height: 100%; max-width: 100%; margin-top: 1%" *ngIf="hasLoaded">
-  <mat-card-header *ngIf="isLogged">
-    <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}" (click)="openProfile()"
-         class="pointer">
-    <mat-card-title (click)="openProfile()" class="pointer">{{ post.username }}</mat-card-title>
-    <mat-card-subtitle>{{ post.created_at }}</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-header *ngIf="!isLogged">
-    <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}">
-    <mat-card-title>{{ post.username }}</mat-card-title>
-    <mat-card-subtitle>{{ post.created_at }}</mat-card-subtitle>
-  </mat-card-header>
+
+  <div *ngIf="isLogged; then online_headers else guest_headers"></div>
+
+  <ng-template #online_headers>
+    <mat-card-header>
+      <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}" (click)="openProfile()"
+           class="pointer">
+      <mat-card-title (click)="openProfile()" class="pointer">{{ post.username }}</mat-card-title>
+      <mat-card-subtitle>{{ post.created_at }}</mat-card-subtitle>
+    </mat-card-header>
+  </ng-template>
+  <ng-template #guest_headers>
+    <mat-card-header>
+      <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}">
+      <mat-card-title>{{ post.username }}</mat-card-title>
+      <mat-card-subtitle>{{ post.created_at }}</mat-card-subtitle>
+    </mat-card-header>
+  </ng-template>
 
   <mat-card-content>
     <h2>{{ post.title }}</h2>
@@ -36,7 +43,7 @@
       <mat-icon>thumb_up</mat-icon>
       {{ count_likes }}
     </div>
-    <div class="col-2">
+    <div class="col-1">
       <mat-icon>comment</mat-icon>
       {{ count_comments }}
     </div>

@@ -1,0 +1,43 @@
+<mat-card style="max-height: 100%; max-width: 100%; margin-top: 1%">
+  <mat-card-header>
+    <img mat-card-avatar src="{{ this.URL }}/{{ post.avatar }}" alt="{{ post.avatar }}">
+    <mat-card-title>{{ post.username }}</mat-card-title>
+    <mat-card-subtitle>{{ post.created_at }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <h2>{{ post.title }}</h2>
+    <p>
+      {{ post.description }}
+    </p>
+  </mat-card-content>
+
+  <div
+    *ngIf="post.images.toLowerCase().endsWith('.jpg') || post.images.toLowerCase().endsWith('.png') || post.images.toLowerCase().endsWith('.jpeg'); then imageContent else codeContent">
+  </div>
+  <ng-template #imageContent>
+    <img class="image-card" mat-card-image src="{{ this.URL }}/{{ post.images }}" alt="{{ post.images }}">
+  </ng-template>
+  <ng-template #codeContent>
+    <full-code-editor [post]="post"></full-code-editor>
+  </ng-template>
+
+  <br>
+
+  <span>{{ message_like }}</span>
+  <div class="row">
+    <div class="col-2">
+      <mat-icon>thumb_up</mat-icon>
+      {{ count_likes }}
+    </div>
+    <div class="col-2">
+      <mat-icon>comment</mat-icon>
+      {{ count_comments }}
+    </div>
+  </div>
+
+  <mat-card-actions>
+      <button mat-button (click)="setLike()" [ngClass]="{'like' : isLiked, 'dislike': !isLiked}">LIKE</button>
+      <button mat-button (click)="setComment()">COMMENT</button>
+  </mat-card-actions>
+</mat-card>

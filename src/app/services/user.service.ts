@@ -68,6 +68,10 @@ export class UserService {
     return this.http.post<any>(`${this._API_URL}/user/acceptFollowerRequest`, body, {headers: this.header});
   }
 
+  removeFollower(uid_follower: string) {
+    return this.http.delete<any>(`${this._API_URL}/user/deleteFollowers/${uid_follower}`, {headers: this.header});
+  }
+
   getAllFollowing() {
     return new Observable<Follow[]>((observer) => {
       this.http.get(`${this._API_URL}/user/getAllFollowings`, {headers: this.header}).subscribe(async (results: any) => {
@@ -143,5 +147,31 @@ export class UserService {
     });
   }
 
+  getAllNotificationsByUserId(userId: string) {
+    return new Observable<Notification[]>((observer) => {
+      this.http.get(`${this._API_URL}/notification/getNotificationsByUserId/${userId}`, {headers: this.header}).subscribe(async (results: any) => {
+        const notifs = [];
+        for (const result of results.notificationsdb) {
+          const notif = new Notification(
+            result.uid_notification,
+            result.type_notification,
+            this._sharedComponent.formatDate(result.created_at),
+            result.user_uid,
+            result.username,
+            result.followers_uid,
+            result.follower,
+            result.avatar,
+            result.post_uid
+          );
+          notifs.push(notif)
+        }
+        observer.next(notifs);
+        observer.complete();
+      }, error => {
+        observer.error(error);
+        observer.complete();
+      })
+    });
+  }
 
 }

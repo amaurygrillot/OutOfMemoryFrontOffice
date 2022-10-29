@@ -63,7 +63,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
         fileExtension: '.ts',
         baseValue: ''
       }*/
-    ];
+   ];
   codeModel: CodeModel = {
     language: this.selected,
     uri: '',
@@ -260,8 +260,5 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
       });
   }
-
-
-
 
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {Post, Comment} from "../shared/models";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
@@ -17,7 +17,8 @@ export class PostService {
     .set('Authorization', `${this._token}`)
     .set('Content-Type', 'application/json');
 
-  constructor(private http: HttpClient, private sharedComponent: SharedComponent) { }
+  constructor(private http: HttpClient, private sharedComponent: SharedComponent) {
+  }
 
   getAllPosts() {
     return new Observable<Post[]>((observer) => {
@@ -49,11 +50,42 @@ export class PostService {
     });
   }
 
-  getPostsByUserId(userId: string) {
+  getPostsByUserId() {
     return new Observable<Post[]>((observer) => {
       // @ts-ignore
-      const body = new HttpParams().set("idPerson", userId);
-      this.http.get(`${this._API_URL}/post/getAllPostByUserID`,  { headers : this.header, params: body}).subscribe((results: any) => {
+      this.http.get(`${this._API_URL}/post/getAllPostByUserID`, {headers: this.header}).subscribe((results: any) => {
+        const posts = [];
+        for (const result of results.postUser) {
+          const post = new Post(
+            result.post_uid,
+            result.is_comment,
+            result.type_privacy,
+            result.title,
+            result.description,
+            this.sharedComponent.formatDate(result.created_at),
+            result.person_uid,
+            result.username,
+            result.avatar,
+            result.images,
+            result.count_comment,
+            result.count_likes,
+            result.is_like);
+          posts.push(post);
+        }
+        observer.next(posts);
+        observer.complete();
+      }, error => {
+        observer.error(error);
+        observer.complete();
+      })
+    });
+  }
+
+
+  getPostsByOtherUserId(userId: string) {
+    return new Observable<Post[]>((observer) => {
+      // @ts-ignore
+      this.http.get(`${this._API_URL}/post/getAllPostByOtherUserID/${userId}`, {headers: this.header}).subscribe((results: any) => {
         const posts = [];
         for (const result of results.postUser) {
           const post = new Post(
@@ -120,14 +152,13 @@ export class PostService {
       .set('enctype', 'multipart/form-data')
       .set('Accept', 'application/json')
 
-    return this.http.post<any>(`${this._API_URL}/post/createNewPost`, formData, { headers: createPostHeader });
+    return this.http.post<any>(`${this._API_URL}/post/createNewPost`, formData, {headers: createPostHeader});
 
   }
 
-  async saveCode(post_uid: string, codeModel: CodeModel): Promise<string | undefined>
-  {
-    let file = new Blob([ codeModel.value],
-      {type:  codeModel.uri.substring(codeModel.uri.indexOf('.'))});
+  async saveCode(post_uid: string, codeModel: CodeModel): Promise<string | undefined> {
+    let file = new Blob([codeModel.value],
+      {type: codeModel.uri.substring(codeModel.uri.indexOf('.'))});
     const formData: FormData = new FormData();
     formData.append('fileKey', file, codeModel.uri);
     formData.append('commentId', `${post_uid}`)
@@ -136,14 +167,17 @@ export class PostService {
 
     return this.http.post<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${codeModel.language}/saveFile`,
       formData,
-      { headers: headers1}
+      {headers: headers1}
     ).toPromise();
   }
 
   getLikes(post_uid: string) {
     const body = new HttpParams().set('uidPost', post_uid)
     return new Observable<bigint>((observer) => {
-      this.http.get(`${this._API_URL}/post/getLikes`, { headers : this.header, params: body}).subscribe(async (result: any) => {
+      this.http.get(`${this._API_URL}/post/getLikes`, {
+        headers: this.header,
+        params: body
+      }).subscribe(async (result: any) => {
         const likes = result.posts[0][0].uid_likes;
         observer.next(likes);
         observer.complete();
@@ -156,7 +190,7 @@ export class PostService {
 
   getLikesUser(post_uid: string) {
     return new Observable<any>((observer) => {
-      this.http.get(`${this._API_URL}/post/getLikeUserByPost/${post_uid}`, { headers : this.header}).subscribe(async (result: any) => {
+      this.http.get(`${this._API_URL}/post/getLikeUserByPost/${post_uid}`, {headers: this.header}).subscribe(async (result: any) => {
         const isLike = result.isLikedb[0].total_likes;
         observer.next(isLike);
         observer.complete();
@@ -173,7 +207,7 @@ export class PostService {
       'uidPost': post_uid,
       'uidPerson': user_uid
     }
-    return this.http.post<any>(`${this._API_URL}/post/likeOrUnlikePost`, body, { headers: this.header });
+    return this.http.post<any>(`${this._API_URL}/post/likeOrUnlikePost`, body, {headers: this.header});
   }
 
   createNewComment(post_uid: string, comment: string) {
@@ -181,12 +215,12 @@ export class PostService {
       'uidPost': post_uid,
       'comment': comment
     }
-    return this.http.post<any>(`${this._API_URL}/post/addNewComment`, body, { headers: this.header});
+    return this.http.post<any>(`${this._API_URL}/post/addNewComment`, body, {headers: this.header});
   }
 
   getCommentsByPostId(post_uid: string) {
     return new Observable<Comment[]>((observer) => {
-      this.http.get(`${this._API_URL}/post/getCommentByIdPost/${post_uid}`, { headers: this.header }).subscribe((results: any) => {
+      this.http.get(`${this._API_URL}/post/getCommentByIdPost/${post_uid}`, {headers: this.header}).subscribe((results: any) => {
         const comments = [];
         for (const result of results.comments) {
           const comment = new Comment(
@@ -215,6 +249,7 @@ export class PostService {
     const body = {
       'uidComment': comment_uid
     }
-    return this.http.put<any>(`${this._API_URL}/post/likeOrUnLikeComment`, body, { headers: this.header });
+    return this.http.put<any>(`${this._API_URL}/post/likeOrUnLikeComment`, body, {headers: this.header});
   }
+
 }
