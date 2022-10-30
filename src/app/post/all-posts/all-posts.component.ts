@@ -6,6 +6,7 @@ import {FormControl} from "@angular/forms";
 import {MatSelect} from "@angular/material/select";
 import {DatePipe} from "@angular/common";
 import {environment} from "@environments/environment.prod";
+import {AppComponent} from "@app/app.component";
 
 @Component({
   selector: 'app-all-posts',
@@ -14,7 +15,9 @@ import {environment} from "@environments/environment.prod";
 })
 export class AllPostsComponent implements OnInit, OnChanges {
   @Input() allPosts!: boolean;
-  @Input() userId!: string
+  @Input() userId!: string;
+  @Input() lastIndex!: number;
+
   @ViewChild('selectSort') selectSort!: MatSelect;
   postControl = new FormControl();
   sortControl = new FormControl();
@@ -28,7 +31,8 @@ export class AllPostsComponent implements OnInit, OnChanges {
   isLoading = true;
   isLogged = sessionStorage.getItem('token') !== null;
   oneDayMillisecond = 1000 * 60 * 60 * 24;
-  constructor(private postService: PostService, private datePipe: DatePipe) { }
+
+  constructor(private postService: PostService) { }
 
   ngOnInit(): void {
 

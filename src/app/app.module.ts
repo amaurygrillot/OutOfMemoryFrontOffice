@@ -19,6 +19,7 @@ import {MatTableModule} from "@angular/material/table";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSortModule} from "@angular/material/sort";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {ErrorModule} from "@app/error/error.module";
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -51,6 +52,7 @@ export const MY_DATE_FORMATS = {
     PostModule,
     FullCodeEditorModule,
     NotificationModule,
+    ErrorModule,
     MatTableModule,
     MatExpansionModule,
     MatSortModule,

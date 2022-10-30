@@ -6,6 +6,7 @@ import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
 import {PostService} from "@app/services/post.service";
 import {AllFollowingComponent} from "@app/user/all-following/all-following.component";
 import {AllFollowersComponent} from "@app/user/all-followers/all-followers.component";
+import {AppComponent} from "@app/app.component";
 
 @Component({
   selector: 'app-profile',
