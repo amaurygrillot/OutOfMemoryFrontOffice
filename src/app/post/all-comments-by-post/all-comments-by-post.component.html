@@ -1,3 +1,11 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<mat-card-header>
+  <mat-card-title>Comments of the post : {{ post_name }}</mat-card-title>
+</mat-card-header>
+
 <mat-card>
   <mat-card-title>
     Add a new comment
@@ -21,7 +29,7 @@
 
 <mat-card>
   <mat-card-title>
-    List of comments for the post : {{ post_name }}
+    List of comments
   </mat-card-title>
 
   <mat-spinner *ngIf="isLoading"></mat-spinner>

@@ -7,3 +7,17 @@
 .row-form-width {
   width: 100%;
 }
+
+.close-button{
+  float: right;
+  top:-22px;
+  right:-22px;
+}
+
+.close-icon {
+  transition: 1s ease-in-out;
+}
+
+.close-icon:hover {
+  transform: rotate(180deg);
+}
