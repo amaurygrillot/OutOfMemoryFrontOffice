@@ -54,6 +54,10 @@
       <mat-dialog-content *ngFor=" let post of profilePosts" style="max-height: 100%; max-width: 100%">
         <app-profile-post [post]="post" [hasLoaded]="true"></app-profile-post>
       </mat-dialog-content>
+      <mat-card-content *ngIf="profilePosts.length == 0">
+        <br>
+        No posts created.
+      </mat-card-content>
     </mat-tab>
 
   </mat-tab-group>
