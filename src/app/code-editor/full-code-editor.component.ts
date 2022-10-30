@@ -22,6 +22,7 @@ export type ProgrammingLanguageAssociation = {
 })
 
 export class FullCodeEditorComponent implements OnInit, OnChanges{
+
   get challengeResult(): ChallengeResult {
     return this._challengeResult;
   }
@@ -29,6 +30,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     this._challengeResult = value;
   }
   @Input() post !: Post;
+  @Input() postCreation!: boolean;
   @Input() challengeId !: string;
   @Input() executeNoSave !: boolean;
   @Input() challengeParticipation !: boolean;
@@ -101,16 +103,23 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
 
   ngOnInit() {
+    console.log("ye")
   }
   ngOnChanges(): void {
-
-    if(this.post !== undefined
-      && this.post !== null
-      && sessionStorage.getItem('userId') !== this.post.person_uid)
+    if(this.postCreation)
+    {
+      this.loadAllLanguagesBaseValue(2 * 1000);
+      return;
+    }
+    else
+    {
+      this.loadAllLanguagesBaseValue(30 * 1000);
+    }
+    if(this.post && sessionStorage.getItem('userId') !== this.post.person_uid)
     {
       this.readonly = true;
     }
-    this.loadAllLanguagesBaseValue(30 * 1000);
+
   }
 
   onCodeChanged(value: any) {
@@ -175,6 +184,10 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     {
       filePath = `challenge/${this.challengeId}/${sessionStorage.getItem('userId')}`
     }
+    else if(this.post === null || this.post === undefined)
+    {
+      filePath = 'null/null'
+    }
     else
     {
       filePath = `${this.post.post_uid}/${this.post.person_uid}`
@@ -200,6 +213,8 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
           const value = await this.setLanguageBaseValue(programmingLanguage);
           value.subscribe(result =>
           {
+            console.log("here")
+            console.log(result)
             if (result.status === 200 && !this.foundSavedFile) {
               programmingLanguage.baseValue = result.body || ' ';
               this.code = programmingLanguage.baseValue;
@@ -212,7 +227,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
                 code = result.status;
             }
           })
-
         }
     });
   }
@@ -222,19 +236,12 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     this.getAllLanguagesBaseValue(timeout)
       .then((value: boolean) =>
       {
-        if(value)
-        {
-          this.setEditorValues();
-          this.contentReady = true;
-          this.isEditorReady = true;
-          this.loadingBaseValues = false;
-          this.hasLoaded = false;
-          this.loading = false;
-        }
 
       })
       .catch((reason: any) =>
       {
+        console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        console.log(reason)
         if(reason.code === 500)
         {
           this.loadingBaseValues = false;
@@ -246,7 +253,15 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
           this.contentReady = true;
         }
 
-      });
+      }).finally(() =>
+    {
+      this.setEditorValues();
+      this.contentReady = true;
+      this.isEditorReady = true;
+      this.loadingBaseValues = false;
+      this.hasLoaded = false;
+      this.loading = false;
+    });
   }
 
   private executeWithSave(url: string, formData: FormData) {
@@ -302,6 +317,8 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
   public setEditorValues()
   {
+
+    console.log("ohiobhjvyfiv")
     this.codeModel.language = this.selectedProgrammingLanguage.languageName;
     if(this.challengeParticipation)
     {
@@ -317,7 +334,9 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     }
     this.codeModel.value = this.selectedProgrammingLanguage.baseValue;
     this.code = this.selectedProgrammingLanguage.baseValue;
+    console.log("hioujbbkjnjblù")
     this.contentReady = true;
     this.isEditorReady = true;
+    console.log("njbhjbhvhvhhvhvhvhvhvhvhvhvhvhhv")
   }
 }

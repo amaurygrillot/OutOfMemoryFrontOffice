@@ -30,8 +30,8 @@
 
       </mat-tab>
 
-      <mat-tab label="Code">
-        <full-code-editor [executeNoSave]="true" #codeEditor></full-code-editor>
+      <mat-tab label="Code" #tabCode>
+        <full-code-editor *ngIf="tabCode.isActive" [postCreation]="true" [executeNoSave]="true" #codeEditor></full-code-editor>
       </mat-tab>
 
       <mat-tab label="Image">
