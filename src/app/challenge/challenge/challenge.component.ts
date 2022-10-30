@@ -25,6 +25,8 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
   loading = false;
   challengeResultExists = false;
   challengeResult!: ChallengeResult;
+  showTestResults = false;
+  testResults: string[] = [];
   constructor(private _appComponent: AppComponent, private _challengeService: ChallengeService, private _dialog: MatDialog, private _sharedComponent: SharedComponent) {
 
   }
@@ -82,12 +84,15 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
     {
       return;
     }
+    let result = 0;
     let file = new Blob([this.codeEditor.code], {type: this.codeEditor.selectedProgrammingLanguage.fileExtension});
     lastValueFrom(this._challengeService.checkResults(file, this.codeEditor.selectedProgrammingLanguage, this.challenge.challenge_id, challengeResult.uid))
       .then((data) =>
       {
         console.log(data)
         challengeResult!.resultat_obtenu = ((data.passed / data.totalTests) * 100)+ "%";
+        this.testResults = data.results;
+        this.showTestResults = true;
       })
       .catch((reason) => {
         console.log(reason)
@@ -102,7 +107,6 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
         {
           if(this.challengeResultExists && challengeResult !== null)
           {
-            console.log(challengeResult)
             this.challengeResult = challengeResult;
             this.challengeResult.uid = data.uidChallengeResult;
             this.challengeResult.updated_at = this._sharedComponent.formatDateEuropean(new Date().toString());

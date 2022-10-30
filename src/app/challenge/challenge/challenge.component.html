@@ -5,6 +5,16 @@
                   [challengeId]="challenge.challenge_id"
                   [executeNoSave]="true"
                   #codeEditor></full-code-editor>
+<mat-card *ngIf="showTestResults" [style.background]="">
+  <mat-card-title></mat-card-title>
+  <mat-card-content>
+    Voilà vos résultats d'exécution
+    <p style="white-space: pre;" *ngFor="let testResult of testResults">
+      {{testResult.substring(0,testResult.indexOf('Le programme s\'est arrêté avec le code'))}}
+    </p>
+  </mat-card-content>
+
+</mat-card>
 <button mat-stroked-button color="primary" style="margin-top: 1%; margin-bottom: 1%;"
         *ngIf="(participating || challengeResultExists) && !loading" (click)="submitResult()">Soumettre le résultat</button>
 <mat-spinner style="margin-top: 1%; margin-bottom: 1%;"
