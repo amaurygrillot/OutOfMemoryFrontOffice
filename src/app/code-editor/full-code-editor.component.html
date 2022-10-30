@@ -1,6 +1,5 @@
 <mat-card style="max-height: 100%; max-width: 100%" *ngIf="contentReady">
   <mat-card-title>Editeur</mat-card-title>
-
   <mat-card-content>
     <mat-card-actions *ngIf="isEditorReady">
       <mat-form-field appearance="fill">
@@ -51,3 +50,4 @@
 
   </mat-card-content>
 </mat-card>
+<mat-spinner *ngIf="!contentReady"></mat-spinner>
