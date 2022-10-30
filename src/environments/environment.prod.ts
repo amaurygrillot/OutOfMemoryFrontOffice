@@ -1,4 +1,7 @@
 export const environment = {
+  baseUrl: 'https://outofmemoryerror-back.azurewebsites.net',
+  apiUrl: 'https://outofmemoryerror-back.azurewebsites.net/api',
+  apiLocalUrl: 'http://localhost:3000/api',
   CODE_EXECUTOR_URL : 'https://outofmemoryerror-code-executer-container.azurewebsites.net',
   API_URL : 'https://outofmemoryerror-back.azurewebsites.net/api',
   firebase: {

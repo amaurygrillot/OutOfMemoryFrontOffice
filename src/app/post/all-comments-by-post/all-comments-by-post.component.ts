@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {PostService} from "@app/services/post.service";
 import {Comment} from "@app/shared/models";
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormControl, Validators} from "@angular/forms";
 
 @Component({
@@ -22,16 +22,15 @@ export class AllCommentsByPostComponent implements OnInit {
   isLoading = true;
 
   constructor(private _postService: PostService, @Inject(MAT_DIALOG_DATA) public data: any) {
-    this.post_uid = this.data.post_uid;
-    this.post_name = this.data.post_name;
+    this.post_uid = data.post_uid;
+    this.post_name = data.post_name;
   }
 
   ngOnInit(): void {
-    console.log("all comments", this.post_uid)
     this._postService.getCommentsByPostId(this.post_uid).subscribe(comments => {
       this.comments = comments;
       this.isLoading = false;
-    }, error => {})
+    });
   }
 
   messageIsNotNull() {

@@ -11,6 +11,7 @@ import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {UserModule} from "@app/user/user.module";
 import {PostModule} from "@app/post/post.module";
 import {FullCodeEditorModule} from "@app/code-editor/full-code-editor.module";
+import {NotificationModule} from "@app/notification/notification.module";
 import { ChallengeComponent } from './challenge/challenge/challenge.component';
 import { ChallengeBoardComponent } from './challenge/challenge-board/challenge-board.component';
 import { AllChallengesComponent } from './challenge/all-challenges/all-challenges.component';
@@ -49,6 +50,7 @@ export const MY_DATE_FORMATS = {
     UserModule,
     PostModule,
     FullCodeEditorModule,
+    NotificationModule
     MatTableModule,
     MatExpansionModule,
     MatSortModule,

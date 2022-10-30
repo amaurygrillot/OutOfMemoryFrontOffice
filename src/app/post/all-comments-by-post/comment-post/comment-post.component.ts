@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Comment} from "src/app/shared/models";
 import {PostService} from "@app/services/post.service";
+import {environment} from "@environments/environment";
 
 @Component({
   selector: 'app-comment-post',
@@ -11,7 +12,7 @@ export class CommentPostComponent implements OnInit {
 
   @Input() comment!: Comment
 
-  URL = "https://outofmemoryerror-back.azurewebsites.net";
+  URL = environment.baseUrl
   count_likes!: number;
   message_like!: string;
   isLiked = false;

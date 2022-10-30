@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {LocalStorageService} from "src/app/auth/services/local-storage.service";
-import {Router} from "@angular/router";
 import {MatDialogRef} from "@angular/material/dialog";
 import {TokenService} from "@app/auth/services/token.service";
+import {environment} from "@environments/environment";
 import {AppComponent} from "@app/app.component";
 import {lastValueFrom} from "rxjs";
 
@@ -15,7 +14,7 @@ import {lastValueFrom} from "rxjs";
 })
 
 export class LoginComponent implements OnInit {
-  private _url = "https://outofmemoryerror-back.azurewebsites.net/api";
+  private _url = environment.apiUrl;
   hide = false;
   show = true;
   loading = false;

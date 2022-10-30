@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-content>
-  <mat-tab-group color="primary" backgroundColor="primary" mat-align-tabs="center" #tabGroup>
+    <mat-tab-group color="primary" backgroundColor="primary" mat-align-tabs="center" #tabGroup>
 
     <mat-tab label="out of memory" #tab1>
       <app-all-posts [allPosts]="true" *ngIf="tab1.isActive"></app-all-posts>
@@ -18,6 +18,10 @@
       <app-all-challenges [allChallenges]="true" *ngIf="tab4.isActive"></app-all-challenges>
     </mat-tab>
 
+    <mat-tab label="My notifications" *ngIf="isLogged && tabNotif.isActive" #tabNotif>
+      <app-all-notifications *ngIf="tabNotif.isActive && displayMyNotifications"></app-all-notifications>
+    </mat-tab>
+
     <mat-tab [disabled]="true" #tab5>
       <ng-template mat-tab-label>
         <button mat-flat-button color="primary" (click)="showLogin()" *ngIf="!isLogged">
@@ -27,11 +31,10 @@
       </ng-template>
     </mat-tab>
 
-    <mat-tab *ngIf="!isLogged" label="Sign up" #tab6>
-      <app-signup></app-signup>
-    </mat-tab>
+      <mat-tab *ngIf="!isLogged" label="Sign up" #tab6>
+        <app-signup *ngIf="displaySignUp"></app-signup>
+      </mat-tab>
 
-  </mat-tab-group>
-<full-code-editor *ngIf="showEditor"></full-code-editor>
+    </mat-tab-group>
   </mat-card-content>
 </mat-card>

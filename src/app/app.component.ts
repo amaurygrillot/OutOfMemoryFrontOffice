@@ -2,8 +2,10 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {LoginComponent} from "@app/auth/login/login.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {User} from "@app/shared/models";
-import {MatTabGroup} from "@angular/material/tabs";
+import {MatTabChangeEvent, MatTabGroup} from "@angular/material/tabs";
 import {MatDialog} from "@angular/material/dialog";
+import {environment} from "@environments/environment";
+import {UserService} from "@app/services/user.service";
 import {SharedComponent} from "@app/shared/shared.component";
 
 @Component({
@@ -14,17 +16,51 @@ import {SharedComponent} from "@app/shared/shared.component";
 export class AppComponent implements OnInit{
   title = 'OutOfMemoryFrontOffice';
   isLogged = sessionStorage.getItem('token') !== null;
-  private _url = "https://outofmemoryerror-back.azurewebsites.net/api"
+  private _url = environment.apiUrl;
 
   showEditor = false
+  displayMenuUser = false
+  displayAllPosts = true
+  displayMyPosts = false
+  displayCreatePost = false
+  displaySignUp = false
+  displayProfile = false
+  displaySettings = false
+  displayPostProfile = false
+  displayMyNotifications = false
   showMenuUser = false
   showPostCreated = true
   showSignup = false
   static sharedComponent: SharedComponent;
+  currentUser!: User
+  postUser!: User
+
   @ViewChild('tabGroup') tabGroup!: MatTabGroup;
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private _sharedComponent: SharedComponent) {
-    AppComponent.sharedComponent = _sharedComponent;
+  constructor(private http: HttpClient, public dialog: MatDialog, private _userService: UserService, private _sharedComponent: SharedComponent) {
+    //console.log(sessionStorage);
+    this._userService.getUserById(sessionStorage.getItem('userId')!).subscribe(user => {
+      this.currentUser = user;
+      AppComponent.sharedComponent = _sharedComponent;
+    });
+    //console.log(this.currentUser);
+  }
+
+  public tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+    const index = tabChangeEvent.index;
+    if (index == 0) {
+      this.showPost();
+    } else if (index == 1) {
+      this.showMyPosts();
+    } else if (index == 2) {
+      if (this.isLogged) this.showCreatePost();
+      else this.showSignUp();
+    } else if (index == 3) {
+      this.showMyNotifications();
+    }
+
+  
+  @ViewChild('tabGroup') tabGroup!: MatTabGroup;
   }
   ngOnInit(): void {
 
@@ -41,7 +77,7 @@ export class AppComponent implements OnInit{
           .set('Authorization', `${sessionStorage.getItem('token')}`)
           .set('Content-Type', 'application/json');
         this.isLogged = true;
-        this.showMenuUser = true;
+        this.displayMenuUser = true;
 
         const user = await this.http.get<any>(`${this._url}/user/getAnotherUserById/${sessionStorage.getItem('userId')}`,
           {headers: header})
@@ -73,27 +109,113 @@ export class AppComponent implements OnInit{
   }
 
   resetAllTabs() {
-    this.showPostCreated = true;
-    this.showEditor = false;
-    this.showMenuUser = false;
-    this.showSignup = false;
+    this.showPost()
   }
 
   showPost() {
-    this.showPostCreated = true;
+    this.displayAllPosts = true;
+    this.displayMyPosts = false;
+    this.displayCreatePost = false;
     this.showEditor = false;
-    this.showSignup = false;
+    this.displayMenuUser = false;
+    this.displaySignUp = false;
+    this.displayProfile = false;
+    this.displaySettings = false;
+    this.displayPostProfile = false;
+    this.displayMyNotifications = false;
+  }
+
+  showMyPosts() {
+    this.displayAllPosts = false;
+    this.displayMyPosts = true;
+    this.displayCreatePost = false;
+    this.showEditor = false;
+    this.displayMenuUser = false;
+    this.displaySignUp = false;
+    this.displayProfile = false;
+    this.displaySettings = false;
+    this.displayPostProfile = false;
+    this.displayMyNotifications = false;
   }
 
   showCreatePost() {
-    this.showPostCreated = false;
-    this.showEditor = true;
-    this.showSignup = false;
+    this.displayAllPosts = false;
+    this.displayMyPosts = false;
+    this.displayCreatePost = true;
+    this.showEditor = false;
+    this.displayMenuUser = false;
+    this.displaySignUp = false;
+    this.displayProfile = false;
+    this.displaySettings = false;
+    this.displayPostProfile = false;
+    this.displayMyNotifications = false;
   }
 
   showSignUp() {
-    this.showPostCreated = false;
+    this.displayAllPosts = false;
+    this.displayMyPosts = false;
+    this.displayCreatePost = false;
     this.showEditor = false;
-    this.showSignup = true;
+    this.displayMenuUser = false;
+    this.displaySignUp = true;
+    this.displayProfile = false;
+    this.displaySettings = false;
+    this.displayPostProfile = false;
+    this.displayMyNotifications = false;
+  }
+
+  showProfile() {
+    this.displayAllPosts = false;
+    this.displayMyPosts = false;
+    this.displayCreatePost = false;
+    this.showEditor = false;
+    this.displayMenuUser = false;
+    this.displaySignUp = false;
+    this.displayProfile = true;
+    this.displaySettings = false;
+    this.displayPostProfile = false;
+    this.displayMyNotifications = false;
+  }
+
+  showSettings() {
+    this.displayAllPosts = false;
+    this.displayMyPosts = false;
+    this.displayCreatePost = false;
+    this.showEditor = false;
+    this.displayMenuUser = false;
+    this.displaySignUp = false;
+    this.displayProfile = false;
+    this.displaySettings = true;
+    this.displayPostProfile = false;
+    this.displayMyNotifications = false;
+  }
+
+  showPostProfile(uid: string) {
+    this._userService.getUserById(uid).subscribe(user => {
+      this.postUser = user;
+    });
+    this.displayAllPosts = false;
+    this.displayMyPosts = false;
+    this.displayCreatePost = false;
+    this.showEditor = false;
+    this.displayMenuUser = false;
+    this.displaySignUp = false;
+    this.displayProfile = false;
+    this.displaySettings = false;
+    this.displayPostProfile = true;
+    this.displayMyNotifications = false;
+  }
+
+  showMyNotifications() {
+    this.displayAllPosts = false;
+    this.displayMyPosts = false;
+    this.displayCreatePost = false;
+    this.showEditor = false;
+    this.displayMenuUser = false;
+    this.displaySignUp = false;
+    this.displayProfile = false;
+    this.displaySettings = false;
+    this.displayPostProfile = false;
+    this.displayMyNotifications = true;
   }
 }

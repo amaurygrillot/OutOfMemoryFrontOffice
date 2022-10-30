@@ -1,0 +1,9 @@
+<mat-card style="max-height: 100%; max-width: 100%; margin-top: 1%">
+  <mat-card-header>
+    <img mat-card-avatar src="{{ this.URL }}/{{ following.avatar }}" alt="{{ following.avatar }}">
+    <mat-card-title>{{ following.fullname }} </mat-card-title>
+    <mat-card-subtitle>{{ following.username }}</mat-card-subtitle>
+  </mat-card-header>
+  <button mat-stroked-button (click)="unfollow()" (mouseover)="setUnfollowButton()" (mouseout)="setFollowedButton()"
+          [ngClass]="{'followed' : !mouseOverFollow, 'unfollow': mouseOverFollow}">{{ followButtonValue }}</button>
+</mat-card>

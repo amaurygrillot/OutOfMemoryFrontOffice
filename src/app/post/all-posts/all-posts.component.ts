@@ -5,6 +5,7 @@ import {Observable, of} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {MatSelect} from "@angular/material/select";
 import {DatePipe} from "@angular/common";
+import {environment} from "@environments/environment.prod";
 
 @Component({
   selector: 'app-all-posts',
@@ -13,11 +14,12 @@ import {DatePipe} from "@angular/common";
 })
 export class AllPostsComponent implements OnInit, OnChanges {
   @Input() allPosts!: boolean;
+  @Input() userId!: string
   @ViewChild('selectSort') selectSort!: MatSelect;
   postControl = new FormControl();
   sortControl = new FormControl();
   ageControl = new FormControl();
-  URL = "https://outofmemoryerror-back.azurewebsites.net"
+  URL = environment.baseUrl
   posts!: Post[];
   filteredPosts!: Observable<Post[]>;
   lastFilter = '';
@@ -40,9 +42,11 @@ export class AllPostsComponent implements OnInit, OnChanges {
         this.filter('', this.posts)
       });
     } else {
-      this.postService.getPostsByUserId(sessionStorage.getItem('userId') || '').subscribe(async posts => {
+      if (this.userId === undefined) { this.userId = sessionStorage.getItem('userId') || ''}
+      this.postService.getPostsByUserId().subscribe(async posts => {
         this.posts = posts;
         this.isLoading = false;
+        //console.log(`userId ${this.userId} ${this.posts}`)
         this.filter('', this.posts)
       });
     }
@@ -72,9 +76,9 @@ export class AllPostsComponent implements OnInit, OnChanges {
     });
     if(startArray === this.posts)
     {
-      console.log(newPosts)
+      //console.log(newPosts)
       newPosts = this.sortPosts(this.lastSort, newPosts);
-      console.log(newPosts)
+      //console.log(newPosts)
       newPosts = this.selectAge(this.lastAge, newPosts);
       this.filteredPosts = of(newPosts);
       this.lastFilter = filter;

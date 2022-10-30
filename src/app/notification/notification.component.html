@@ -1,0 +1,33 @@
+<div *ngIf="type == '1'">
+  <mat-card class="example-card" style="max-height: 100%; max-width: 100%;">
+    <mat-card-header>
+      <img mat-card-avatar src="{{ this.URL }}/{{ notification.avatar }}" alt="{{ notification.avatar }}" (click)="openProfile()" class="pointer">
+      <mat-card-title (click)="openProfile()" class="pointer">{{ notificationUsername }}</mat-card-title>
+      <mat-card-subtitle>wants to follow you. ({{ notification.created_at }})</mat-card-subtitle>
+      <div>
+        <button (click)="acceptFollow()" [disabled]="hasConfirmed" mat-flat-button color="primary">{{ confirmationButtonValue }}</button>
+      </div>
+    </mat-card-header>
+  </mat-card>
+</div>
+
+<div *ngIf="type == '2'">
+  <mat-card class="example-card" style="max-height: 100%; max-width: 100%;">
+    <mat-card-header>
+      <img mat-card-avatar src="{{ this.URL }}/{{ notification.avatar }}" alt="{{ notification.avatar }}">
+      <mat-card-title>{{ notificationUsername }}</mat-card-title>
+      <mat-card-subtitle>liked the post [{{ post_title }}]. ({{ notification.created_at }})</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+</div>
+
+<div *ngIf="type == '3'">
+  <mat-card class="example-card" style="max-height: 100%; max-width: 100%;">
+    <mat-card-header>
+      <img mat-card-avatar src="{{ this.URL }}/{{ notification.avatar }}" alt="{{ notification.avatar }}" (click)="openProfile()" class="pointer">
+      <mat-card-title (click)="openProfile()" class="pointer">{{ notificationUsername }}</mat-card-title>
+      <mat-card-subtitle>is now following you. ({{ notification.created_at }})</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+</div>
+

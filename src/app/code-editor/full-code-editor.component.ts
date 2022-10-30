@@ -75,6 +75,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       }*/
     ];
   selected = this.programmingLanguageAssociations[0].languageName;
+
   codeModel: CodeModel = {
     language: this.selected,
     uri: '',
@@ -247,7 +248,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
       });
   }
-
 
   private executeWithSave(url: string, formData: FormData) {
     const headers1 = new HttpHeaders()

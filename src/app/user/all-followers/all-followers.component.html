@@ -1,0 +1,15 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">close</mat-icon>
+</button>
+
+<mat-card-header>
+  <mat-card-title>Followers</mat-card-title>
+</mat-card-header>
+
+<mat-dialog-content>
+  <div *ngFor=" let follower of allFollowers" style="max-height: 100%; max-width: 100%">
+    <mat-card-content>
+      <app-follower [follower]="follower"></app-follower>
+    </mat-card-content>
+  </div>
+</mat-dialog-content>
