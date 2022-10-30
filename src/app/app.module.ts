@@ -3,7 +3,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {environment} from '@environments/environment';
 import {RouterModule} from "@angular/router";
 import {SharedModule} from "@app/shared/shared.module";
 import {AppRoutingModule} from "@app/app-routing.module";
@@ -12,6 +11,13 @@ import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {UserModule} from "@app/user/user.module";
 import {PostModule} from "@app/post/post.module";
 import {FullCodeEditorModule} from "@app/code-editor/full-code-editor.module";
+import { ChallengeComponent } from './challenge/challenge/challenge.component';
+import { ChallengeBoardComponent } from './challenge/challenge-board/challenge-board.component';
+import { AllChallengesComponent } from './challenge/all-challenges/all-challenges.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatSortModule} from "@angular/material/sort";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 export const MY_DATE_FORMATS = {
   parse: {
@@ -27,7 +33,10 @@ export const MY_DATE_FORMATS = {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ChallengeComponent,
+    ChallengeBoardComponent,
+    AllChallengesComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +48,11 @@ export const MY_DATE_FORMATS = {
     RouterModule,
     UserModule,
     PostModule,
-    FullCodeEditorModule
+    FullCodeEditorModule,
+    MatTableModule,
+    MatExpansionModule,
+    MatSortModule,
+    MatPaginatorModule
   ],
   providers: [
     {provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS}

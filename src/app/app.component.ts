@@ -1,16 +1,17 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {LoginComponent} from "@app/auth/login/login.component";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {User} from "@app/shared/models";
 import {MatTabGroup} from "@angular/material/tabs";
 import {MatDialog} from "@angular/material/dialog";
+import {SharedComponent} from "@app/shared/shared.component";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'OutOfMemoryFrontOffice';
   isLogged = sessionStorage.getItem('token') !== null;
   private _url = "https://outofmemoryerror-back.azurewebsites.net/api"
@@ -19,13 +20,15 @@ export class AppComponent {
   showMenuUser = false
   showPostCreated = true
   showSignup = false
-
+  static sharedComponent: SharedComponent;
   @ViewChild('tabGroup') tabGroup!: MatTabGroup;
 
-  constructor(private http: HttpClient, public dialog: MatDialog) {
-    //console.log(sessionStorage);
+  constructor(private http: HttpClient, public dialog: MatDialog, private _sharedComponent: SharedComponent) {
+    AppComponent.sharedComponent = _sharedComponent;
   }
+  ngOnInit(): void {
 
+  }
   updateLoginStatus($event: boolean) {
     this.isLogged = $event;
   }

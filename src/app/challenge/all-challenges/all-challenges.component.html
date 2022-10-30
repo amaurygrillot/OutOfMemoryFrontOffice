@@ -1,0 +1,54 @@
+
+
+
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+
+<div *ngIf="challenges && challenges.length > 0 && !isLoading">
+  <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <input type="text" placeholder="Chercher un challenge" aria-label="Select Posts" matInput [formControl]="challengesControl">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <mat-select placeholder="Classer par..."
+                (selectionChange)="sortChallenges($event.value, challenges)"
+                [(value)]="lastSort"
+                [formControl]="sortControl" #selectSort>
+      <mat-option [value]="'Date'">Date</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field  class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <mat-select placeholder="Voir les challenges datant de : "
+                (selectionChange)="selectAge($event.value, challenges)"
+                [formControl]="ageControl"
+                [(value)]="lastAge">
+      <mat-option [value]="'Today'">Aujourd'hui</mat-option>
+      <mat-option [value]="'Week'">Cette semaine</mat-option>
+      <mat-option [value]="'All'">Tous les temps</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <mat-card  class="example-card">
+
+    <mat-card-content>
+      <mat-accordion>
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                             (closed)="panelOpenState = false"
+        *ngFor="let challenge of challenges">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{challenge.title}}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{panelOpenState ? '' : 'Cliquez pour plus de détail'}}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <app-challenge [challenge]="challenge"></app-challenge>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+
+    </mat-card-content>
+  </mat-card>
+</div>

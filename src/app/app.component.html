@@ -2,19 +2,23 @@
   <mat-card-content>
   <mat-tab-group color="primary" backgroundColor="primary" mat-align-tabs="center" #tabGroup>
 
-    <mat-tab label="out of memory">
-      <app-all-posts [allPosts]="true" *ngIf="tabGroup.selectedIndex === 0"></app-all-posts>
+    <mat-tab label="out of memory" #tab1>
+      <app-all-posts [allPosts]="true" *ngIf="tab1.isActive"></app-all-posts>
     </mat-tab>
 
-    <mat-tab label="My posts" *ngIf="isLogged">
-      <app-all-posts [allPosts]="false" *ngIf="tabGroup.selectedIndex === 1"></app-all-posts>
+    <mat-tab label="My posts" *ngIf="isLogged" #tab2>
+      <app-all-posts [allPosts]="false" *ngIf="tab2.isActive"></app-all-posts>
     </mat-tab>
 
-    <mat-tab label="New post" *ngIf="isLogged">
-      <app-create-post *ngIf="tabGroup.selectedIndex === 2"></app-create-post>
+    <mat-tab label="New post" *ngIf="isLogged" #tab3>
+      <app-create-post *ngIf="tab3.isActive"></app-create-post>
     </mat-tab>
 
-    <mat-tab [disabled]="true">
+    <mat-tab label="Challenges" #tab4>
+      <app-all-challenges [allChallenges]="true" *ngIf="tab4.isActive"></app-all-challenges>
+    </mat-tab>
+
+    <mat-tab [disabled]="true" #tab5>
       <ng-template mat-tab-label>
         <button mat-flat-button color="primary" (click)="showLogin()" *ngIf="!isLogged">
           Sign In
@@ -23,7 +27,7 @@
       </ng-template>
     </mat-tab>
 
-    <mat-tab *ngIf="!isLogged" label="Sign up">
+    <mat-tab *ngIf="!isLogged" label="Sign up" #tab6>
       <app-signup></app-signup>
     </mat-tab>
 
