@@ -4,6 +4,8 @@ import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {lastValueFrom, Observable} from "rxjs";
 import {CodeEditorComponent} from '@ngstack/code-editor';
 import {Post} from "@app/shared/models";
+import {ChallengeResult} from "@app/shared/models/challengeresult.model";
+import {environment} from "@environments/environment";
 
 export type ProgrammingLanguageAssociation = {
   languageName: string;
@@ -20,11 +22,19 @@ export type ProgrammingLanguageAssociation = {
 })
 
 export class FullCodeEditorComponent implements OnInit, OnChanges{
+  get challengeResult(): ChallengeResult {
+    return this._challengeResult;
+  }
+  set challengeResult(value: ChallengeResult) {
+    this._challengeResult = value;
+  }
   @Input() post !: Post;
-  @Input() postCreation !: boolean;
+  @Input() challengeId !: string;
+  @Input() executeNoSave !: boolean;
+  @Input() challengeParticipation !: boolean;
   @ViewChild('codeEditor') codeEditor !: CodeEditorComponent;
   @ViewChild('secondCodeEditor') secondCodeEditor !: CodeEditorComponent;
-  selected = '';
+  private _challengeResult!: ChallengeResult;
   loading = false;
   loadingBaseValues = false;
   hasLoaded = false;
@@ -63,7 +73,9 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
         fileExtension: '.ts',
         baseValue: ''
       }*/
-   ];
+    ];
+  selected = this.programmingLanguageAssociations[0].languageName;
+
   codeModel: CodeModel = {
     language: this.selected,
     uri: '',
@@ -91,93 +103,66 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
   ngOnInit() {
   }
   ngOnChanges(): void {
-    if(this.postCreation === undefined || !this.postCreation)
-    {
-        if(sessionStorage.getItem('userId') !== this.post.person_uid)
-        {
-          this.readonly = true;
-        }
-        this.loadAllLanguagesBaseValue(30 * 1000);
-    }
-    else
-    {
-      this.codeModel.language = this.programmingLanguageAssociations[0].languageName;
-      this.codeModel.uri = this.programmingLanguageAssociations[0].mainFile;
-      this.codeModel.value = this.programmingLanguageAssociations[0].baseValue;
-      this.code = this.programmingLanguageAssociations[0].baseValue;
-      this.contentReady = true;
-      this.isEditorReady = true;
-    }
 
+    if(this.post !== undefined
+      && this.post !== null
+      && sessionStorage.getItem('userId') !== this.post.person_uid)
+    {
+      this.readonly = true;
+    }
+    this.loadAllLanguagesBaseValue(30 * 1000);
   }
-
-
 
   onCodeChanged(value: any) {
     this.code = value;
     if(this.hasLoaded)
       this.hasLoaded = false;
-
   }
 
   async sendData() {
     this.loading = true;
-    const programmingLanguage = await this.programmingLanguageAssociations.find((item) => {
-      return item.languageName === this.selected
-    });
-    let url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/`
+    let url = `${environment.CODE_EXECUTOR_URL}/${this.selectedProgrammingLanguage.languageName}`
     const formData: FormData = new FormData();
-    if(this.postCreation || this.post.person_uid !== sessionStorage.getItem('userId'))
+    if(this.challengeParticipation && !this.executeNoSave)
     {
-      url = `https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage?.languageName}/executeNoSave`
+      if(sessionStorage.getItem('userId'))
+      {
+        if(this._challengeResult)
+        {
+          url += `/challenge`
+          formData.append('challengeResultId', `${this._challengeResult.uid}`)
+        }
+        else
+        {
+          url += `/executeNoSave`
+        }
+      }
+      else
+      {
+        alert("Veuillez vous connecter avant de participer au challenge.")
+        this.loading = false;
+        return;
+      }
+    }
+    else if(this.executeNoSave || this.post.person_uid !== sessionStorage.getItem('userId'))
+    {
+      url += `/executeNoSave`
     }
     else
     {
       formData.append('commentId', `${this.post.post_uid}`)
     }
-    let file = new Blob([this.code], {type: programmingLanguage?.fileExtension});
+    let file = new Blob([this.code], {type: this.selectedProgrammingLanguage.fileExtension});
 
-    formData.append('fileKey', file, programmingLanguage?.mainFile);
-    const headers1 = new HttpHeaders()
-      .set('Authorization', `${sessionStorage.getItem('token')}`)
-    lastValueFrom(this.http.post<string>(url,
-      formData,
-      { headers: headers1}))
-      .then((data) =>
-      {
-          console.log(data);
-          this.resultColor = 'green';
-          this.result = data.substring(0, data.lastIndexOf('\n'))
-      })
-      .catch((reason) => {
-          this.resultColor = 'red';
-          this.result = reason.error;
-      })
-      .finally(() =>
-      {
-          this.title = "Résultat d'exécution :";
-          this.hasLoaded = true;
-          this.loading = false;
-      });
-
+    formData.append('fileKey', file, this.selectedProgrammingLanguage.mainFile);
+    this.executeWithSave(url, formData)
   }
 
   changeLanguage(programmingLanguage: ProgrammingLanguageAssociation) {
     this.loading = true;
     this.changingLanguage = !this.changingLanguage;
     this.selectedProgrammingLanguage = programmingLanguage;
-    this.codeModel.language = programmingLanguage.languageName;
-    if(this.postCreation)
-    {
-      this.codeModel.uri = programmingLanguage.mainFile;
-    }
-    else
-    {
-      this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
-    }
-
-    this.codeModel.value = programmingLanguage.baseValue;
-    this.code = programmingLanguage.baseValue;
+    this.setEditorValues()
     this.onCodeChanged(this.code);
     this.loading = false;
 
@@ -185,10 +170,16 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
   async setLanguageBaseValue(programmingLanguage: ProgrammingLanguageAssociation): Promise<Observable<HttpResponse<string>>>
   {
-    //filePath : post_uid/user_uid
-    const filePath = `${this.post.post_uid}/${this.post.person_uid}`
-    return this.http.get<string>(`https://outofmemoryerror-code-executer-container.azurewebsites.net/${programmingLanguage.languageName}/${filePath}`, {observe: 'response'});
-
+    let filePath: string;
+    if(this.challengeParticipation)
+    {
+      filePath = `challenge/${this.challengeId}/${sessionStorage.getItem('userId')}`
+    }
+    else
+    {
+      filePath = `${this.post.post_uid}/${this.post.person_uid}`
+    }
+    return this.http.get<string>(`${environment.CODE_EXECUTOR_URL}/${programmingLanguage.languageName}/${filePath}`, {observe: 'response'});
   }
 
   async getAllLanguagesBaseValue(timeout: number): Promise<boolean>
@@ -210,11 +201,9 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
           value.subscribe(result =>
           {
             if (result.status === 200 && !this.foundSavedFile) {
-              this.codeModel.value = result.body || ' ';
-              this.code = this.codeModel.value;
-              this.codeModel.uri = this.post.post_uid + programmingLanguage.mainFile;
-              this.selected = programmingLanguage.languageName;
-              this.codeModel.language = this.selected;
+              programmingLanguage.baseValue = result.body || ' ';
+              this.code = programmingLanguage.baseValue;
+              this.selectedProgrammingLanguage = programmingLanguage;
               this.foundSavedFile = true;
               accept(this.foundSavedFile);
             }
@@ -222,7 +211,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
             {
                 code = result.status;
             }
-            programmingLanguage.baseValue = result.body || '';
           })
 
         }
@@ -234,9 +222,9 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     this.getAllLanguagesBaseValue(timeout)
       .then((value: boolean) =>
       {
-        console.log("value : " + value)
         if(value)
         {
+          this.setEditorValues();
           this.contentReady = true;
           this.isEditorReady = true;
           this.loadingBaseValues = false;
@@ -261,4 +249,75 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       });
   }
 
+  private executeWithSave(url: string, formData: FormData) {
+    const headers1 = new HttpHeaders()
+      .set('Authorization', `${sessionStorage.getItem('token')}`)
+    lastValueFrom(this.http.post<string>(url,
+      formData,
+      { headers: headers1}))
+      .then((data) =>
+      {
+        this.resultColor = 'green';
+        this.result = data.substring(0, data.lastIndexOf('\n'))
+      })
+      .catch((reason) => {
+        this.resultColor = 'red';
+        this.result = reason.message;
+
+      })
+      .finally(() =>
+      {
+        this.title = "Résultat d'exécution :";
+        this.hasLoaded = true;
+        this.loading = false;
+      });
+  }
+
+  async saveCodeNoExecution(): Promise<string>
+  {
+    const programmingLanguage = await this.programmingLanguageAssociations.find((item) => {
+      return item.languageName === this.selected
+    });
+    let url = `${environment.CODE_EXECUTOR_URL}/${programmingLanguage?.languageName}`
+    const formData: FormData = new FormData();
+    if(this.challengeParticipation)
+    {
+      url += `/challenge`;
+      formData.append('challengeResultId', `${this._challengeResult.uid}`);
+      formData.append('challengeId', `${this._challengeResult.challenge_id}`);
+    }
+    else
+    {
+      formData.append('commentId', `${this.post.post_uid}`)
+    }
+    url += `/saveFile`;
+    let file = new Blob([this.code], {type: programmingLanguage?.fileExtension});
+    formData.append('fileKey', file, programmingLanguage?.mainFile);
+    const headers1 = new HttpHeaders()
+      .set('Authorization', `${sessionStorage.getItem('token')}`)
+    return lastValueFrom(this.http.post<string>(url,
+      formData,
+      {headers: headers1}));
+  }
+
+  public setEditorValues()
+  {
+    this.codeModel.language = this.selectedProgrammingLanguage.languageName;
+    if(this.challengeParticipation)
+    {
+      this.codeModel.uri = this.challengeId + this.selectedProgrammingLanguage.mainFile;
+    }
+    else if(this.post !== undefined)
+    {
+      this.codeModel.uri = this.post.post_uid + this.selectedProgrammingLanguage.mainFile;
+    }
+    else
+    {
+      this.codeModel.uri = this.selectedProgrammingLanguage.mainFile;
+    }
+    this.codeModel.value = this.selectedProgrammingLanguage.baseValue;
+    this.code = this.selectedProgrammingLanguage.baseValue;
+    this.contentReady = true;
+    this.isEditorReady = true;
+  }
 }

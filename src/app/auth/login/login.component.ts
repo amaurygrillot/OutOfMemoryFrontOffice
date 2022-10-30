@@ -4,6 +4,8 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {MatDialogRef} from "@angular/material/dialog";
 import {TokenService} from "@app/auth/services/token.service";
 import {environment} from "@environments/environment";
+import {AppComponent} from "@app/app.component";
+import {lastValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -55,6 +57,7 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem('token', data.token);
         const userId = this.getUserId(data.token).idPerson;
         sessionStorage.setItem('userId', userId);
+        await this.setUsername();
         this.dialogRef.close();
         this.loading = false;
       },
@@ -68,6 +71,19 @@ export class LoginComponent implements OnInit {
     this.tokenService.setToken(token);
     this.tokenService.decodeToken();
     return this.tokenService.getUserId();
+  }
+
+  async setUsername()
+  {
+    const headers = new HttpHeaders()
+      .set('Authorization', `${sessionStorage.getItem('token')}`)
+    lastValueFrom(this.http.get<any>("https://outofmemoryerror-back.azurewebsites.net/api/user/getUserById",
+      {headers : headers}))
+      .then((data =>
+      {
+        console.log(data)
+        sessionStorage.setItem("username", data.user.username);
+      }))
   }
 
   onNoClick(submitEvent: Event): void {

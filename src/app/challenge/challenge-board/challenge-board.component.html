@@ -1,0 +1,65 @@
+<mat-card>
+  <mat-form-field class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <input type="text" placeholder="Cherchez un utilisateur" aria-label="Select user" matInput [formControl]="searchControl">
+  </mat-form-field>
+
+  <mat-form-field  *ngIf="arrayInitiated" class="example-full-width" style="min-width : 30%; margin-left: 2%; margin-top: 2%">
+    <mat-select  placeholder="Voir uniquement les résultats écrits en : "
+                (selectionChange)="selectLanguage($event.value)"
+                [formControl]="languageControl">
+      <mat-option [value]="'Tous'">Tout languages</mat-option>
+      <mat-option *ngFor="let language of languageArray" [value]="language">{{language}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 challenge-table"
+       matSort
+       (matSortChange)="announceSortChange($event)">
+
+  <ng-container matColumnDef="position">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Classement </th>
+    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="username">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Utilisateur </th>
+    <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="resultat_obtenu">
+    <th mat-header-cell *matHeaderCellDef> Résultat obtenu </th>
+    <td mat-cell *matCellDef="let element"> {{element.resultat_obtenu}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="temps_execution">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Temps d'exécution </th>
+    <td mat-cell *matCellDef="let element"> {{element.temps_execution}} secondes</td>
+  </ng-container>
+
+
+  <ng-container matColumnDef="created_at">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Créé le : </th>
+    <td mat-cell *matCellDef="let element"> {{element.created_at}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="updated_at">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Mis à jour le : </th>
+    <td mat-cell *matCellDef="let element"> {{element.updated_at}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="language_used">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="" sortActionDescription=""> Langage utilisé </th>
+    <td mat-cell *matCellDef="let element"> {{element.used_language}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+  [ngClass]="{'highlighted' : isCurrentUser(row)}"></tr>
+</table>
+  <mat-paginator [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 25, 50, 100]"
+                 showFirstLastButtons
+                 aria-label="Select page">
+  </mat-paginator>
+</mat-card>

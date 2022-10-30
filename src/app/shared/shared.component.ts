@@ -8,8 +8,8 @@ import {HttpClient} from "@angular/common/http";
   styleUrls: ['./shared.component.css']
 })
 export class SharedComponent implements OnInit {
-
-  constructor(private _datePipe: DatePipe, private _http: HttpClient) { }
+  constructor(private _datePipe: DatePipe, private _http: HttpClient) {
+  }
 
   ngOnInit(): void {
   }
@@ -18,8 +18,18 @@ export class SharedComponent implements OnInit {
     return this._datePipe.transform(date, 'yyyy/MM/dd hh:mm a') || "";
   }
 
+  formatDateDB(date: string) {
+    return this._datePipe.transform(date, 'yyyy/MM/dd HH:mm:ss') || "";
+  }
+
+  formatDateEuropean(date: string) {
+    return this._datePipe.transform(date, 'dd/MM/yyyy HH:mm','+00') || "";
+  }
+
   readFileFromAPI(url: string, fileName: string) {
     return this._http.get(`${url}/${fileName}`);
   }
+
+
 
 }
