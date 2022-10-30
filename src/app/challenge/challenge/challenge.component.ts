@@ -7,6 +7,8 @@ import {ChallengeResult} from "@app/shared/models/challengeresult.model";
 import {FullCodeEditorComponent} from "@app/code-editor/full-code-editor.component";
 import {SharedComponent} from "@app/shared/shared.component";
 import {ChallengeBoardComponent} from "@app/challenge/challenge-board/challenge-board.component";
+import {lastValueFrom} from "rxjs";
+import {environment} from "@environments/environment";
 
 @Component({
   selector: 'app-challenge',
@@ -80,28 +82,48 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
     {
       return;
     }
-    this._challengeService.postChallengeResult(challengeResult, this.challengeResultExists).then((data) =>
-    {
-      if(this.challengeResultExists && challengeResult !== null)
+    let file = new Blob([this.codeEditor.code], {type: this.codeEditor.selectedProgrammingLanguage.fileExtension});
+    lastValueFrom(this._challengeService.checkResults(file, this.codeEditor.selectedProgrammingLanguage, this.challenge.challenge_id, challengeResult.uid))
+      .then((data) =>
       {
-        this.challengeResult = challengeResult;
-        this.challengeResult.uid = data.uidChallengeResult;
-        this.challengeResult.updated_at = this._sharedComponent.formatDateEuropean(new Date().toString());
-        this.codeEditor.challengeResult = this.challengeResult;
-        this.challengeResultExists = true;
-      }
-    })
+        console.log(data)
+        challengeResult!.resultat_obtenu = ((data.passed / data.totalTests) * 100)+ "%";
+      })
       .catch((reason) => {
-        console.log(reason.error);
+        console.log(reason)
       })
       .finally(() =>
       {
-        this.codeEditor.saveCodeNoExecution().then((result) =>
+        if(challengeResult === null)
         {
-          this.loading = false;
-          this.challengeBoard.updateChallengeBoard()
+          return;
+        }
+        this._challengeService.postChallengeResult(challengeResult, this.challengeResultExists).then((data) =>
+        {
+          if(this.challengeResultExists && challengeResult !== null)
+          {
+            console.log(challengeResult)
+            this.challengeResult = challengeResult;
+            this.challengeResult.uid = data.uidChallengeResult;
+            this.challengeResult.updated_at = this._sharedComponent.formatDateEuropean(new Date().toString());
+            this.codeEditor.challengeResult = this.challengeResult;
+            this.challengeResultExists = true;
+          }
         })
+          .catch((reason) => {
+            console.log(reason.error);
+          })
+          .finally(() =>
+          {
+            this.codeEditor.saveCodeNoExecution().then((result) =>
+            {
+              this.loading = false;
+              this.challengeBoard.updateChallengeBoard()
+            })
+          });
       });
+
+
 
   }
 
@@ -121,7 +143,7 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
       parseFloat(temps_execution),
       sessionStorage.getItem('userId') || '',
       '',
-      this._sharedComponent.formatDateEuropean(new Date().toString()),
+      new Date().toString(),
       this.codeEditor.selectedProgrammingLanguage.languageName,
       sessionStorage.getItem("username") || ''
     )

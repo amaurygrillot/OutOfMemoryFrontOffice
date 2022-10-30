@@ -45,7 +45,6 @@ export class ChallengeBoardComponent implements OnInit, AfterViewInit  {
   {
     this.challengeService.getAllChallengeResults(this.challengeId).subscribe(allChallengeResults => {
       this.allChallengeResults = allChallengeResults as ChallengeResult[];
-      console.log(typeof this.allChallengeResults)
       this.allChallengeResults.forEach(element =>
       {
         element.created_at = AppComponent.sharedComponent.formatDateEuropean(element.created_at) || '';

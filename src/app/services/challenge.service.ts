@@ -6,6 +6,7 @@ import {environment} from "@environments/environment";
 import {Challenge} from "../shared/models/challenge";
 import {ChallengeResult} from "@app/shared/models/challengeresult.model";
 import {AppComponent} from "@app/app.component";
+import {ProgrammingLanguageAssociation} from "@app/code-editor/full-code-editor.component";
 
 
 
@@ -101,6 +102,20 @@ export class ChallengeService {
     return lastValueFrom(this.http.get<any>(url,
       { headers: headers1}));
   }
+
+  checkResults(file: Blob, selectedLanguage: ProgrammingLanguageAssociation, challenge_uid: string, challengeResultId: string )
+  {
+    const formData: FormData = new FormData();
+    formData.append('fileKey', file, selectedLanguage.mainFile);
+    formData.append('challenge_uid', challenge_uid);
+    formData.append('challengeResultId', challengeResultId);
+    const headers1 = new HttpHeaders()
+      .set('Authorization', `${sessionStorage.getItem('token')}`)
+    return this.http.post<any>(`${environment.CODE_EXECUTOR_URL}/${selectedLanguage.languageName}/challenge/checkResults`,
+      formData,
+      { headers: headers1});
+  }
+
 
 
 }

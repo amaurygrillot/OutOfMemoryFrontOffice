@@ -120,12 +120,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
   async sendData() {
     this.loading = true;
-    const programmingLanguage = await this.programmingLanguageAssociations
-      .find((item) =>
-      {
-        return item.languageName === this.selected
-      });
-    let url = `${environment.CODE_EXECUTOR_URL}/${programmingLanguage?.languageName}`
+    let url = `${environment.CODE_EXECUTOR_URL}/${this.selectedProgrammingLanguage.languageName}`
     const formData: FormData = new FormData();
     if(this.challengeParticipation && !this.executeNoSave)
     {
@@ -156,9 +151,9 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     {
       formData.append('commentId', `${this.post.post_uid}`)
     }
-    let file = new Blob([this.code], {type: programmingLanguage?.fileExtension});
+    let file = new Blob([this.code], {type: this.selectedProgrammingLanguage.fileExtension});
 
-    formData.append('fileKey', file, programmingLanguage?.mainFile);
+    formData.append('fileKey', file, this.selectedProgrammingLanguage.mainFile);
     this.executeWithSave(url, formData)
   }
 
