@@ -15,6 +15,7 @@ import {ProfileComponent} from "@app/user/profile/profile.component";
 })
 export class PostComponent implements OnInit, OnChanges {
   @Input() post!: Post;
+  @Input() lastIndex!: number;
 
   URL = environment.baseUrl;
 
@@ -87,6 +88,7 @@ export class PostComponent implements OnInit, OnChanges {
   }
 
   openProfile() {
+    this._appComponent.tabGroup.selectedIndex = 4;
     const dialogRef = this._dialog.open(ProfileComponent, {
       width: '800px',
       height: '750px',
@@ -94,6 +96,8 @@ export class PostComponent implements OnInit, OnChanges {
         'userId': this.post.person_uid
       }
     });
-    dialogRef.afterClosed().subscribe(_ => {});
+    dialogRef.afterClosed().subscribe(_ => {
+      this._appComponent.tabGroup.selectedIndex = this.lastIndex;
+    });
   }
 }

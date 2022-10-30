@@ -3,7 +3,7 @@
     <mat-tab-group color="primary" backgroundColor="primary" mat-align-tabs="center" #tabGroup>
 
     <mat-tab label="out of memory" #tab1>
-      <app-all-posts [allPosts]="true" *ngIf="tab1.isActive"></app-all-posts>
+      <app-all-posts [lastIndex]="tabGroup.selectedIndex!" [allPosts]="true" *ngIf="tab1.isActive"></app-all-posts>
     </mat-tab>
 
       <!--
@@ -29,7 +29,8 @@
         <button mat-flat-button color="primary" (click)="showLogin()" *ngIf="!isLogged">
           Sign In
         </button>
-        <app-user *ngIf="isLogged"></app-user>
+        <app-user [lastIndex]="tab5.position!" *ngIf="isLogged"></app-user>
+        <app-page-empty *ngIf="tab5.isActive"></app-page-empty>
       </ng-template>
     </mat-tab>
 

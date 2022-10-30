@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {UserService} from "@app/services/user.service";
 import {Post, User} from "@app/shared/models";
 import {PostService} from "@app/services/post.service";
+import {environment} from "@environments/environment";
 
 @Component({
   selector: 'app-user',
@@ -10,7 +11,9 @@ import {PostService} from "@app/services/post.service";
 })
 export class UserComponent implements OnInit {
 
-  URL = "https://outofmemoryerror-back.azurewebsites.net"
+  @Input() lastIndex!: number
+
+  URL = environment.baseUrl
   user!: User
   userPosts!: Post[]
   loading = true;
