@@ -15,7 +15,7 @@ export class SharedComponent implements OnInit {
   }
 
   formatDate(date: string) {
-    return this._datePipe.transform(date, 'yyyy/MM/dd hh:mm a') || "";
+    return this._datePipe.transform(date, 'yyyy/MM/dd HH:mm') || "";
   }
 
   formatDateDB(date: string) {
