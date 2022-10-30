@@ -28,12 +28,11 @@ export class MenuUserComponent implements OnInit {
   }
 
   showProfile() {
-    this._appComponent.showProfile();
     this._appComponent.tabGroup.selectedIndex = 4;
   }
 
   showSettings() {
-    this._appComponent.showSettings();
+    //this._appComponent.showSettings();
     this._appComponent.tabGroup.selectedIndex = 4;
   }
 

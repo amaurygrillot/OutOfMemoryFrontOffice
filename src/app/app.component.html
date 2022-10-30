@@ -6,9 +6,11 @@
       <app-all-posts [allPosts]="true" *ngIf="tab1.isActive"></app-all-posts>
     </mat-tab>
 
+      <!--
     <mat-tab label="My posts" *ngIf="isLogged" #tab2>
       <app-all-posts [allPosts]="false" *ngIf="tab2.isActive"></app-all-posts>
     </mat-tab>
+    -->
 
     <mat-tab label="New post" *ngIf="isLogged" #tab3>
       <app-create-post *ngIf="tab3.isActive"></app-create-post>
@@ -19,7 +21,7 @@
     </mat-tab>
 
     <mat-tab label="My notifications" *ngIf="isLogged" #tabNotif>
-      <app-all-notifications *ngIf="tabNotif.isActive && displayMyNotifications"></app-all-notifications>
+      <app-all-notifications *ngIf="tabNotif.isActive"></app-all-notifications>
     </mat-tab>
 
     <mat-tab [disabled]="true" #tab5>
@@ -32,7 +34,7 @@
     </mat-tab>
 
       <mat-tab *ngIf="!isLogged" label="Sign up" #tab6>
-        <app-signup *ngIf="displaySignUp"></app-signup>
+        <app-signup *ngIf="tab6.isActive"></app-signup>
       </mat-tab>
 
     </mat-tab-group>
