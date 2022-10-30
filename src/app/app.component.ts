@@ -41,8 +41,8 @@ export class AppComponent implements OnInit{
     //console.log(sessionStorage);
     this._userService.getUserById(sessionStorage.getItem('userId')!).subscribe(user => {
       this.currentUser = user;
-      AppComponent.sharedComponent = _sharedComponent;
     });
+    AppComponent.sharedComponent = _sharedComponent;
     //console.log(this.currentUser);
   }
 
