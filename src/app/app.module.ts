@@ -3,9 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterModule} from "@angular/router";
 import {SharedModule} from "@app/shared/shared.module";
-import {AppRoutingModule} from "@app/app-routing.module";
 import {AuthModule} from "@app/auth/auth.module";
 import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {UserModule} from "@app/user/user.module";
@@ -44,10 +42,8 @@ export const MY_DATE_FORMATS = {
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AppRoutingModule,
     SharedModule,
     AuthModule,
-    RouterModule,
     UserModule,
     PostModule,
     FullCodeEditorModule,

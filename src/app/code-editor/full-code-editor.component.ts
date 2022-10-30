@@ -103,7 +103,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
 
   ngOnInit() {
-    console.log("ye")
   }
   ngOnChanges(): void {
     if(this.postCreation)
@@ -213,8 +212,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
           const value = await this.setLanguageBaseValue(programmingLanguage);
           value.subscribe(result =>
           {
-            console.log("here")
-            console.log(result)
+
             if (result.status === 200 && !this.foundSavedFile) {
               programmingLanguage.baseValue = result.body || ' ';
               this.code = programmingLanguage.baseValue;
@@ -240,8 +238,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
       })
       .catch((reason: any) =>
       {
-        console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-        console.log(reason)
         if(reason.code === 500)
         {
           this.loadingBaseValues = false;
@@ -317,8 +313,6 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
 
   public setEditorValues()
   {
-
-    console.log("ohiobhjvyfiv")
     this.codeModel.language = this.selectedProgrammingLanguage.languageName;
     if(this.challengeParticipation)
     {
@@ -334,9 +328,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     }
     this.codeModel.value = this.selectedProgrammingLanguage.baseValue;
     this.code = this.selectedProgrammingLanguage.baseValue;
-    console.log("hioujbbkjnjblù")
     this.contentReady = true;
     this.isEditorReady = true;
-    console.log("njbhjbhvhvhhvhvhvhvhvhvhvhvhvhhv")
   }
 }

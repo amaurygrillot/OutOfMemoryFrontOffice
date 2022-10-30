@@ -1,6 +1,6 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
-<div *ngIf="posts.length == 0 && !isLoading">
+<div *ngIf="(posts === undefined || posts.length == 0) && !isLoading">
   <mat-card style="max-height: 100%; max-width: 100%">
     <mat-card-content>
       No posts created.

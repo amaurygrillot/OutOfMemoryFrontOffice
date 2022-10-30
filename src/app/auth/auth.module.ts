@@ -3,7 +3,6 @@ import {AuthComponent} from './auth.component';
 import {LoginComponent} from "./login/login.component";
 import {SignupComponent} from './signup/signup.component';
 import {SharedModule} from "../shared/shared.module";
-import {AuthRoutingModule} from "@app/auth/auth-routing.module";
 
 
 @NgModule({
@@ -18,8 +17,7 @@ import {AuthRoutingModule} from "@app/auth/auth-routing.module";
     SignupComponent
   ],
   imports: [
-    SharedModule,
-    AuthRoutingModule
+    SharedModule
   ]
 })
 export class AuthModule {
