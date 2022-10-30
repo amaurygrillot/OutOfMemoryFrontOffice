@@ -18,7 +18,7 @@
       <app-all-challenges [allChallenges]="true" *ngIf="tab4.isActive"></app-all-challenges>
     </mat-tab>
 
-    <mat-tab label="My notifications" *ngIf="isLogged && tabNotif.isActive" #tabNotif>
+    <mat-tab label="My notifications" *ngIf="isLogged" #tabNotif>
       <app-all-notifications *ngIf="tabNotif.isActive && displayMyNotifications"></app-all-notifications>
     </mat-tab>
 

@@ -50,7 +50,7 @@ export const MY_DATE_FORMATS = {
     UserModule,
     PostModule,
     FullCodeEditorModule,
-    NotificationModule
+    NotificationModule,
     MatTableModule,
     MatExpansionModule,
     MatSortModule,

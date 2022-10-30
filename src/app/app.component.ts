@@ -58,9 +58,6 @@ export class AppComponent implements OnInit{
     } else if (index == 3) {
       this.showMyNotifications();
     }
-
-  
-  @ViewChild('tabGroup') tabGroup!: MatTabGroup;
   }
   ngOnInit(): void {
 
