@@ -91,7 +91,12 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
       {
         console.log(data)
         challengeResult!.resultat_obtenu = ((data.passed / data.totalTests) * 100)+ "%";
-        this.testResults = data.results;
+        challengeResult!.temps_execution = data.totalTime.toFixed(3);
+        this.testResults = data.results.map((testResult: any) =>
+        {
+          let res = testResult.substring(0,testResult.indexOf('Le programme s\'est arrêté avec le code'));
+          return res.substring(0, res.indexOf('\n') + 1) + 'Résultat : ' + res.substring(res.indexOf('\n') + 1);
+        });
         this.showTestResults = true;
       })
       .catch((reason) => {
