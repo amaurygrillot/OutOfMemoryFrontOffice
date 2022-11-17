@@ -12,7 +12,7 @@
     <h3>Score : {{challengeResult.resultat_obtenu}}</h3>
     <h3>Temps total d'exécution : {{challengeResult.temps_execution}} secondes</h3>
     <mat-expansion-panel *ngFor="let testResult of testResults"
-    style="width: 100%" [style.background]="testResult.passed ? 'green' : 'red'">
+    style="width: 100%; margin-top: 0.5%" [style.background]="testResult.passed ? 'green' : 'red'">
       <mat-expansion-panel-header>
         <mat-panel-title style="font-weight: bold">
           {{testResult.testName}}

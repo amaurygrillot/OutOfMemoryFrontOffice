@@ -112,7 +112,7 @@ export class FullCodeEditorComponent implements OnInit, OnChanges{
     }
     else
     {
-      this.loadAllLanguagesBaseValue(30 * 1000);
+      this.loadAllLanguagesBaseValue(10 * 1000);
     }
     if(this.post && sessionStorage.getItem('userId') !== this.post.person_uid)
     {
