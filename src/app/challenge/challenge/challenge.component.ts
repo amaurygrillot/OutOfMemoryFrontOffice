@@ -10,6 +10,14 @@ import {ChallengeBoardComponent} from "@app/challenge/challenge-board/challenge-
 import {lastValueFrom} from "rxjs";
 import {environment} from "@environments/environment";
 
+export type TestResult = {
+  testName: string;
+  arguments: string;
+  expectedResult: string;
+  actualResult: string;
+  passed: boolean;
+}
+
 @Component({
   selector: 'app-challenge',
   templateUrl: './challenge.component.html',
@@ -26,7 +34,8 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
   challengeResultExists = false;
   challengeResult!: ChallengeResult;
   showTestResults = false;
-  testResults: string[] = [];
+  testResults: TestResult[] = [];
+  resultColor = "white";
   constructor(private _appComponent: AppComponent, private _challengeService: ChallengeService, private _dialog: MatDialog, private _sharedComponent: SharedComponent) {
 
   }
@@ -90,13 +99,13 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
       .then((data) =>
       {
         console.log(data)
-        challengeResult!.resultat_obtenu = ((data.passed / data.totalTests) * 100)+ "%";
+        challengeResult!.resultat_obtenu = ((data.passed / data.totalTests) * 100).toFixed(2)+ "%";
         challengeResult!.temps_execution = data.totalTime.toFixed(3);
-        this.testResults = data.results.map((testResult: any) =>
+        this.testResults = (data.results as TestResult[]).map((testResult) =>
         {
-          let res = testResult.substring(0,testResult.indexOf('Le programme s\'est arrêté avec le code'));
-          return res.substring(0, res.indexOf('\n') + 1) + 'Résultat : ' + res.substring(res.indexOf('\n') + 1);
-        });
+          testResult.actualResult = testResult.actualResult.substring(0, testResult.actualResult.indexOf('\n'));
+          return testResult;
+        })
         this.showTestResults = true;
       })
       .catch((reason) => {

@@ -11,17 +11,19 @@
     <h2>Résultats des tests</h2>
     <h3>Score : {{challengeResult.resultat_obtenu}}</h3>
     <h3>Temps total d'exécution : {{challengeResult.temps_execution}} secondes</h3>
-    <mat-expansion-panel *ngFor="let testResult of testResults;
-    let indexOfElement = index"
-    style="width: 100%">
+    <mat-expansion-panel *ngFor="let testResult of testResults"
+    style="width: 100%" [style.background]="testResult.passed ? 'green' : 'red'">
       <mat-expansion-panel-header>
-        <mat-panel-title>
-          Test {{indexOfElement + 1}}
+        <mat-panel-title style="font-weight: bold">
+          {{testResult.testName}}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <h3>{{testResult.substring(0, testResult.indexOf('\n'))}}</h3>
-      <h4>{{testResult.substring(testResult.indexOf('\n'), testResult.indexOf('Temps d\'exécution'))}}</h4>
-      <h4>{{testResult.substring(testResult.indexOf('Temps d\'exécution'))}}</h4>
+      <h3>{{testResult.arguments.substring(0, testResult.arguments.indexOf(':') + 1)}}</h3>
+      <h4>{{testResult.arguments.substring(testResult.arguments.indexOf(':') + 1)}}</h4>
+      <h3>Résultat attendu : </h3>
+      <h4>{{testResult.expectedResult}}</h4>
+      <h3>Votre résultat : </h3>
+      <h4>{{testResult.actualResult}}</h4>
     </mat-expansion-panel>
 
 
