@@ -117,8 +117,6 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
 
   private checkResults(challengeResult: any)
   {
-    console.log("here")
-    console.log(challengeResult);
     let file = new Blob([this.codeEditor.code], {type: this.codeEditor.selectedProgrammingLanguage.fileExtension});
     lastValueFrom(this._challengeService.checkResults(file, this.codeEditor.selectedProgrammingLanguage, this.challenge.challenge_id, challengeResult.uid))
       .then((data) =>
@@ -160,7 +158,6 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
       .finally(() => {
         if (challengeResult === null) {
           this.loading = false;
-          console.log("igiv hgvjhhkh ")
           return;
         }
 
