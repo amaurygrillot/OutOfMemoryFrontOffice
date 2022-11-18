@@ -132,18 +132,6 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
           return testResult;
         })
         this.showTestResults = true;
-      })
-      .catch((reason) => {
-        console.log(this.challengeResultExists);
-        this.loading = false;
-        console.log(reason)
-      })
-      .finally(() => {
-        if (challengeResult === null) {
-          this.loading = false;
-          console.log("igiv hgvjhhkh ")
-          return;
-        }
         this._challengeService.postChallengeResult(challengeResult, this.challengeResultExists).then((data) => {
           if (challengeResult !== null) {
             this.challengeResult = challengeResult;
@@ -163,6 +151,19 @@ export class ChallengeComponent implements OnInit, AfterContentChecked  {
             })
 
           })
+      })
+      .catch((reason) => {
+        console.log(this.challengeResultExists);
+        this.loading = false;
+        console.log(reason)
+      })
+      .finally(() => {
+        if (challengeResult === null) {
+          this.loading = false;
+          console.log("igiv hgvjhhkh ")
+          return;
+        }
+
       });
   }
 
